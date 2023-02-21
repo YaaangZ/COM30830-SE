@@ -1,8 +1,6 @@
 import requests
 import json
-from dbinfo import *
 import traceback
-
 
 # from sqlalchemy import create_engine
 # import pandas as pd
