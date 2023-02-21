@@ -13,7 +13,7 @@ import traceback
 # DATABASE = "jdbc"
 # engine = create_engine('mysql://{}:{}@{}/{}'.format(USER, PASSWORD, HOST, DATABASE))
 #
-# def store(obj):
+# def store(obj):x
 #     # need to write.....
 #     for item in obj:
 #         vals = (item.get("address"), ...)
