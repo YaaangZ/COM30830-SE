@@ -92,7 +92,6 @@ def store_station():
     """
     stations = get_data()
     engine = get_engine()
-    update = 0
     with engine.connect() as conn:
         pre_sql = text(
             "insert into station values(:number,:name,:address,:position_lat,:position_lng,:banking,:bonus,:bike_stands)")
@@ -108,11 +107,10 @@ def store_station():
 
                 conn.execute(pre_sql, insert_data)
             conn.commit()
-            update += 1
         except Exception as e:
             tb = traceback.format_exc()
             print(f"An error occurred: {e}\n{tb}")
-    return update
+
 
 def store_availability(logger):
     """
@@ -121,6 +119,7 @@ def store_availability(logger):
     """
     stations = get_data()
     engine = get_engine()
+    update = 0
     with engine.connect() as conn:
         pre_sql = text(
             "insert into availability values(:number,:available_bike_stands,:available_bikes,:status,:last_update)")
@@ -133,10 +132,11 @@ def store_availability(logger):
             try:
                 conn.execute(pre_sql, insert_data)
                 conn.commit()
+                update += 1
             except IntegrityError:
                 continue
             except Exception as e:
                 tb = traceback.format_exc()
                 logger.exception(f"An error occurred: {e}\n{tb}")
 
-
+    return update
