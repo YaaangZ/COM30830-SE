@@ -1,19 +1,15 @@
-# import sys
-# sys.path.append('/home/ubuntu/codes/scraper/bikeInfo')
-
-from functions import store_availability
+from functions_weather import store_weather_data
 import logging
 from datetime import datetime
 from config_info import PRE_PATH
 # Create a logger object
-logger = logging.getLogger('scraper_bike_logger')
+logger = logging.getLogger('scraper_weather_logger')
 logger.setLevel(logging.DEBUG)
 
 # Create a file handler object
-cur_time = datetime.today()
-today = cur_time.strftime('%Y_%m_%d')
+today = datetime.today().strftime('%Y_%m_%d')
 
-fh = logging.FileHandler(f'{PRE_PATH}scraper_bike_{today}.log')
+fh = logging.FileHandler(f'{PRE_PATH}scraper_weather_{today}.log')
 
 # Set the log level for the file handler
 fh.setLevel(logging.DEBUG)
@@ -25,5 +21,5 @@ fh.setFormatter(formatter)
 # Add the file handler to the logger
 logger.addHandler(fh)
 
-update = store_availability(logger)
-logger.info(f"Scraper update {update} rows at: {cur_time}")
+update = store_weather_data(logger)
+logger.info(f"Scraper updated {update} row weather information.")
