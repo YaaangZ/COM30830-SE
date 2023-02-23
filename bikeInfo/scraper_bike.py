@@ -4,7 +4,7 @@
 from functions import store_availability
 import logging
 from datetime import datetime
-
+from config_info import PRE_PATH
 # Create a logger object
 logger = logging.getLogger('scraper_bike_logger')
 logger.setLevel(logging.DEBUG)
@@ -12,7 +12,8 @@ logger.setLevel(logging.DEBUG)
 # Create a file handler object
 cur_time = datetime.today()
 today = cur_time.strftime('%Y_%m_%d')
-fh = logging.FileHandler(f'scraper_bike_{today}.log')
+
+fh = logging.FileHandler(f'{PRE_PATH}scraper_bike_{today}.log')
 
 # Set the log level for the file handler
 fh.setLevel(logging.DEBUG)
