@@ -7,5 +7,8 @@ NAME = "dublin"
 #information about database
 USER = "admin"
 PASSWORD = "group8ucd"
-HOST = "dbbikes.czd4qxlz1ioy.us-east-1.rds.amazonaws.com"
+# Yun's RDS
+# HOST = "dbbikes.czd4qxlz1ioy.us-east-1.rds.amazonaws.com"
+# Yang's RDS
+HOST = "dbbikes.cqqckwqnmywv.eu-west-1.rds.amazonaws.com"
 DATABASE = "dbbikes"
