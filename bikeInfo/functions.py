@@ -136,16 +136,3 @@ def store_availability():
             print(f"An error occurred: {e}\n{tb}")
 
 
-def crawl():
-    """
-
-    :return:
-    """
-    # use Crontab to execute every 5 mins
-    try:
-        store_availability()
-    except Exception as e:
-        # if there is any problem, print the traceback
-        # use logging or something?
-        print(traceback.format_exc())
-
