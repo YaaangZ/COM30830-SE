@@ -18,7 +18,7 @@ HOST = "dbbikes.czd4qxlz1ioy.us-east-1.rds.amazonaws.com"
 DATABASE = "dbbikes"
 
 # location of log file
-PRE_PATH = "/home/ubuntu/codes/scrapers/test/COM30830-SE/scrapers/logs/"
+PRE_PATH = "/home/ubuntu/codes/scraper/test/COM30830-SE/scrapers/logs/"
 # PRE_PATH = ""
 
 
