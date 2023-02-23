@@ -92,6 +92,7 @@ def store_station():
     """
     stations = get_data()
     engine = get_engine()
+    update = 0
     with engine.connect() as conn:
         pre_sql = text(
             "insert into station values(:number,:name,:address,:position_lat,:position_lng,:banking,:bonus,:bike_stands)")
@@ -107,10 +108,11 @@ def store_station():
 
                 conn.execute(pre_sql, insert_data)
             conn.commit()
+            update += 1
         except Exception as e:
             tb = traceback.format_exc()
             print(f"An error occurred: {e}\n{tb}")
-
+    return update
 
 def store_availability(logger):
     """

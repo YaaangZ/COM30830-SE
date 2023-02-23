@@ -24,6 +24,5 @@ fh.setFormatter(formatter)
 # Add the file handler to the logger
 logger.addHandler(fh)
 
-logger.info(f"Scraper starts to work at: {cur_time}")
-store_availability(logger)
-
+update = store_availability(logger)
+logger.info(f"Scraper update {update} rows at: {cur_time}")
