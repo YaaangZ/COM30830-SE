@@ -1,6 +1,9 @@
 import unittest
-from bikeInfo import functions
 
+
+
+from bikeInfo import functions
+import datetime
 
 class TestBikeInfo(unittest.TestCase):
 
@@ -19,3 +22,7 @@ class TestBikeInfo(unittest.TestCase):
 
     def test_store_availability(self):
         functions.store_availability()
+    def test_demo(self):
+        d = datetime.datetime.today().strftime('%Y_%m_%d')
+        print(type(d))
+

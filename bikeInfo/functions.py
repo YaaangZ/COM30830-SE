@@ -1,11 +1,11 @@
-import requests
 import json
 import traceback
+
+import requests
 from sqlalchemy import create_engine, text
+from sqlalchemy.exc import IntegrityError
 
-from bikeInfo.config_info import *
-
-
+from config_info import *
 def get_engine():
     """
     get engine to handle database
@@ -25,6 +25,7 @@ def check_connection():
         res = conn.execute(text("show variables"))
         for row in res:
             print(row)
+            break
 
 
 def init_database():
@@ -111,7 +112,7 @@ def store_station():
             print(f"An error occurred: {e}\n{tb}")
 
 
-def store_availability():
+def store_availability(logger):
     """
     insert dynamic data into table 'availability'
     :return:
@@ -121,31 +122,19 @@ def store_availability():
     with engine.connect() as conn:
         pre_sql = text(
             "insert into availability values(:number,:available_bike_stands,:available_bikes,:status,:last_update)")
-        conn.begin()
-        try:
-            for station in stations:
-                insert_data = {"number": station.get("number"),
-                               "available_bike_stands": station.get("available_bike_stands"),
-                               "available_bikes": station.get("available_bikes"), "status": station.get("status"),
-                               "last_update": station.get("last_update")}
+
+        for station in stations:
+            insert_data = {"number": station.get("number"),
+                           "available_bike_stands": station.get("available_bike_stands"),
+                           "available_bikes": station.get("available_bikes"), "status": station.get("status"),
+                           "last_update": station.get("last_update") // 1000}
+            try:
                 conn.execute(pre_sql, insert_data)
+                conn.commit()
+            except IntegrityError:
+                continue
+            except Exception as e:
+                tb = traceback.format_exc()
+                logger.exception(f"An error occurred: {e}\n{tb}")
 
-            conn.commit()
-        except Exception as e:
-            tb = traceback.format_exc()
-            print(f"An error occurred: {e}\n{tb}")
-
-
-def crawl():
-    """
-
-    :return:
-    """
-    # use Crontab to execute every 5 mins
-    try:
-        store_availability()
-    except Exception as e:
-        # if there is any problem, print the traceback
-        # use logging or something?
-        print(traceback.format_exc())
 
