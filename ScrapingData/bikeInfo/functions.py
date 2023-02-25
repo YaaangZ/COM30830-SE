@@ -2,8 +2,9 @@ import requests
 import json
 import traceback
 from sqlalchemy import create_engine, text
+from sqlalchemy.exc import IntegrityError
 
-from bikeInfo.config_info import *
+from ScrapingData.bikeInfo.config_info import *
 
 
 def get_engine():
@@ -111,28 +112,31 @@ def store_station():
             print(f"An error occurred: {e}\n{tb}")
 
 
-def store_availability():
+def store_availability(logger):
     """
     insert dynamic data into table 'availability'
     :return:
     """
     stations = get_data()
     engine = get_engine()
+    update = 0
     with engine.connect() as conn:
         pre_sql = text(
             "insert into availability values(:number,:available_bike_stands,:available_bikes,:status,:last_update)")
-        conn.begin()
-        try:
-            for station in stations:
-                insert_data = {"number": station.get("number"),
-                               "available_bike_stands": station.get("available_bike_stands"),
-                               "available_bikes": station.get("available_bikes"), "status": station.get("status"),
-                               "last_update": station.get("last_update")}
+
+        for station in stations:
+            insert_data = {"number": station.get("number"),
+                           "available_bike_stands": station.get("available_bike_stands"),
+                           "available_bikes": station.get("available_bikes"), "status": station.get("status"),
+                           "last_update": station.get("last_update") // 1000}
+            try:
                 conn.execute(pre_sql, insert_data)
+                conn.commit()
+                update += 1
+            except IntegrityError:
+                continue
+            except Exception as e:
+                tb = traceback.format_exc()
+                logger.exception(f"An error occurred: {e}\n{tb}")
 
-            conn.commit()
-        except Exception as e:
-            tb = traceback.format_exc()
-            print(f"An error occurred: {e}\n{tb}")
-
-
+    return update

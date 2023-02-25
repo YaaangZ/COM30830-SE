@@ -7,3 +7,5 @@ USER = "admin"
 PASSWORD = "group8ucd"
 HOST = "dbbikes.cqqckwqnmywv.eu-west-1.rds.amazonaws.com"  # Yang's key
 DATABASE = "dbbikes"
+
+PRE_PATH = ""

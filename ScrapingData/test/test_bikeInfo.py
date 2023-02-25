@@ -1,5 +1,7 @@
+import logging
 import unittest
-from bikeInfo import functions
+from ScrapingData.bikeInfo import functions
+from ScrapingData.bikeInfo.functions import store_availability
 
 
 class TestBikeInfo(unittest.TestCase):
@@ -18,4 +20,5 @@ class TestBikeInfo(unittest.TestCase):
         functions.store_station()
 
     def test_store_availability(self):
-        functions.store_availability()
+        logger = logging.getLogger("test")
+        store_availability(logger)
