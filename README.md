@@ -39,3 +39,11 @@ create table availability(
 Yang's JCDecaux Key: 92a580e0a48e1f31ade6e2c8c40372a25f10c56e
 Yang's Open Weather key: 8f2e40db6b1c4dcc89b68735362dbc56
 Yang's RDS endpoint: dbbikes.cqqckwqnmywv.eu-west-1.rds.amazonaws.com
+
+# Crontab config information
+python dir: /home/ubuntu/miniconda3/envs/dbbikes/bin/python
+Script route: /home/ubuntu/folder_dbbikes/code/COM30830-SE/ScrapingData/bikeInfo/scraper_bike.py
+Crontab bike command: */5 * * * * /home/ubuntu/miniconda3/envs/dbbikes/bin/python /home/ubuntu/folder_dbbikes/code/COM30830-SE/ScrapingData/bikeInfo/scraper_bike.py
+Crontab weather command: */30 * * * * /home/ubuntu/miniconda3/envs/dbbikes/bin/python /home/ubuntu/folder_dbbikes/code/COM30830-SE/ScrapingData/bikeInfo/scraper_weather.py
+
+
