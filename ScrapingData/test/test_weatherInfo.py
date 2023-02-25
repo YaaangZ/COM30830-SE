@@ -17,4 +17,3 @@ class TestWeatherInfo(unittest.TestCase):
     def test_store_weather_data(self):
         logger = logging.getLogger("test")
         store_weather_data(logger)
-

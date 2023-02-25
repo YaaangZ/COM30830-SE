@@ -8,4 +8,4 @@ PASSWORD = "group8ucd"
 HOST = "dbbikes.cqqckwqnmywv.eu-west-1.rds.amazonaws.com"
 DATABASE = "dbbikes"
 
-PRE_PATH = ""
+PRE_PATH = "/home/ubuntu/folder_dbbikes/log/"
