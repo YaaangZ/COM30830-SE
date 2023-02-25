@@ -5,7 +5,7 @@ import requests
 from sqlalchemy import create_engine, text
 from sqlalchemy.exc import IntegrityError
 
-from ScrapingData.weatherInfo.config_info import *
+from .config_info import *
 
 
 def get_engine():
@@ -66,33 +66,6 @@ def init_database():
             print(f"An error occurred: {e}\n{tb}")
 
 
-# def store_weather_data():
-#     """
-#     store weather in the tb_weather
-#     :return: None
-#     """
-#     Weather = get_data()
-#     engine = get_engine()
-#     with engine.connect() as conn:
-#         pre_sql = text(
-#             "insert into tb_weather values(:updatedTime,:weatherId,:weatherMain,:temp,:feels_like,:temp_min,:temp_max,:humidity,:visibility,:windSpeed,:windDeg,:sunrise,:sunset)")
-#         conn.begin()
-#         try:
-#             # for weather in Weather:
-#             insert_data = {"updatedTime": Weather["dt"], "weatherId": Weather["weather"][0]["id"],
-#                            "weatherMain": Weather["weather"][0]["main"],
-#                            "temp": Weather["main"]["temp"],
-#                            "feels_like": Weather["main"]["feels_like"],
-#                            "temp_min": Weather["main"]["temp_min"], "temp_max": Weather["main"]["temp_max"],
-#                            "humidity": Weather["main"]["humidity"], "visibility": Weather["visibility"],
-#                            "windSpeed": Weather["wind"]["speed"], "windDeg": Weather["wind"]["deg"],
-#                            "sunrise": Weather["sys"]["sunrise"], "sunset": Weather["sys"]["sunset"]}
-#
-#             conn.execute(pre_sql, insert_data)
-#             conn.commit()
-#         except Exception as e:
-#             tb = traceback.format_exc()
-#             print(f"An error occurred: {e}\n{tb}")
 def store_weather_data(logger):
     """
     store weather in the tb_weather

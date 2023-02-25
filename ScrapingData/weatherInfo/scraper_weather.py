@@ -2,8 +2,8 @@ import logging
 
 from datetime import datetime
 
-from ScrapingData.bikeInfo.config_info import PRE_PATH
-from ScrapingData.weatherInfo.function import store_weather_data
+from .config_info import PRE_PATH
+from .function import store_weather_data
 
 # Create a logger object
 logger = logging.getLogger('scraper_weather_logger')

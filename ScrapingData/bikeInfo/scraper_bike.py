@@ -1,7 +1,7 @@
 from datetime import datetime
 
-from ScrapingData.bikeInfo.config_info import PRE_PATH
-from functions import store_availability
+from .config_info import PRE_PATH
+from .functions import store_availability
 import logging
 
 # Set up the logger

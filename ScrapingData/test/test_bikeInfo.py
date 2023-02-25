@@ -1,7 +1,6 @@
 import logging
 import unittest
-from ScrapingData.bikeInfo import functions
-from ScrapingData.bikeInfo.functions import store_availability
+from ..bikeInfo import functions
 
 
 class TestBikeInfo(unittest.TestCase):
@@ -21,4 +20,4 @@ class TestBikeInfo(unittest.TestCase):
 
     def test_store_availability(self):
         logger = logging.getLogger("test")
-        store_availability(logger)
+        functions.store_availability(logger)

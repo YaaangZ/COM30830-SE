@@ -1,8 +1,7 @@
 import logging
 import unittest
 
-from ScrapingData.weatherInfo import function
-from ScrapingData.weatherInfo.function import store_weather_data
+from ..weatherInfo import function
 
 
 class TestWeatherInfo(unittest.TestCase):
@@ -16,4 +15,4 @@ class TestWeatherInfo(unittest.TestCase):
 
     def test_store_weather_data(self):
         logger = logging.getLogger("test")
-        store_weather_data(logger)
+        function.store_weather_data(logger)
