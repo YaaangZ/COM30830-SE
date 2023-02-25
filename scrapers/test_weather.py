@@ -1,6 +1,7 @@
 import unittest
 import logging
-from functions_weather import *
+
+from .functions_weather import *
 
 
 class TestWeatherInfo(unittest.TestCase):

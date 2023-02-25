@@ -1,7 +1,7 @@
-from functions_bike import store_availability
+from .functions_bike import store_availability
 import logging
 from datetime import datetime
-from config_info import PRE_PATH
+from .config_info import PRE_PATH
 # Create a logger object
 logger = logging.getLogger('scraper_bike_logger')
 logger.setLevel(logging.DEBUG)

@@ -4,7 +4,7 @@ from sqlalchemy.exc import IntegrityError
 import requests
 from sqlalchemy import create_engine, text
 
-from config_info import *
+from .config_info import *
 
 
 def get_engine():

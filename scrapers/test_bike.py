@@ -1,5 +1,5 @@
 import unittest
-from functions_bike import *
+from .functions_bike import *
 import logging
 
 
