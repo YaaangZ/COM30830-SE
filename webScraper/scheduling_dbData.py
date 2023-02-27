@@ -1,16 +1,19 @@
 import requests
 import json
-from dbinfo import *
+from config_info.config import APIkeys
 import traceback
 import time
 
 
 def main():
+    STATIONS_URI = "https://api.jcdecaux.com/vls/v1/stations"
+    NAME = "Dublin"
+
     # use Crontab to execute every 5 mins
     while True:
         try:
             r = requests.get(STATIONS_URI, params={"contract": NAME,
-                                                   "apiKey": APIKEY})
+                                                   "apiKey": APIkeys.Bike_APIKEY})
             # change to python object
             station_info_obj = json.loads(r.text)
             # store(station_info_obj)
