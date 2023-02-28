@@ -1,16 +1,14 @@
+import time
+import requests
+import json
+import glob
+import traceback
+from sqlalchemy import create_engine
+import sqlalchemy as sqla
 import os
 import sys
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
-from config_info.config import MySQL, APIkeys
-import sqlalchemy as sqla
-from sqlalchemy import create_engine
-import MySQLdb
-import traceback
-import glob
-import json
-import requests
-import time
-
+from config_info.config_info import MySQL, APIkeys
 
 
 # engine is a complex software that takes input from python app and processes the information and converts into out that sql data
