@@ -17,6 +17,7 @@ def main():
         r = requests.get(STATIONS_URI, params={"contract": NAME,
                                                "apiKey": APIkeys.Bike_APIKEY})
         station_info_obj = json.loads(r.text)
+        return station_info_obj
     except:
         # if there is any problem, print the traceback
         print(traceback.format_exc())
