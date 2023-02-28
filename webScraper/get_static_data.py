@@ -1,3 +1,4 @@
+from config_info.config_info import MySQL, APIkeys
 import time
 import requests
 import json
@@ -8,7 +9,6 @@ import sqlalchemy as sqla
 import os
 import sys
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
-from config_info.config_info import MySQL, APIkeys
 
 
 # engine is a complex software that takes input from python app and processes the information and converts into out that sql data
@@ -119,7 +119,7 @@ def store_availability_information():
     for station in station_availability:
         row = (station.get("number"), station.get("available_bike_stands"),
                station.get("available_bikes"), station.get("status"), station.get("last_update")//1000)
-
+        # print(row)
         engine.execute(store_availability_sql, row)
 
 
