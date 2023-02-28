@@ -77,7 +77,7 @@ def create_dbbikes_database():
     engine.execute(sql2)
     engine.execute(sql3)
 
-# create_dbbikes_database()
+create_dbbikes_database()
 
 # method to get the data
 
@@ -106,7 +106,7 @@ def store_station_information():
         engine.execute(store_station_sql, row)
 
 
-# store_station_information()
+store_station_information()
 
 # function to store availability data into availablity table
 
