@@ -118,9 +118,9 @@ def store_availability_information():
 
     for station in station_availability:
         row = (station.get("number"), station.get("available_bike_stands"),
-               station.get("available_bikes"), station.get("status"), station.get("last_update"))
+               station.get("available_bikes"), station.get("status"), station.get("last_update")//1000)
 
         engine.execute(store_availability_sql, row)
 
 
-# store_availability_information()
+store_availability_information()

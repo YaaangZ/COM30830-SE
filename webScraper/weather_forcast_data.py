@@ -92,7 +92,8 @@ def store_weatherInformation():
 
     row = (dublin_weather['dt'], dublin_weather['weather'][0]['id'], dublin_weather['weather'][0]['description'], dublin_weather['main']['temp'], dublin_weather['main']['feels_like'], dublin_weather['main']['temp_min'], dublin_weather['main']
            ['temp_max'], dublin_weather['visibility'], dublin_weather['wind']['speed'], dublin_weather['wind']['deg'], dublin_weather['sys']['sunrise'], dublin_weather['sys']['sunset'], dublin_weather['main']['humidity'], dublin_weather['weather'][0]['icon'])
-
+    
+    
     engine.execute(store_weatherInfo_sql, row)
 
 
