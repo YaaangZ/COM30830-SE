@@ -5,7 +5,7 @@ import requests
 from sqlalchemy import create_engine, text
 from sqlalchemy.exc import IntegrityError
 
-from .config_info import *
+from config_info import *
 def get_engine():
     """
     get engine to handle database

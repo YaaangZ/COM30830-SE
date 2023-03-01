@@ -1,5 +1,5 @@
 import unittest
-from .functions_bike import *
+from functions_bike import *
 import logging
 
 
@@ -21,3 +21,4 @@ class TestBikeInfo(unittest.TestCase):
     def test_store_availability(self):
         logger = logging.getLogger("test")
         store_availability(logger)
+

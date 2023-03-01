@@ -1,7 +1,7 @@
-from .functions_weather import store_weather_data
+from functions_weather import store_weather_data
 import logging
 from datetime import datetime
-from .config_info import PRE_PATH
+from config_info import PRE_PATH
 # Create a logger object
 logger = logging.getLogger('scraper_weather_logger')
 logger.setLevel(logging.DEBUG)
