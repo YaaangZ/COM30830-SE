@@ -1,0 +1,7 @@
+2023-03-02 09:25:32,608 - __main__ - ERROR - An error occurred while scraping weather information
+2023-03-02 09:25:32,611 - __main__ - ERROR - Traceback (most recent call last):
+  File "/Users/winnieimafidon/Documents/software-engineering/bike_rental_project/COM30830-SE/webScraper/scheduling_weatherData.py", line 33, in <module>
+    weather_forcast_data.store_weatherInformation(weather_data)
+TypeError: store_weatherInformation() takes 0 positional arguments but 1 was given
+
+2023-03-02 09:26:53,458 - __main__ - INFO - Weather information scraped successfully

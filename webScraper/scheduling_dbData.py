@@ -30,10 +30,10 @@ logger.addHandler(file_handler)
 STATIONS_URI = "https://api.jcdecaux.com/vls/v1/stations"
 NAME = "Dublin"
 try:
-    r = requests.get(STATIONS_URI, params={"contract": NAME,
-                                            "apiKey": APIkeys.Bike_APIKEY})
-    station_info_obj = json.loads(r.text)
-    get_static_data.store_availability_information(station_info_obj)
+    # r = requests.get(STATIONS_URI, params={"contract": NAME,
+    #                                         "apiKey": APIkeys.Bike_APIKEY})
+    # station_info_obj = json.loads(r.text)
+    get_static_data.store_availability_information()
     logger.info("Bikes information scraped successfully")
 
     

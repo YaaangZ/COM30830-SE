@@ -1,0 +1,78 @@
+2023-03-02 10:16:26,775 - __main__ - ERROR - An error occurred while scraping dublin bikes information
+2023-03-02 10:16:26,778 - __main__ - ERROR - Traceback (most recent call last):
+  File "/Users/winnieimafidon/Documents/software-engineering/bike_rental_project/COM30830-SE/webScraper/scheduling_dbData.py", line 36, in <module>
+    get_static_data.store_availability_information(station_info_obj)
+TypeError: store_availability_information() takes 0 positional arguments but 1 was given
+
+2023-03-02 10:20:24,356 - __main__ - ERROR - An error occurred while scraping dublin bikes information
+2023-03-02 10:20:24,374 - __main__ - ERROR - Traceback (most recent call last):
+  File "/Users/winnieimafidon/opt/anaconda3/envs/softwareEngineering/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1819, in _execute_context
+    self.dialect.do_execute(
+  File "/Users/winnieimafidon/opt/anaconda3/envs/softwareEngineering/lib/python3.10/site-packages/sqlalchemy/engine/default.py", line 732, in do_execute
+    cursor.execute(statement, parameters)
+  File "/Users/winnieimafidon/opt/anaconda3/envs/softwareEngineering/lib/python3.10/site-packages/pymysql/cursors.py", line 148, in execute
+    result = self._query(query)
+  File "/Users/winnieimafidon/opt/anaconda3/envs/softwareEngineering/lib/python3.10/site-packages/pymysql/cursors.py", line 310, in _query
+    conn.query(q)
+  File "/Users/winnieimafidon/opt/anaconda3/envs/softwareEngineering/lib/python3.10/site-packages/pymysql/connections.py", line 548, in query
+    self._affected_rows = self._read_query_result(unbuffered=unbuffered)
+  File "/Users/winnieimafidon/opt/anaconda3/envs/softwareEngineering/lib/python3.10/site-packages/pymysql/connections.py", line 775, in _read_query_result
+    result.read()
+  File "/Users/winnieimafidon/opt/anaconda3/envs/softwareEngineering/lib/python3.10/site-packages/pymysql/connections.py", line 1156, in read
+    first_packet = self.connection._read_packet()
+  File "/Users/winnieimafidon/opt/anaconda3/envs/softwareEngineering/lib/python3.10/site-packages/pymysql/connections.py", line 725, in _read_packet
+    packet.raise_for_error()
+  File "/Users/winnieimafidon/opt/anaconda3/envs/softwareEngineering/lib/python3.10/site-packages/pymysql/protocol.py", line 221, in raise_for_error
+    err.raise_mysql_exception(self._data)
+  File "/Users/winnieimafidon/opt/anaconda3/envs/softwareEngineering/lib/python3.10/site-packages/pymysql/err.py", line 143, in raise_mysql_exception
+    raise errorclass(errno, errval)
+pymysql.err.IntegrityError: (1062, "Duplicate entry '30-1677751906' for key 'availability.PRIMARY'")
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/winnieimafidon/Documents/software-engineering/bike_rental_project/COM30830-SE/webScraper/scheduling_dbData.py", line 36, in <module>
+    get_static_data.store_availability_information()
+  File "/Users/winnieimafidon/Documents/software-engineering/bike_rental_project/COM30830-SE/webScraper/get_static_data.py", line 115, in store_availability_information
+    engine.execute(store_availability_sql, row)
+  File "<string>", line 2, in execute
+  File "/Users/winnieimafidon/opt/anaconda3/envs/softwareEngineering/lib/python3.10/site-packages/sqlalchemy/util/deprecations.py", line 402, in warned
+    return fn(*args, **kwargs)
+  File "/Users/winnieimafidon/opt/anaconda3/envs/softwareEngineering/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 3176, in execute
+    return connection.execute(statement, *multiparams, **params)
+  File "/Users/winnieimafidon/opt/anaconda3/envs/softwareEngineering/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1291, in execute
+    return self._exec_driver_sql(
+  File "/Users/winnieimafidon/opt/anaconda3/envs/softwareEngineering/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1595, in _exec_driver_sql
+    ret = self._execute_context(
+  File "/Users/winnieimafidon/opt/anaconda3/envs/softwareEngineering/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1862, in _execute_context
+    self._handle_dbapi_exception(
+  File "/Users/winnieimafidon/opt/anaconda3/envs/softwareEngineering/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 2043, in _handle_dbapi_exception
+    util.raise_(
+  File "/Users/winnieimafidon/opt/anaconda3/envs/softwareEngineering/lib/python3.10/site-packages/sqlalchemy/util/compat.py", line 208, in raise_
+    raise exception
+  File "/Users/winnieimafidon/opt/anaconda3/envs/softwareEngineering/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1819, in _execute_context
+    self.dialect.do_execute(
+  File "/Users/winnieimafidon/opt/anaconda3/envs/softwareEngineering/lib/python3.10/site-packages/sqlalchemy/engine/default.py", line 732, in do_execute
+    cursor.execute(statement, parameters)
+  File "/Users/winnieimafidon/opt/anaconda3/envs/softwareEngineering/lib/python3.10/site-packages/pymysql/cursors.py", line 148, in execute
+    result = self._query(query)
+  File "/Users/winnieimafidon/opt/anaconda3/envs/softwareEngineering/lib/python3.10/site-packages/pymysql/cursors.py", line 310, in _query
+    conn.query(q)
+  File "/Users/winnieimafidon/opt/anaconda3/envs/softwareEngineering/lib/python3.10/site-packages/pymysql/connections.py", line 548, in query
+    self._affected_rows = self._read_query_result(unbuffered=unbuffered)
+  File "/Users/winnieimafidon/opt/anaconda3/envs/softwareEngineering/lib/python3.10/site-packages/pymysql/connections.py", line 775, in _read_query_result
+    result.read()
+  File "/Users/winnieimafidon/opt/anaconda3/envs/softwareEngineering/lib/python3.10/site-packages/pymysql/connections.py", line 1156, in read
+    first_packet = self.connection._read_packet()
+  File "/Users/winnieimafidon/opt/anaconda3/envs/softwareEngineering/lib/python3.10/site-packages/pymysql/connections.py", line 725, in _read_packet
+    packet.raise_for_error()
+  File "/Users/winnieimafidon/opt/anaconda3/envs/softwareEngineering/lib/python3.10/site-packages/pymysql/protocol.py", line 221, in raise_for_error
+    err.raise_mysql_exception(self._data)
+  File "/Users/winnieimafidon/opt/anaconda3/envs/softwareEngineering/lib/python3.10/site-packages/pymysql/err.py", line 143, in raise_mysql_exception
+    raise errorclass(errno, errval)
+sqlalchemy.exc.IntegrityError: (pymysql.err.IntegrityError) (1062, "Duplicate entry '30-1677751906' for key 'availability.PRIMARY'")
+[SQL: insert into availability values(%s, %s, %s, %s, %s)]
+[parameters: (30, 16, 4, 'OPEN', 1677751906)]
+(Background on this error at: https://sqlalche.me/e/14/gkpj)
+
+2023-03-02 10:30:30,470 - __main__ - INFO - Bikes information scraped successfully

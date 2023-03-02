@@ -30,7 +30,7 @@ try:
     url = f'https://api.openweathermap.org/data/2.5/weather?lat=53.332383&lon=-6.252717&appid={APIkeys.weather_APIKEY}'
     response = requests.get(url)
     weather_data = response.json()
-    weather_forcast_data.store_weatherInformation(weather_data)
+    weather_forcast_data.store_weatherInformation()
     logger.info("Weather information scraped successfully")
 
 except Exception as e:

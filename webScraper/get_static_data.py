@@ -1,5 +1,6 @@
 import sqlalchemy as sqla
 from sqlalchemy import create_engine
+from sqlalchemy.exc import IntegrityError
 import traceback
 import glob
 import json
@@ -37,45 +38,37 @@ def create_dbbikes_database():
 
     # creating database
 
-    sql1 = """
+    sql1 = '''
     CREATE DATABASE IF NOT EXISTS dbbikes;
-    """
+    '''
 
     # creating a table for station
-
-    sql2 = """
+    sql2 = '''
     DROP TABLE IF EXISTS station;
-    CREATE TABLE IF NOT EXISTS station(
-        number integer not null, 
-        name varchar(128), 
-        address varchar(128), 
-        position_lat decimal(8,6), 
-        position_lng decimal(9,6), 
-        banking integer, 
-        bonus integer,
-        bike_stands integer, 
-        primary key(number), 
-        unique(name)
-    );
-    """
+    '''
+
+    sql3 = '''
+     CREATE TABLE station(number integer not null, name varchar(128), address varchar(128), position_lat decimal(8,6), position_lng decimal(9,6), banking integer, bonus integer, bike_stands integer, primary key(number),unique(name));
+    '''
+
+   
+    # drop table if exists
+    sql4 = ''' DROP TABLE IF EXISTS availability'''
 
     # creating a table for availability
 
-    sql3 = """
-    DROP TABLE IF EXISTS availability;
-    CREATE TABLE IF NOT EXISTS availability(
-        number integer not null,
-        available_bike_stands integer,
-        available_bikes integer,
-        status varchar(128),
-        last_update integer,
-        primary key(number, last_update)
-    );
-    """
+    sql5 = '''
+    CREATE TABLE availability(number integer not null, available_bike_stands integer, available_bikes integer, status varchar(128), last_update integer, primary key(number, last_update));
+    '''
 
     engine.execute(sql1)
     engine.execute(sql2)
     engine.execute(sql3)
+    engine.execute(sql4)
+    engine.execute(sql5)
+
+    
+
 
 create_dbbikes_database()
 
@@ -120,7 +113,12 @@ def store_availability_information():
         row = (station.get("number"), station.get("available_bike_stands"),
                station.get("available_bikes"), station.get("status"), station.get("last_update")//1000)
         # print(row)
-        engine.execute(store_availability_sql, row)
 
+        try:
+            engine.execute(store_availability_sql, row)
+        except IntegrityError:
+            continue
+
+        
 
 store_availability_information()
