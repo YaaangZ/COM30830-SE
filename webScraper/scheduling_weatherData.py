@@ -26,7 +26,6 @@ def main():
     try:
         weather_forcast_data.store_weatherInformation()
         logger.info("Weather information scraped successfully")
-        time.sleep(5 * 60)
 
     except Exception as e:
         # If there is any problem, log the error
