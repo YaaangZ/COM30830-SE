@@ -81,7 +81,7 @@ def create_weather_database():
     engine.execute(sql4)
 
 
-# create_weather_database()
+create_weather_database()
 
 
 def store_weatherInformation():
