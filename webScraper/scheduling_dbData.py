@@ -22,11 +22,9 @@ file_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
 
 def main():
-    while True:
         try:
             get_static_data.store_availability_information()
             logger.info("Bikes information scraped successfully")
-            time.sleep(5 * 60)
        
         except:
             # if there is any problem, print the traceback
