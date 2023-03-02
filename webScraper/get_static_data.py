@@ -1,4 +1,3 @@
-import sqlalchemy as sqla
 from sqlalchemy import create_engine, text
 from sqlalchemy.exc import IntegrityError
 import traceback
@@ -25,8 +24,10 @@ def get_engine():
 def check_connection():
     engine = get_engine()
     with engine.connect() as conn:
-        for res in conn.execute(text("SHOW VARIABLES")):
-            print(res)
+        res = conn.execute(text("show variables"))
+        for row in res:
+            print(row)
+            break
 
 check_connection()
 
@@ -47,6 +48,7 @@ def create_dbbikes_database():
 
     sql3 = '''
     CREATE TABLE station(number integer not null, name varchar(128), address varchar(128), position_lat decimal(8,6), position_lng decimal(9,6), banking integer, bonus integer, bike_stands integer, primary key(number),unique(name));
+
     '''
 
 
@@ -61,14 +63,15 @@ def create_dbbikes_database():
     with engine.connect() as conn:
         conn.begin()
         try:
-            conn.execute(sql1)
-            conn.execute(sql2)
-            conn.execute(sql3)
-            conn.execute(sql4)
-            conn.execute(sql5)
+            conn.execute(text(sql1))
+            conn.execute(text("USE dbbikes;"))
+            conn.execute(text(sql2))
+            conn.execute(text(sql3))
+            conn.execute(text(sql4))
+            conn.execute(text(sql5))
             conn.commit()
         except Exception as e:
-            traceback.format_exc()
+            print(traceback.format_exc())
 
 create_dbbikes_database()
 
@@ -78,47 +81,51 @@ create_dbbikes_database()
 def get_dbData():
     STATIONS_URI = "https://api.jcdecaux.com/vls/v1/stations"
     NAME = "Dublin"
-
-    r = requests.get(STATIONS_URI, params={"contract": NAME,
+    try:
+        r = requests.get(STATIONS_URI, params={"contract": NAME,
                                            "apiKey": APIkeys.Bike_APIKEY})
-    return json.loads(r.text)
-
+        return json.loads(r.text)
+    except Exception as e:
+            print(traceback.format_exc())
 # function to store information into station table
 
 
 def store_station_information():
-
     station = get_dbData()
     engine = get_engine()
-    store_station_sql = "insert into station values(%s, %s, %s, %s, %s, %s, %s, %s)"
+    store_station_sql = text("insert into station values(:number,:name,:address,:position_lat,:position_lng,:banking,:bonus,:bike_stands)")
 
     with engine.connect() as conn:
         conn.begin()
         try:
             for station in station:
-                row = (station.get("number"), station.get("name"), station.get("address"), station.get("position").get("lat"), station.get(
-                        "position").get("lng"), int(station.get("banking")), int(station.get("bonus")), station.get("bike_stands"))
-               
-                conn.execute(store_station_sql, row) 
+                row = {"number": station.get("number"), "name": station.get("name"),
+                               "address": station.get("address"),
+                               "position_lat": station.get("position").get("lat"),
+                               "position_lng": station.get("position").get("lng"),
+                               "banking": int(station.get("banking")), "bonus": int(station.get("bonus")),
+                               "bike_stands": station.get("bike_stands")}
+                conn.execute(store_station_sql, row)
             conn.commit()
         except Exception as e:
-            traceback.format_exc()
+            print(traceback.format_exc())
 
 store_station_information()
-
 # function to store availability data into availablity table
 
 
 def store_availability_information():
     station_availability = get_dbData()
     engine = get_engine()
-    store_availability_sql = "insert into availability values(%s, %s, %s, %s, %s)"
-    with engine.connect() as conn:
-        conn.begin()
+    store_availability_sql = text("insert into availability values(:number,:available_bike_stands,:available_bikes,:status,:last_update)")
 
+    with engine.connect() as conn:
         for station in station_availability:
-            row = (station.get("number"), station.get("available_bike_stands"),
-                station.get("available_bikes"), station.get("status"), station.get("last_update")//1000)
+            row = {"number": station.get("number"),
+                           "available_bike_stands": station.get("available_bike_stands"),
+                           "available_bikes": station.get("available_bikes"), "status": station.get("status"),
+                           "last_update": station.get("last_update") // 1000}
+
                 # print(row)
             try:
                 conn.execute(store_availability_sql, row)
@@ -126,8 +133,7 @@ def store_availability_information():
             except IntegrityError:
                 continue
             except Exception as e:
-                traceback.format_exc()
-
+                print(traceback.format_exc())       
         
 
-store_availability_information()
+# store_availability_information()

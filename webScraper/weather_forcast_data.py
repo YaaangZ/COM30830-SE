@@ -59,54 +59,59 @@ def create_weather_database():
         CREATE TABLE IF NOT EXISTS weatherInformation (
             date_time integer not null,
             weather_id integer not null,
-            main varchar(128),
-            description varchar(128),
+            weatherMain varchar(128),
             temperature decimal(9, 6),
             feels_like decimal(9, 6),
             temp_min decimal(9, 6),
             temp_max decimal(9, 6),
-            visibility decimal(9, 6),
+            humidity decimal(9,6),
+            visibility integer,
             wind_speed decimal(9, 6),
             wind_degree decimal(9, 6),
             sunrise decimal(9, 6),
             sunset decimal(9, 6),
-            humidity integer,
             icon varchar(128),
             primary key(date_time)
         );'''
 
-    sql4 = '''ALTER TABLE weatherInformation DROP COLUMN main;
-    '''
+
     with engine.connect() as conn:
         conn.begin()
         try:
-            conn.execute(sql1)
-            conn.execute(sql2)
-            conn.execute(sql3)
-            conn.execute(sql4)
+            conn.execute(text(sql1))
+            conn.execute(text("USE dbbikes;"))
+
+            conn.execute(text(sql2))
+            conn.execute(text(sql3))
             conn.commit()
         except Exception as e:
-            traceback.format_exc()
+            print(traceback.format_exc())
 
 
 create_weather_database()
 
 
 def store_weatherInformation():
-    dublin_weather = scrap_weather(53.332383, -6.252717)
+    Weather = scrap_weather(53.332383, -6.252717)
     engine = get_engine()
     with engine.connect() as conn:
-        store_weatherInfo_sql = "insert into weatherInformation values(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        store_weatherInfo_sql = text("insert into weatherInformation values(:date_time,:weather_id,:weatherMain,:temperature,:feels_like,:temp_min,:temp_max,:humidity,:visibility,:wind_speed,:wind_degree,:sunrise,:sunset, :icon)")
         # main_info = json.dumps(dublin_weather['main'])
         
     
-        row = (dublin_weather['dt'], dublin_weather['weather'][0]['id'], dublin_weather['weather'][0]['description'], dublin_weather['main']['temp'], dublin_weather['main']['feels_like'], dublin_weather['main']['temp_min'], dublin_weather['main']
-                ['temp_max'], dublin_weather['visibility'], dublin_weather['wind']['speed'], dublin_weather['wind']['deg'], dublin_weather['sys']['sunrise'], dublin_weather['sys']['sunset'], dublin_weather['main']['humidity'], dublin_weather['weather'][0]['icon'])
+        row = {"date_time": Weather["dt"], "weather_id": Weather["weather"][0]["id"],
+                       "weatherMain": Weather["weather"][0]["main"],
+                       "temperature": Weather["main"]["temp"],
+                       "feels_like": Weather["main"]["feels_like"],
+                       "temp_min": Weather["main"]["temp_min"], "temp_max": Weather["main"]["temp_max"],
+                       "humidity": Weather["main"]["humidity"], "visibility": Weather["visibility"],
+                       "wind_speed": Weather["wind"]["speed"], "wind_degree": Weather["wind"]["deg"],
+                       "sunrise": Weather["sys"]["sunrise"], "sunset": Weather["sys"]["sunset"], "icon": Weather['weather'][0]['icon']}
         try:
             conn.execute(store_weatherInfo_sql, row)
             conn.commit()
         except IntegrityError:
             pass
         except Exception as e:
-            traceback.format_exc()
+            print(traceback.format_exc())
 store_weatherInformation()

@@ -22,15 +22,13 @@ logger.addHandler(file_handler)
 
 # Use Crontab to execute every 5 mins
 
-def main():
-    try:
-        weather_forcast_data.store_weatherInformation()
-        logger.info("Weather information scraped successfully")
+try:
+    weather_forcast_data.store_weatherInformation()
+    logger.info("Weather information scraped successfully")
 
-    except Exception as e:
-        # If there is any problem, log the error
-        logger.error("An error occurred while scraping weather information")
-        logger.error(traceback.format_exc())
+except Exception as e:
+    # If there is any problem, log the error
+    logger.error("An error occurred while scraping weather information")
+    logger.error(traceback.format_exc())
 
 
-main()

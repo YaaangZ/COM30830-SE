@@ -21,15 +21,14 @@ file_handler.setFormatter(formatter)
 # Add the file handler to the logger
 logger.addHandler(file_handler)
 
-def main():
-        try:
-            get_static_data.store_availability_information()
-            logger.info("Bikes information scraped successfully")
-       
-        except:
-            # if there is any problem, print the traceback
-            logger.error("An error occurred while scraping dublin bikes information")
-            logger.error(traceback.format_exc())
+
+try:
+    get_static_data.store_availability_information()
+    logger.info("Bikes information scraped successfully")
+    
+except:
+    # if there is any problem, print the traceback
+    logger.error("An error occurred while scraping dublin bikes information")
+    logger.error(traceback.format_exc())
 
 
-main()

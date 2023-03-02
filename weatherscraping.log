@@ -8,3 +8,6 @@ TypeError: store_weatherInformation() takes 0 positional arguments but 1 was giv
 2023-03-02 11:14:36,986 - __main__ - INFO - Weather information scraped successfully
 2023-03-02 12:10:54,000 - __main__ - INFO - Weather information scraped successfully
 2023-03-02 17:12:07,222 - __main__ - INFO - Weather information scraped successfully
+2023-03-02 22:11:29,440 - __main__ - INFO - Weather information scraped successfully
+2023-03-02 22:23:19,034 - __main__ - INFO - Weather information scraped successfully
+2023-03-02 23:29:04,832 - __main__ - INFO - Weather information scraped successfully
