@@ -1,7 +1,6 @@
 import sqlalchemy as sqla
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.orm import sessionmaker
 import traceback
 import glob
 import json
@@ -23,13 +22,11 @@ def get_engine():
 
 # checking my connection
 
-
 def check_connection():
     engine = get_engine()
-
-    for res in engine.execute("SHOW VARIABLES"):
-        print(res)
-
+    with engine.connect() as conn:
+        for res in conn.execute(text("SHOW VARIABLES")):
+            print(res)
 
 check_connection()
 
@@ -37,7 +34,7 @@ check_connection()
 def create_dbbikes_database():
     engine = get_engine()
 
-    # creating database
+# creating database
 
     sql1 = '''
     CREATE DATABASE IF NOT EXISTS dbbikes;
@@ -49,10 +46,10 @@ def create_dbbikes_database():
     '''
 
     sql3 = '''
-     CREATE TABLE station(number integer not null, name varchar(128), address varchar(128), position_lat decimal(8,6), position_lng decimal(9,6), banking integer, bonus integer, bike_stands integer, primary key(number),unique(name));
+    CREATE TABLE station(number integer not null, name varchar(128), address varchar(128), position_lat decimal(8,6), position_lng decimal(9,6), banking integer, bonus integer, bike_stands integer, primary key(number),unique(name));
     '''
 
-   
+
     # drop table if exists
     sql4 = ''' DROP TABLE IF EXISTS availability'''
 
@@ -61,15 +58,17 @@ def create_dbbikes_database():
     sql5 = '''
     CREATE TABLE availability(number integer not null, available_bike_stands integer, available_bikes integer, status varchar(128), last_update integer, primary key(number, last_update));
     '''
-
-    engine.execute(sql1)
-    engine.execute(sql2)
-    engine.execute(sql3)
-    engine.execute(sql4)
-    engine.execute(sql5)
-
-    engine.close()
-
+    with engine.connect() as conn:
+        conn.begin()
+        try:
+            conn.execute(sql1)
+            conn.execute(sql2)
+            conn.execute(sql3)
+            conn.execute(sql4)
+            conn.execute(sql5)
+            conn.commit()
+        except Exception as e:
+            traceback.format_exc()
 
 create_dbbikes_database()
 
@@ -93,17 +92,17 @@ def store_station_information():
     engine = get_engine()
     store_station_sql = "insert into station values(%s, %s, %s, %s, %s, %s, %s, %s)"
 
-    
-    for station in station:
-        row = (station.get("number"), station.get("name"), station.get("address"), station.get("position").get("lat"), station.get(
-                "position").get("lng"), int(station.get("banking")), int(station.get("bonus")), station.get("bike_stands"))
+    with engine.connect() as conn:
+        conn.begin()
         try:
-            engine.execute(store_station_sql, row) 
-        except IntegrityError:
-            continue
-
-    engine.close()
-
+            for station in station:
+                row = (station.get("number"), station.get("name"), station.get("address"), station.get("position").get("lat"), station.get(
+                        "position").get("lng"), int(station.get("banking")), int(station.get("bonus")), station.get("bike_stands"))
+               
+                conn.execute(store_station_sql, row) 
+            conn.commit()
+        except Exception as e:
+            traceback.format_exc()
 
 store_station_information()
 
@@ -114,16 +113,20 @@ def store_availability_information():
     station_availability = get_dbData()
     engine = get_engine()
     store_availability_sql = "insert into availability values(%s, %s, %s, %s, %s)"
+    with engine.connect() as conn:
+        conn.begin()
 
-    for station in station_availability:
-        row = (station.get("number"), station.get("available_bike_stands"),
-               station.get("available_bikes"), station.get("status"), station.get("last_update")//1000)
-        # print(row)
-
-        try:
-            engine.execute(store_availability_sql, row)
-        except IntegrityError:
-            continue
+        for station in station_availability:
+            row = (station.get("number"), station.get("available_bike_stands"),
+                station.get("available_bikes"), station.get("status"), station.get("last_update")//1000)
+                # print(row)
+            try:
+                conn.execute(store_availability_sql, row)
+                conn.commit()
+            except IntegrityError:
+                continue
+            except Exception as e:
+                traceback.format_exc()
 
         
 
