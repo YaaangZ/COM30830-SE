@@ -1,6 +1,7 @@
 import sqlalchemy as sqla
 from sqlalchemy import create_engine
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy.orm import sessionmaker
 import traceback
 import glob
 import json
@@ -67,7 +68,7 @@ def create_dbbikes_database():
     engine.execute(sql4)
     engine.execute(sql5)
 
-    
+    engine.close()
 
 
 create_dbbikes_database()
@@ -92,11 +93,16 @@ def store_station_information():
     engine = get_engine()
     store_station_sql = "insert into station values(%s, %s, %s, %s, %s, %s, %s, %s)"
 
+    
     for station in station:
         row = (station.get("number"), station.get("name"), station.get("address"), station.get("position").get("lat"), station.get(
-            "position").get("lng"), int(station.get("banking")), int(station.get("bonus")), station.get("bike_stands"))
+                "position").get("lng"), int(station.get("banking")), int(station.get("bonus")), station.get("bike_stands"))
+        try:
+            engine.execute(store_station_sql, row) 
+        except IntegrityError:
+            continue
 
-        engine.execute(store_station_sql, row)
+    engine.close()
 
 
 store_station_information()

@@ -3,6 +3,7 @@ import datetime
 import json
 import sqlalchemy as sqla
 from sqlalchemy import create_engine
+from sqlalchemy.exc import IntegrityError
 import traceback
 import glob
 import os
@@ -79,6 +80,8 @@ def create_weather_database():
     engine.execute(sql2)
     engine.execute(sql3)
     engine.execute(sql4)
+    engine.close()
+
 
 
 create_weather_database()
@@ -89,12 +92,16 @@ def store_weatherInformation():
     engine = get_engine()
     store_weatherInfo_sql = "insert into weatherInformation values(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
     # main_info = json.dumps(dublin_weather['main'])
-
+    
+  
     row = (dublin_weather['dt'], dublin_weather['weather'][0]['id'], dublin_weather['weather'][0]['description'], dublin_weather['main']['temp'], dublin_weather['main']['feels_like'], dublin_weather['main']['temp_min'], dublin_weather['main']
-           ['temp_max'], dublin_weather['visibility'], dublin_weather['wind']['speed'], dublin_weather['wind']['deg'], dublin_weather['sys']['sunrise'], dublin_weather['sys']['sunset'], dublin_weather['main']['humidity'], dublin_weather['weather'][0]['icon'])
-    
-    
-    engine.execute(store_weatherInfo_sql, row)
+            ['temp_max'], dublin_weather['visibility'], dublin_weather['wind']['speed'], dublin_weather['wind']['deg'], dublin_weather['sys']['sunrise'], dublin_weather['sys']['sunset'], dublin_weather['main']['humidity'], dublin_weather['weather'][0]['icon'])
+    try:
+        engine.execute(store_weatherInfo_sql, row)
+    except IntegrityError:
+        pass
 
+
+    engine.close()
 
 store_weatherInformation()
