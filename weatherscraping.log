@@ -5,3 +5,4 @@
 TypeError: store_weatherInformation() takes 0 positional arguments but 1 was given
 
 2023-03-02 09:26:53,458 - __main__ - INFO - Weather information scraped successfully
+2023-03-02 11:14:36,986 - __main__ - INFO - Weather information scraped successfully
