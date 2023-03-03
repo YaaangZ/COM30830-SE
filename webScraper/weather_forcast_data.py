@@ -91,9 +91,10 @@ def create_weather_database():
 create_weather_database()
 
 
-def store_weatherInformation():
+def store_weatherInformation(logger):
     Weather = scrap_weather(53.332383, -6.252717)
     engine = get_engine()
+    number_of_updates = 0
     with engine.connect() as conn:
         store_weatherInfo_sql = text("insert into weatherInformation values(:date_time,:weather_id,:weatherMain,:temperature,:feels_like,:temp_min,:temp_max,:humidity,:visibility,:wind_speed,:wind_degree,:sunrise,:sunset, :icon)")
         # main_info = json.dumps(dublin_weather['main'])
@@ -110,8 +111,9 @@ def store_weatherInformation():
         try:
             conn.execute(store_weatherInfo_sql, row)
             conn.commit()
+            number_of_updates += 1
         except IntegrityError:
             pass
         except Exception as e:
             print(traceback.format_exc())
-store_weatherInformation()
+    return number_of_updates

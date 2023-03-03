@@ -13,7 +13,7 @@ from config_info.config_info import MySQL, APIkeys
 
 # engine is a complex software that takes input from python app and processes the information and converts into out that sql data
 # base can understand
-
+# ensuring my connection is being closed == this lead to 64 connections 
 
 def get_engine():
     engine = create_engine(MySQL.URI, echo=True)
@@ -29,7 +29,6 @@ def check_connection():
             print(row)
             break
 
-check_connection()
 
 
 def create_dbbikes_database():
@@ -73,7 +72,6 @@ def create_dbbikes_database():
         except Exception as e:
             print(traceback.format_exc())
 
-create_dbbikes_database()
 
 # method to get the data
 
@@ -110,13 +108,13 @@ def store_station_information():
         except Exception as e:
             print(traceback.format_exc())
 
-store_station_information()
 # function to store availability data into availablity table
 
-
-def store_availability_information():
+# takes logger as an input 
+def store_availability_information(logger):
     station_availability = get_dbData()
     engine = get_engine()
+    number_of_updates = 0   #check number of updates 
     store_availability_sql = text("insert into availability values(:number,:available_bike_stands,:available_bikes,:status,:last_update)")
 
     with engine.connect() as conn:
@@ -130,10 +128,9 @@ def store_availability_information():
             try:
                 conn.execute(store_availability_sql, row)
                 conn.commit()
+                number_of_updates +=1 
             except IntegrityError:
                 continue
             except Exception as e:
-                print(traceback.format_exc())       
-        
-
-# store_availability_information()
+                print(traceback.format_exc())           
+    return number_of_updates  #return number of updates 

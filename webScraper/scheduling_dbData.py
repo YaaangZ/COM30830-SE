@@ -23,7 +23,9 @@ logger.addHandler(file_handler)
 
 
 try:
-    get_static_data.store_availability_information()
+    # get_static_data.store_availability_information()
+    number_of_updates = get_static_data.store_availability_information(logger)
+    logger.info(f"Scraper update {number_of_updates} rows.")
     logger.info("Bikes information scraped successfully")
     
 except:

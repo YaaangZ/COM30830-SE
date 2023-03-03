@@ -154,3 +154,23 @@ KeyboardInterrupt
 2023-03-02 22:08:33,743 - __main__ - INFO - Bikes information scraped successfully
 2023-03-02 23:28:06,828 - __main__ - INFO - Bikes information scraped successfully
 2023-03-03 07:18:01,950 - __main__ - INFO - Bikes information scraped successfully
+2023-03-03 07:52:54,881 - __main__ - ERROR - An error occurred while scraping dublin bikes information
+2023-03-03 07:52:54,883 - __main__ - ERROR - Traceback (most recent call last):
+  File "/Users/winnieimafidon/Documents/software-engineering/bike_rental_project/COM30830-SE/webScraper/scheduling_dbData.py", line 27, in <module>
+    number_of_updates = get_static_data.store_availability(logger)
+AttributeError: module 'get_static_data' has no attribute 'store_availability'
+
+2023-03-03 07:53:02,613 - __main__ - ERROR - An error occurred while scraping dublin bikes information
+2023-03-03 07:53:02,614 - __main__ - ERROR - Traceback (most recent call last):
+  File "/Users/winnieimafidon/Documents/software-engineering/bike_rental_project/COM30830-SE/webScraper/scheduling_dbData.py", line 27, in <module>
+    number_of_updates = get_static_data.store_availability(logger)
+AttributeError: module 'get_static_data' has no attribute 'store_availability'
+
+2023-03-03 07:53:53,318 - __main__ - ERROR - An error occurred while scraping dublin bikes information
+2023-03-03 07:53:53,319 - __main__ - ERROR - Traceback (most recent call last):
+  File "/Users/winnieimafidon/Documents/software-engineering/bike_rental_project/COM30830-SE/webScraper/scheduling_dbData.py", line 27, in <module>
+    number_of_updates = get_static_data.store_availability(logger)
+AttributeError: module 'get_static_data' has no attribute 'store_availability'
+
+2023-03-03 07:56:54,630 - __main__ - INFO - Scraper update 114 rows.
+2023-03-03 07:56:54,631 - __main__ - INFO - Bikes information scraped successfully

@@ -20,10 +20,12 @@ file_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
 
 
-# Use Crontab to execute every 5 mins
+# I will be using Crontab to execute every 5 mins so there is no need for a while loop
 
 try:
-    weather_forcast_data.store_weatherInformation()
+    # this specifies my updates tp the data 
+    number_of_updates = weather_forcast_data.store_weatherInformation(logger)
+    logger.info(f"Scraper update {number_of_updates} rows.")
     logger.info("Weather information scraped successfully")
 
 except Exception as e:
