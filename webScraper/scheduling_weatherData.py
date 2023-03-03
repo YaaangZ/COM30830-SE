@@ -24,8 +24,8 @@ logger.addHandler(file_handler)
 
 try:
     # this specifies my updates tp the data 
-    number_of_updates = weather_forcast_data.store_weatherInformation(logger)
-    logger.info(f"Scraper update {number_of_updates} rows.")
+    weather_forcast_data.store_weatherInformation(logger)
+    # logger.info(f"Scraper update {number_of_updates} rows.")
     logger.info("Weather information scraped successfully")
 
 except Exception as e:
