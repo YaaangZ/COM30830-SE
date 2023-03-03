@@ -175,3 +175,5 @@ AttributeError: module 'get_static_data' has no attribute 'store_availability'
 2023-03-03 07:56:54,630 - __main__ - INFO - Scraper update 114 rows.
 2023-03-03 07:56:54,631 - __main__ - INFO - Bikes information scraped successfully
 2023-03-03 09:46:47,616 - __main__ - INFO - Bikes information scraped successfully
+2023-03-03 11:17:55,684 - __main__ - INFO - Scraper update 32 rows.
+2023-03-03 11:17:55,686 - __main__ - INFO - Bikes information scraped successfully

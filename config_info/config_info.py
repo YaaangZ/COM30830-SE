@@ -9,7 +9,7 @@ NAME = "Dublin"
 
 
 class APIkeys:
-    Bike_APIKEY = "92a580e0a48e1f31ade6e2c8c40372a25f10c56e"
+    Bike_APIKEY = "daf662cdfe4e13af1adb983d5abdfc214e3c8a0e"
     weather_APIKEY = "86c4b57818061dc4cebb5e6a32d09692"
 
 
