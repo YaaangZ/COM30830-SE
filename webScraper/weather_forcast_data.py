@@ -39,7 +39,6 @@ def check_connection():
             print(res)
 
 
-check_connection()
 
 
 def create_weather_database():
@@ -80,7 +79,6 @@ def create_weather_database():
         try:
             conn.execute(text(sql1))
             conn.execute(text("USE dbbikes;"))
-
             conn.execute(text(sql2))
             conn.execute(text(sql3))
             conn.commit()
@@ -88,7 +86,6 @@ def create_weather_database():
             print(traceback.format_exc())
 
 
-create_weather_database()
 
 
 def store_weatherInformation(logger):
