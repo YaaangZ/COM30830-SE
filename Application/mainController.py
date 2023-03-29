@@ -2,7 +2,6 @@ import json
 import traceback
 import pandas as pd
 
-
 from flask import Flask, render_template, jsonify
 from sqlalchemy import create_engine, text
 from get_station_config_info import *
@@ -27,7 +26,6 @@ def main():
 
 
 @app.route("/stations")
-# @functools.lru_cache(maxsize=128)
 def get_stations():
     engine = get_engine()
     sql = "select * from station;"
@@ -43,14 +41,19 @@ def get_stations():
 
 @app.route("/occupancy/<int:station_id>")
 def get_occupancy(station_id):
-    engine = get_engine()
-    df = pd.read_sql_query("select * from availability where number = %(number)s", engine, params={"number": station_id})
-    df['last_update_date'] = pd.to_datetime(df.last_update, unit='ms')
-    df.set_index('last_update_date', inplace=True)
-    res = df['available_bike_stands'].resample('1d').mean()
-    # res['dt'] = df.index
-    print(res)
-    return jsonify(data=json.dumps(list(zip(map(lambda x: x.isoformat(), res.index), res.values))))
+    try:
+        engine = get_engine()
+        df = pd.read_sql_query("select * from availability where number = %(number)s", engine,
+                               params={"number": station_id})
+        df['last_update_date'] = pd.to_datetime(df.last_update, unit='ms')
+        df.set_index('last_update_date', inplace=True)
+        res = df['available_bike_stands'].resample('1d').mean()
+        # res['dt'] = df.index
+        print(res)
+        return jsonify(data=json.dumps(list(zip(map(lambda x: x.isoformat(), res.index), res.values))))
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return jsonify(error="An error occurred"), 500
 
 
 @app.route("/stations/<int:station_id>")
