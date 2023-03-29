@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html>
 <link rel="stylesheet" type="text/css" href="GoogleMap.css">
+<link rel="stylesheet" type="text/css" href="weather.css">
 <body>
 
 <h1>Google Map</h1>
 
 <div id="googleMap_marker"></div>
+<div id="weather"></div>
 
 <script>
 var map = null;
@@ -16,6 +18,7 @@ var mapProp= {
 };
 map = new google.maps.Map(document.getElementById("googleMap_marker"),mapProp);
 getStations();
+getWeather();
 }
 
 function addMarkers(stations) {
@@ -45,6 +48,49 @@ function getStations() {
                 console.log("data is:", typeof data);
                 addMarkers(data);})
 }
+
+function getWeather() {
+  fetch(`https://api.openweathermap.org/data/2.5/weather?lat=53.3498006&lon=-6.2602964&units=metric&appid=8f2e40db6b1c4dcc89b68735362dbc56`)
+    .then(response => response.json())
+    .then(data => {
+      const temp = data.main.temp;
+      const feels_like = data.main.feels_like;
+      const humidity = data.main.humidity;
+      const windDeg = data.wind.deg;
+      const windSpeed = data.wind.speed;
+      const sunrise = new Date(data.sys.sunrise * 1000).toLocaleTimeString();
+      const sunset = new Date(data.sys.sunset * 1000).toLocaleTimeString();
+      const weatherMain = data.weather[0].main;
+
+      // code to display current weather data
+      const weatherDiv = document.getElementById("weather");
+      weatherDiv.innerHTML = `
+        <div class="weather-border">
+          <div class="weather-header">Current Weather</div>
+          <div class="weather-content">${temp} &#8451;, ${weatherMain}</div>
+        </div>
+        <div class="dropdown">
+          <button class="dropbtn">More Details</button>
+          <div class="dropdown-content">
+            <a href="#">Temperature: ${temp} &#8451;</a>
+            <a href="#" class="details">Feels Like: ${feels_like} &#8451;</a>
+            <a href="#" class="details">Humidity: ${humidity}%</a>
+            <a href="#" class="details">Wind Direction: ${windDeg} deg</a>
+            <a href="#" class="details">Wind Speed: ${windSpeed} m/s</a>
+            <a href="#" class="details">Sunrise: ${sunrise}</a>
+            <a href="#" class="details">Sunset: ${sunset}</a>
+          </div>
+        </div>`;
+      const dropdown = document.querySelector(".dropdown");
+      const details = document.querySelectorAll(".details");
+
+      dropdown.addEventListener("click", function() {
+        details.forEach(detail => detail.classList.toggle("show"));
+      });
+    });
+}
+
+
 
 </script>
 
