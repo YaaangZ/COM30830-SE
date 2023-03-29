@@ -5,15 +5,45 @@
 
 <h1>Google Map</h1>
 
-<div id="googleMap"></div>
+<div id="googleMap_marker"></div>
 
 <script>
+var map = null;
 function myMap() {
 var mapProp= {
   center:new google.maps.LatLng(51.508742,-0.120850),
   zoom:5,
 };
-var map = new google.maps.Map(document.getElementById("googleMap"),mapProp);
+map = new google.maps.Map(document.getElementById("googleMap_marker"),mapProp);
+getStations();
+}
+
+function addMarkers(stations) {
+  stations.forEach(station => {
+    var marker = new google.maps.Marker({
+      position: {lat: parseFloat(station.position_lat), lng: parseFloat(station.position_lng)},
+      map: map,
+      title: station.name,
+      station_number: station.number,
+    });
+
+    // Add mouseover and mouseout event listeners
+    marker.addListener('mouseover', function() {
+      marker.setAnimation(google.maps.Animation.BOUNCE);
+    });
+
+    marker.addListener('mouseout', function() {
+      marker.setAnimation(null);
+    });
+  });
+}
+
+function getStations() {
+    fetch("/stations")
+     .then((response) => response.json())
+            .then((data) => {
+                console.log("data is:", typeof data);
+                addMarkers(data);})
 }
 
 </script>
