@@ -1,3 +1,4 @@
+/*This part is displayed vertically*/
 #weather {
   position: fixed;
   top: 20px;
@@ -5,7 +6,7 @@
   padding: 10px;
   background-color: rgba(255, 255, 255, 0.9);
   border: none;
-  border-radius: 15px; /* Rounded corners */
+  border-radius: 15px;
   font-size: 14px;
   color: black;
   text-align: center;
@@ -15,6 +16,21 @@
   width: 100%;
 }
 
+/*
+This part is horizontal screen display
+#weather {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 15px;
+  font-size: 16px;
+  color: black;
+  text-align
+}
+*/
 .weather-border {
   border: none;
   border-radius: 10px;
@@ -39,8 +55,8 @@
 }
 
 .weather-content .icon {
-  width: 60px;
-  height: 60px;
+  width: 150px;
+  height: 150px;
 }
 
 .weather-info {
@@ -115,10 +131,12 @@
   display: block;
 }
 
+
 .icon {
   width: 100px;
-  height: 100px;
+  height: 150px;
 }
+
 
 .animated-bg {
   background: linear-gradient(to bottom, #87CEFA, #98FB98);
