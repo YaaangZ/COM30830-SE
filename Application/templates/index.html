@@ -2,6 +2,7 @@
 <html>
 <link rel="stylesheet" type="text/css" href="GoogleMap.css">
 <link rel="stylesheet" type="text/css" href="weather.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css" integrity="sha384-KyZXEAg3QhqLMpG8r+Knujsl7/1G2LeF5g4O8pHkw0I7p8GNfLXO7JG/qD6sy7yy" crossorigin="anonymous">
 <body>
 
 <h1>Google Map</h1>
@@ -100,16 +101,18 @@ function getWeather() {
             }).join('')}
           </div>
         </div>
+
+        <!--  More details part-->
         <div class="dropdown">
           <button class="dropbtn">More Details</button>
-          <div class="dropdown-content">
-            <a href="#">Temperature: ${currentTemp} &#8451;</a>
-            <a href="#" class="details">Feels Like: ${forecast[0].main.feels_like} &#8451;</a>
-            <a href="#" class="details">Humidity: ${forecast[0].main.humidity}%</a>
-            <a href="#" class="details">Wind Direction: ${forecast[0].wind.deg} deg</a>
-            <a href="#" class="details">Wind Speed: ${forecast[0].wind.speed} m/s</a>
+            <div class="dropdown-content">
+              <a href="#">Temperature: ${currentTemp} &#8451;</a>
+              <a href="#" class="details">Feels Like: ${forecast[0].main.feels_like} &#8451;</a>
+              <a href="#" class="details">Humidity: ${forecast[0].main.humidity}%</a>
+              <a href="#" class="details">Wind Direction: ${forecast[0].wind.deg} deg</a>
+              <a href="#" class="details">Wind Speed: ${forecast[0].wind.speed} m/s</a>
+            </div>
           </div>
-        </div>
 
         <!-- 5-day forecast-->
         <div class="dropdown">

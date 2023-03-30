@@ -1,8 +1,8 @@
 /*This part is displayed vertically*/
 #weather {
   position: fixed;
-  top: 20px;
-  right: 20px;
+  top: 5px;
+  right: 5px;
   padding: 10px;
   background-color: rgba(255, 255, 255, 0.9);
   border: none;
@@ -58,7 +58,6 @@ This part is horizontal screen display
   width: 150px;
   height: 150px;
 }
-
 .weather-info {
   display: flex;
   flex-direction: column;
