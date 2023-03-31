@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://kit.fontawesome.com/7bf84053cf.js" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='index.js') }}"></script>
+    <title>Dublin Bike Rental</title>
+</head>
+<body>
+    <div id="mySidebar" class="sidebar">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>  
+        <div class="sidebarElement"> 
+            <input type="date" id="journeydate" class="dateandtime" >
+            <input type="time" id="journeytime" class="dateandtime">  
+            <input type="text" id="journeyfrom" class="journeyinfo">
+            <input type="text" id="journeyto" class="journeyinfo">    
+            <input type="radio" id="currentlocation" value="yes">
+            <label for="currentlocation" id="text_for_location"> Your Location</label><br>
+        </div> 
+    </div>     
+    <div id="main">
+        <button class="openbtn" onclick="openNav()"> Plan Journey </button>    
+    </div> 
+    <div id="map"></div>
+    <div id="my-element" data-image-url="{{ url_for('static', filename='images/greenbike.svg') }}"></div>
+    <div id="my-element-3" data-image-url="{{ url_for('static', filename='images/redbike.svg') }}"></div>    
+    <div id="my-element-2" data-image-url="{{ url_for('static', filename='images/bluebike.svg') }}"></div>               
+    <script src="https://maps.googleapis.com/maps/api/js?key={{map_apikey}}&callback=initMap" async defer></script>
+</body>
+</html>
