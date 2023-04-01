@@ -56,6 +56,38 @@ def get_occupancy(station_id):
         return jsonify(error="An error occurred"), 500
 
 
+@app.route('/heatmap')
+def get_heatmap():
+    try:
+        engine = get_engine()
+
+        # join availability and station tables on number
+        sql = """
+        SELECT a.available_bikes, s.position_lat, s.position_lng
+        FROM availability a
+        JOIN station s ON a.number = s.number
+        """
+
+        # execute query and fetch results
+        with engine.connect() as conn:
+            rows = conn.execute(text(sql)).fetchall()
+
+        # convert rows into list of dictionaries
+        data = []
+        for row in rows:
+            data.append({
+                'available_bikes': row.available_bikes,
+                'position': {'lat': row.position_lat, 'lng': row.position_lng}
+            })
+        print(data)
+        # return data as JSON response
+        return jsonify(data=data)
+
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return jsonify(error="An error occurred"), 500
+
+
 @app.route("/stations/<int:station_id>")
 def get_station_by_id():
     return render_template("stations.html", apikey=config.APIKEY)

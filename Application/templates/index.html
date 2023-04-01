@@ -2,16 +2,20 @@
 <html>
 <link rel="stylesheet" type="text/css" href="GoogleMap.css">
 <link rel="stylesheet" type="text/css" href="weather.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css" integrity="sha384-KyZXEAg3QhqLMpG8r+Knujsl7/1G2LeF5g4O8pHkw0I7p8GNfLXO7JG/qD6sy7yy" crossorigin="anonymous">
 <body>
 
 <h1>Google Map</h1>
 
 <div id="googleMap_marker"></div>
+<input type="checkbox" id="heatmap_checkbox"  onclick="drawHeatmap(this);">
+<label for="heatmap_checkbox">Show heatmap</label>
 <div id="weather"></div>
 
 <script>
 var map = null;
+var heatmap = null;
+
+<!--This function is to get Google Map-->
 function myMap() {
 var mapProp= {
   center:new google.maps.LatLng(51.508742,-0.120850),
@@ -20,8 +24,13 @@ var mapProp= {
 map = new google.maps.Map(document.getElementById("googleMap_marker"),mapProp);
 getStations();
 getWeather();
+// Select the checkbox element using document.querySelector
+  var checkbox = document.querySelector('#heatmap_checkbox');
+
+  // Add a click event listener to the checkbox
 }
 
+<!--This function is to add markers on the Google Map-->
 function addMarkers(stations) {
   stations.forEach(station => {
     var marker = new google.maps.Marker({
@@ -50,7 +59,7 @@ function getStations() {
                 addMarkers(data);})
 }
 
-<!--This part is displayed vertically-->
+<!--This part is displayed weather information vertically-->
 function getWeather() {
   fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=53.3498006&lon=-6.2602964&units=metric&appid=8f2e40db6b1c4dcc89b68735362dbc56`)
     .then(response => response.json())
@@ -165,7 +174,7 @@ function getWeather() {
 }
 
 
-<!--This part is horizontal screen display-->
+<!--This part is horizontal screen display weather information-->
 <!--function getWeather() {-->
 <!--  fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=53.3498006&lon=-6.2602964&units=metric&appid=8f2e40db6b1c4dcc89b68735362dbc56`)-->
 <!--    .then(response => response.json())-->
@@ -278,6 +287,48 @@ function getWeather() {
 <!--      };-->
 <!--    });-->
 <!--}-->
+
+<!--This function is to draw heatmap on the Google Map-->
+function drawHeatmap(checkbox) {
+    console.log('clicked checkbox-1', checkbox, checkbox.checked);
+    checked = checkbox.checked;
+    if (checked) {
+      if (heatmap == null) {
+        // Fetch the data from the server
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+          if (xhr.readyState == XMLHttpRequest.DONE) {
+            if (xhr.status == 200) {
+              console.log('data', xhr.responseText);
+              var heatmapData = [];
+              var data = JSON.parse(xhr.responseText).data;
+              data.forEach(function(row) {
+                heatmapData.push({
+                  location: new google.maps.LatLng(row.position_lat, row.position_lng),
+                  weight: row.available_bikes
+                });
+              });
+              heatmap = new google.maps.visualization.HeatmapLayer({
+                data: heatmapData,
+                map: map
+              });
+              console.log(heatmap);
+              heatmap.setMap(map);
+              heatmap.set('radius', 40);
+            } else {
+              console.log('failed');
+            }
+          }
+        }
+        xhr.open('GET', '/heatmap', true);
+        xhr.send(null);
+      } else {
+        heatmap.setMap(map);
+      }
+    } else {
+      heatmap.setMap(null);
+    }
+  }
 
 
 

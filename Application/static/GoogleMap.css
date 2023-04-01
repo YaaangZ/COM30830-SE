@@ -13,3 +13,22 @@ html, body {
  margin: 0;
  padding: 0;
 }
+
+/* Style the checkbox */
+#heatmap_checkbox {
+  display: none; /* hide the actual checkbox */
+}
+/* Style the label to look like a button */
+#heatmap_checkbox + label {
+  display: inline-block;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  cursor: pointer;
+}
+/* Style the label when the checkbox is checked */
+#heatmap_checkbox:checked + label {
+  background-color: #007bff;
+  color: #fff;
+  border-color: #007bff;
+}
