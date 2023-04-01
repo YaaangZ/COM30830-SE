@@ -6,9 +6,9 @@
 
 <h1>Google Map</h1>
 
-<div id="googleMap_marker"></div>
 <input type="checkbox" id="heatmap_checkbox"  onclick="drawHeatmap(this);">
-<label for="heatmap_checkbox">Show heatmap</label>
+<label for="heatmap_checkbox">Show heatmap</label>
+<div id="googleMap_marker"></div>
 <div id="weather"></div>
 
 <script>
@@ -288,9 +288,10 @@ function getWeather() {
 <!--    });-->
 <!--}-->
 
-<!--This function is to draw heatmap on the Google Map-->
+
+
 function drawHeatmap(checkbox) {
-    console.log('clicked checkbox-1', checkbox, checkbox.checked);
+<!--    console.log('clicked checkbox-1', checkbox, checkbox.checked);-->
     checked = checkbox.checked;
     if (checked) {
       if (heatmap == null) {
@@ -299,21 +300,25 @@ function drawHeatmap(checkbox) {
         xhr.onreadystatechange = function() {
           if (xhr.readyState == XMLHttpRequest.DONE) {
             if (xhr.status == 200) {
-              console.log('data', xhr.responseText);
+<!--              console.log('data', xhr.responseText);-->
               var heatmapData = [];
               var data = JSON.parse(xhr.responseText).data;
               data.forEach(function(row) {
+                var location = new google.maps.LatLng(row.position_lat, row.position_lng);
+                var weight = row.available_bikes;
+                console.log('location:', location, 'weight:', weight); // Debugging line
                 heatmapData.push({
-                  location: new google.maps.LatLng(row.position_lat, row.position_lng),
-                  weight: row.available_bikes
+                  location: location,
+                  weight: weight
                 });
               });
               heatmap = new google.maps.visualization.HeatmapLayer({
                 data: heatmapData,
                 map: map
               });
-              console.log(heatmap);
-              heatmap.setMap(map);
+<!--              console.log('data: ', data, 'map: ', map); // Debugging line-->
+              console.log('heatmap: ', heatmap);
+<!--              heatmap.setMap(map);-->
               heatmap.set('radius', 40);
             } else {
               console.log('failed');
@@ -328,13 +333,13 @@ function drawHeatmap(checkbox) {
     } else {
       heatmap.setMap(null);
     }
-  }
-
+}
 
 
 </script>
 
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAjeRpg6GHEMrW0F-SVb08DJ5X2_0vOiYY&callback=myMap"></script>
+<!--<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAjeRpg6GHEMrW0F-SVb08DJ5X2_0vOiYY&callback=myMap"></script>-->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAjeRpg6GHEMrW0F-SVb08DJ5X2_0vOiYY&libraries=visualization&callback=myMap"></script>
 
 </body>
 </html>
