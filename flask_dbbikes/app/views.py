@@ -30,6 +30,13 @@ def get_avalability(number):
         return jsonify(availability.to_dir())
     else:
         return jsonify({'error': 'Availability not found'}), 404
+@app.route('/occupancy/<int:number>', methods=['GET'])
+def get_occupancy_24h(number):
+    data_24h = availability_service.get_occupancy_by_number_24h(number)
+    serialized_data_24h = [
+        {"time": row[0], "bikes": row[1], "stands": row[2]} for row in data_24h
+    ]
+    return jsonify(serialized_data_24h)
 @app.route('/map')
 def map():
     # animal = "Yun"

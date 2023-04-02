@@ -46,7 +46,8 @@ class Availability(db.Model):
             'available_bikes': int(self.available_bikes),
             'status': self.status,
             # change to datetime
-            'last_update': datetime.fromtimestamp(self.last_update),
+            # 'last_update': datetime.fromtimestamp(self.last_update),
+            'last_update': int(self.last_update),
         }
 
 

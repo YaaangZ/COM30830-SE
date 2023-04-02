@@ -18,5 +18,6 @@ class TestWeatherInfo(unittest.TestCase):
         logger = logging.getLogger("test")
         store_weather_data(logger)
     def test_demo(self):
-        a = (6) / (-132)
+        a = datetime.now().timestamp()
+        # a = datetime.timestamp(a) - 86400
         print(a)

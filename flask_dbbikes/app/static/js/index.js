@@ -1,3 +1,5 @@
+// Load the Google Charts library
+google.charts.load('current', {'packages':['corechart']});
 function initMap() {
     const dublin = {lat: 53.350140, lng: -6.266155};
     const mapProp= {center: dublin, zoom:14};
@@ -80,6 +82,7 @@ function stationDetail(detail) {
                     "<p>Status: " + station_dynamic.status + "</p>" +
                     "<p>Address: " + station.address + "</p>";
     document.getElementById("leftSection").appendChild(info);
+    drawChart(detail.station.number);
 }
 function changeSideBar() {
     const leftSection = document.getElementById("leftSection");
@@ -97,6 +100,49 @@ function changeSideBar() {
 }
 function addNavigation() {
     document.getElementById("Navigation").style.display = "block";
+}
+// Function to draw the chart
+async function drawChart(number) {
+    let response_data;
+    try {
+        const response = await fetch("/occupancy/" + number);
+        response_data = await response.json();
+    } catch (error) {
+        console.error('Error fetching occupancy data:', error);
+    }
+    if (response_data && response_data.length > 0) {
+        const bikesData = response_data.map(item => [item.time, item.bikes]);
+        const standsData = response_data.map(item => [item.time, item.stands])
+        console.log(response_data);
+        basicDraw(bikesData, "bike_chart");
+        basicDraw(standsData, "stand_chart");
+    } else {
+        console.error("Invalid station number!")
+    }
+}
+function basicDraw(bikeData, divName) {
+    // Create the data table
+    var data = new google.visualization.DataTable();
+    data.addColumn('string', 'Time');
+    data.addColumn('number', 'Number of Bikes');
+    data.addRows(bikeData);
+
+    // Set chart options
+    var options = {
+        title: 'Occupancy for Bikes at Different Times',
+        hAxis: {title: 'Time', titleTextStyle: {color: '#333'}},
+        vAxis: {minValue: 0},
+        legend: {position: 'top'},
+        animation: {
+            duration: 1000,
+            easing: 'out',
+            startup: true,
+        },
+    };
+
+    // Create and draw the chart
+    var chart = new google.visualization.ColumnChart(document.getElementById(divName));
+    chart.draw(data, options);
 }
 let map = null;
 // src: https://www.flaticon.com/free-icons/bike?word=bike
