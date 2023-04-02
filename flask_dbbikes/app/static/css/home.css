@@ -1,0 +1,54 @@
+#container{
+    position:absolute;
+    left:0px;
+    right:0px;
+    top:0px;
+    bottom:0px;
+    /*display: flex;*/
+}
+#leftSection{
+    /*flex: 0;*/
+    /*width: 0;*/
+    /*height: 100%;*/
+    position: fixed;
+    width: 0;
+    height: 100%;
+    background-color: #f1f1f1;
+    overflow-x: hidden;
+    transition: 0.3s;
+
+}
+#map{
+    /*flex: 10;*/
+    /*!*width:75%;*!*/
+    height:100%;
+    margin-left: 0;
+
+    transition: 0.3s;
+}
+#StationDetailButton {
+    color: white;
+    background-color: rgb(84, 145, 245);
+    border: white;
+    width: 100%;
+    border-radius: 5px;
+    padding: 3px;
+    cursor: pointer;
+}
+.MapButton {
+    color: white;
+    background-color: rgb(84, 145, 245);
+    border: white;
+    border-radius: 5px;
+    padding: 8px 16px;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+}
+.stationDetail {
+
+}
+#Navigation {
+    display: none;
+}

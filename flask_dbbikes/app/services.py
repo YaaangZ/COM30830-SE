@@ -1,5 +1,5 @@
 from typing import List, Optional
-from models import Station
+from models import Station, Availability
 
 
 class StationService:
@@ -11,3 +11,9 @@ class StationService:
 
     def get_all_stations(self) -> List[Station]:
         return self.db.session.query(Station).all()
+class AvailabilityService:
+    def __init__(self, db):
+        self.db = db
+    def get_availability_by_number(self, number: int) -> Optional[Availability]:
+
+        return self.db.session.query(Availability).filter_by(number=number).first()
