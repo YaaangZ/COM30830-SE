@@ -37,6 +37,9 @@ def get_occupancy_24h(number):
         {"time": row[0], "bikes": row[1], "stands": row[2]} for row in data_24h
     ]
     return jsonify(serialized_data_24h)
+# @app.route('/stationDetail/<int:number>', methods=['GET'])
+# def get_station_detail(number):
+
 @app.route('/map')
 def map():
     # animal = "Yun"

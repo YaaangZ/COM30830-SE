@@ -52,3 +52,18 @@
 #Navigation {
     display: none;
 }
+#closeSideBar {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+.bike_chart {
+    display: none;
+    width: 100%;
+    height: 400px;
+}
+.stand_chart {
+    display: none;
+    width: 100%;
+    height: 400px;
+}

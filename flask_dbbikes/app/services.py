@@ -18,7 +18,8 @@ class AvailabilityService:
         self.db = db
     def get_availability_by_number(self, number: int) -> Optional[Availability]:
 
-        return self.db.session.query(Availability).filter_by(number=number).first()
+        # return self.db.session.query(Availability).filter_by(number=number).first()
+        return self.db.session.query(Availability).filter_by(number=number).order_by(Availability.last_update.desc()).first()
     def get_occupancy_by_number_24h(self, number: int):
         current_time = datetime.now()
         timestamp_24_hours_ago = datetime.timestamp(current_time - timedelta(hours=24))
@@ -33,4 +34,13 @@ class AvailabilityService:
             .order_by('hour').all()
         processed_data = [[row[0], round(row[1]), round(row[2])] for row in data]
         return processed_data
+    # def get_station_detail(self, number):
+    #     res = self.db.session.query(
+    #         Availability.number, Availability.available_bike_stands, Availability.available_bikes,
+    #         Station.name, Station.address, Station.bike_stands, Availability.last_update) \
+    #         .join(Station, Availability.number == Station.number) \
+    #         .filter(Availability.number == number) \
+    #         .order_by(Availability.last_update.desc()) \
+    #         .limit(1).first()
+    #     return
 

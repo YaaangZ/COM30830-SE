@@ -43,9 +43,8 @@ function addMarkers(stations) {
         marker.addListener("click", () => {
             getAvailability(station.number).then((station_dynamic) => {
                 if (infowindow) {infowindow.close();}
-
                 console.log("station_dynamic is:", typeof station_dynamic);
-                currentStation = {station: station, station_dynamic: station_dynamic};
+                currentStation = station.number;
                 if (sideBarOpened) {stationDetail(currentStation);}
                 const content = "<div id='infoWindow'>" +
                     "<h2 id='infoW_head'>" + station.name + "</h2>" +
@@ -54,7 +53,7 @@ function addMarkers(stations) {
                     "<p>Bikes: " + station_dynamic.available_bikes + "/" + station.bike_stands + "</p>" +
                     "<p>Status: " + station_dynamic.status + "</p>" +
                     "<p>Address: " + station.address + "</p>" +
-                    "<button id='StationDetailButton' onclick='stationDetail(currentStation)'>Show Trends</button>" +
+                    "<button id='StationDetailButton' onclick='stationDetail(currentStation)'>Show Details</button>" +
                     "</div>" +
                     "</div>";
                 infowindow = new google.maps.InfoWindow({content: content});
@@ -68,21 +67,67 @@ function getAvailability(number) {
     return fetch("/availability/" + number)
     .then((response) => response.json());
 }
-function stationDetail(detail) {
-    let stationDetail = document.getElementById("stationDetail");
-    if (stationDetail) {stationDetail.remove();}
-    if (!sideBarOpened) {changeSideBar();}
-    let info = document.createElement("div");
-    info.setAttribute("id", "stationDetail");
-    let station = detail.station;
-    let station_dynamic = detail.station_dynamic;
-    info.innerHTML ="<h2>" + station.name + "</h2>" +
+function stationDetail(number) {
+    if (!sideBarOpened) {changeSideBar();}//put into another function
+    let info = document.getElementById("info");
+    if (info.innerHTML.trim() !== '') {
+        info.innerHTML = '';
+    }
+    stationCard(number).then(card => {
+        info.appendChild(card);
+        // trends_switch(card.querySelector(".trendButton"));
+    });
+
+}
+async function stationCard(number) {
+    let card = document.createElement("div");
+    card.classList.add("stationCard");
+    card.dataset.number = number;
+    let station;
+    let station_dynamic;
+    try {
+        let response = await fetch("/station/" + number);
+        station = await response.json();
+        response = await fetch("availability/" + number);
+        station_dynamic = await response.json();
+    } catch (error) {
+        console.error('Error fetching station card data:', error);
+    }
+    let textDetail = document.createElement("div");
+    textDetail.classList.add("textDetail");
+    textDetail.innerHTML ="<h2>" + station.name + "</h2>" +
                     "<p>Stands: " + station_dynamic.available_bike_stands + "/" + station.bike_stands + "</p>" +
                     "<p>Bikes: " + station_dynamic.available_bikes + "/" + station.bike_stands + "</p>" +
                     "<p>Status: " + station_dynamic.status + "</p>" +
                     "<p>Address: " + station.address + "</p>";
-    document.getElementById("leftSection").appendChild(info);
-    drawChart(detail.station.number);
+    card.appendChild(textDetail);
+    let trendButton = document.createElement("button");
+    trendButton.classList.add("trendButton");
+    // trendButton.setAttribute("id", "trendButton");
+    trendButton.textContent = "Show/Hide Trends";
+    trendButton.addEventListener("click", function () {trends_switch(trendButton)});
+    card.appendChild(trendButton);
+    let bike_chart = document.createElement("div");
+    bike_chart.classList.add("bike_chart");
+    let stand_chart = document.createElement("div");
+    stand_chart.classList.add("stand_chart");
+    card.appendChild(bike_chart);
+    card.appendChild(stand_chart);
+    return card;
+}
+function trends_switch(btn) {
+    const card = btn.parentElement;
+    const number = card.dataset.number;
+    const bike_chart = card.querySelector(".bike_chart");
+    const stand_chart = card.querySelector(".stand_chart");
+    if (window.getComputedStyle(bike_chart).getPropertyValue('display') === 'none') {
+        bike_chart.style.display = "block";
+        stand_chart.style.display = "block"
+        drawChart(number);
+    } else {
+        bike_chart.style.display = "none";
+        stand_chart.style.display = "none"
+    }
 }
 function changeSideBar() {
     const leftSection = document.getElementById("leftSection");
@@ -95,6 +140,8 @@ function changeSideBar() {
     } else {
         leftSection.style.width = "0px";
         mapSection.style.marginLeft = "0px";
+        const info = document.getElementById("info");
+        info.innerHTML = '';
         sideBarOpened = false;
     }
 }
@@ -113,23 +160,31 @@ async function drawChart(number) {
     if (response_data && response_data.length > 0) {
         const bikesData = response_data.map(item => [item.time, item.bikes]);
         const standsData = response_data.map(item => [item.time, item.stands])
-        console.log(response_data);
-        basicDraw(bikesData, "bike_chart");
-        basicDraw(standsData, "stand_chart");
+        const card = document.querySelector('.stationCard[data-number="' + parseInt(number) + '"]');
+        const bike_chart = card.querySelector(".bike_chart");
+        const stand_chart = card.querySelector(".stand_chart");
+        basicDraw(bikesData, bike_chart);
+        basicDraw(standsData, stand_chart);
     } else {
         console.error("Invalid station number!")
     }
 }
-function basicDraw(bikeData, divName) {
+function basicDraw(bikeData, div) {
+    let y;
+    if (div.className === "bike_chart") {
+        y = "bikes";
+    } else {
+        y = "stands";
+    }
     // Create the data table
     var data = new google.visualization.DataTable();
     data.addColumn('string', 'Time');
-    data.addColumn('number', 'Number of Bikes');
+    data.addColumn('number', y);
     data.addRows(bikeData);
 
     // Set chart options
     var options = {
-        title: 'Occupancy for Bikes at Different Times',
+        title: 'Occupancy for ' + y + ' at Different Times',
         hAxis: {title: 'Time', titleTextStyle: {color: '#333'}},
         vAxis: {minValue: 0},
         legend: {position: 'top'},
@@ -141,7 +196,7 @@ function basicDraw(bikeData, divName) {
     };
 
     // Create and draw the chart
-    var chart = new google.visualization.ColumnChart(document.getElementById(divName));
+    var chart = new google.visualization.ColumnChart(div);
     chart.draw(data, options);
 }
 let map = null;
