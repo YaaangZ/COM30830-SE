@@ -1,3 +1,4 @@
+
 // Load the Google Charts library
 google.charts.load('current', {'packages':['corechart']});
 function initMap() {
@@ -16,6 +17,10 @@ function initMap() {
     });
     map.controls[google.maps.ControlPosition.TOP_LEFT].push(button);
     getStations();
+
+    //Yang
+    getWeather();
+
 }
 function getStations() {
     fetch("/stations")
