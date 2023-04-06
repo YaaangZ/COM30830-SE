@@ -3,20 +3,21 @@ function addMarkers(stations){
   stations.forEach(station =>{
     const lat = Number(station.position_lat)
     const lng = Number(station.position_lng)
-    const infoString = `<h6 style="text-align: center; font-size:15px; "> Station Information <h6>
-    <ul style="font-size:15px">
-    <li> Station Number: ${station.number} </li>
-    <li> Station Address: ${station.address} </li>
+    const infoString = `<h1 style="text-align: center; font-size:25px; "> Station Name: ${station.address} <h1>
+    <p style="font-size:20px"> 
     <i class="fa-sharp fa-solid fa-square-parking"></i>
-    <li> Available Bikes Stand: ${station.available_bike_stands} </li>
-    <li> Available Bikes: ${station.available_bikes} </li>
-    </ul>`;
+    Available Bikes Stand: ${station.available_bike_stands} 
+    </p>
+    <p style="font-size:20px">
+    <i class="fa-solid fa-person-biking"></i>
+    Available Bikes: ${station.available_bikes} 
+    </p>`;
 
     let markerIcon;
 
     if (station.available_bikes >= 25) {
       markerIcon = {
-        url: document.getElementById('my-element').dataset.imageUrl,
+        url: document.getElementById('my-element-1').dataset.imageUrl,
       }
     } else if (station.available_bikes >= 10 && station.available_bikes <=24) {
       markerIcon = {
@@ -77,10 +78,14 @@ function addMarkers(stations){
       marker.setAnimation(null);
 
     });
-  });
 
+    marker.addListener('click', createRoute())
+ });
 }
 
+function createRoute(){
+  
+}
 function getStations(){
 
     fetch("/stations")
@@ -91,6 +96,7 @@ function getStations(){
       // data)   
       addMarkers(data);
       });
+      
 }
 
 
@@ -102,6 +108,9 @@ function getStations(){
 
 
 // }
+
+
+
 function initMap() {
     // The location of Dublin
     const dublinLatLng = { lat: 53.350140, lng: -6.266155};
@@ -114,10 +123,11 @@ function initMap() {
 
     });
     map.setOptions({styles: styles['hide']});
-
  
 
     getStations();
+    new AutocompleteDirectionsHandler(map);
+
   }
 
      
@@ -135,6 +145,127 @@ function initMap() {
       
   ]
   }
+// google api functionality 
+  class AutocompleteDirectionsHandler {
+    map;
+    originPlaceId;
+    destinationPlaceId;
+    travelMode;
+    directionsService;
+    directionsRenderer;
+    constructor(map) {
+      this.map = map;
+      this.originPlaceId = "";
+      this.destinationPlaceId = "";
+      this.travelMode = google.maps.TravelMode.WALKING;
+      this.directionsService = new google.maps.DirectionsService();
+      this.directionsRenderer = new google.maps.DirectionsRenderer({
+        polylineOptions: {
+          strokeColor: "black",
+        },
+      });
+      this.directionsRenderer.setMap(map);
+
+
+    const originInput = document.getElementById("journeyfrom");
+    const destinationInput = document.getElementById("journeyto");
+    const modeSelector = document.getElementById("mode-selector");
+    // Specify just the place data fields that you need.
+    const originAutocomplete = new google.maps.places.Autocomplete(
+      originInput,
+      { fields: ["place_id"] }
+    );
+    // Specify just the place data fields that you need.
+    const destinationAutocomplete = new google.maps.places.Autocomplete(
+      destinationInput,
+      { fields: ["place_id"] }
+
+    );
+
+
+    this.setupClickListener(
+      "changemode-walking",
+      google.maps.TravelMode.WALKING
+    );
+    this.setupClickListener(
+      "changemode-transit",
+      google.maps.TravelMode.TRANSIT
+    );
+    this.setupClickListener(
+      "changemode-driving",
+      google.maps.TravelMode.DRIVING
+    );
+
+
+    this.setupPlaceChangedListener(originAutocomplete, "ORIG");
+    this.setupPlaceChangedListener(destinationAutocomplete, "DEST");
+  }
+  // Sets a listener on a radio button to change the filter type on Places
+  // Autocomplete.
+  setupClickListener(id, mode) {
+    const radioButton = document.getElementById(id);
+
+    radioButton.addEventListener("click", () => {
+      this.travelMode = mode;
+      this.route();
+    });
+  }
+  setupPlaceChangedListener(autocomplete, mode) {
+    autocomplete.bindTo("bounds", this.map);
+    autocomplete.addListener("place_changed", () => {
+      const place = autocomplete.getPlace();
+
+      if (!place.place_id) {
+        window.alert("Please select an option from the dropdown list.");
+        return;
+      }
+
+      if (mode === "ORIG") {
+        this.originPlaceId = place.place_id;
+      } else {
+        this.destinationPlaceId = place.place_id;
+      }
+
+      this.route();
+    });
+  }
+  route() {
+    if (!this.originPlaceId || !this.destinationPlaceId) {
+      return;
+    }
+
+    const me = this;
+
+    this.directionsService.route(
+      {
+        origin: { placeId: this.originPlaceId },
+        destination: { placeId: this.destinationPlaceId },
+        travelMode: this.travelMode,
+      },
+      (response, status) => {
+        if (status === "OK") {
+          me.directionsRenderer.setDirections(response);
+        } else {
+          window.alert("Directions request failed due to " + status);
+        }
+      }
+
+  
+    );
+    }
+
+    // event listener to click for and create a route for when marker is clicked 
+
+
+}
+// generating a filter that calculates the closest marker to the origin and the destination
+
+
+
+
+
+
+  
 
   function openNav() {
     document.getElementById("main").style.marginLeft = "25%";

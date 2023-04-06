@@ -17,11 +17,18 @@ padding: 0;
     filter: grayscale(50%);
   } 
 
+#logo-element{
+  display: flex;
+  align-items: center;
+  height: 150px;
+  width: 150px;
+}
+
 /* The sidebar menu */
 .sidebar {
   display: flex;
-flex-direction: column;  
-height: 100%; /* 100% Full-height */
+  flex-direction: column;  
+  height: 100%; /* 100% Full-height */
   width: 0; /* 0 width - change this with JavaScript */
   position: fixed; /* Stay in place */
   z-index: 1; /* Stay on top */
@@ -32,6 +39,7 @@ height: 100%; /* 100% Full-height */
   padding-top: 60px; /* Place content 60px from the top */
   transition: 0.5s; /* 0.5 second transition effect to slide in the sidebar */
 }
+
 
 /* The sidebar links */
 .sidebar a {
@@ -44,29 +52,46 @@ height: 100%; /* 100% Full-height */
   margin: 10px;
 }
 
-
-.sidebarElement{
-  padding: 8px 8px 8px 32px;
-  display: block;
-  margin: 10px;
-
+.sidebarElement {
+  display: flex;
+  padding: 50px;
+  flex-direction: column;
 }
 
-.sidebarElement .journeyinfo
-{
+
+.dateandtime {
+  height: 50px;
+  width: 330px;
   padding: 10px;
-  height: 20px;
-  width: 200px;
 
 }
 
-.sidebarElement .dateandtime
-{
-  padding: 10px;
-  height: 20px;
-  width: 200px;
+.journeyinfo{
+  height: 50px;
+  width: 300px;
+}
+
+#mode-selector {
+  font-size:  20px;
+  color: white;
+  
 
 }
+#journeyfrom, #journeyto {
+  font-size: 30px;
+}
+#journeydate, #journeytime {
+  font-size: 30px;
+}
+.journey-info-wrapper {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;  
+  padding: 30px;
+  height: 180px;  
+}
+
+
 /* When you mouse over the navigation links, change their color */
 .sidebar a:hover {
   color: #f1f1f1;
