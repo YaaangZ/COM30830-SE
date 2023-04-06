@@ -39,7 +39,10 @@ def get_occupancy_24h(number):
     return jsonify(serialized_data_24h)
 # @app.route('/stationDetail/<int:number>', methods=['GET'])
 # def get_station_detail(number):
-
+#     res = availability_service.get_station_availability(number)
+#     # json_res = jsonify([dict(row) for row in res])
+#     json_res = jsonify([dict(row) for row in res if isinstance(row, dict)])
+#     return json_res
 @app.route('/map')
 def map():
     # animal = "Yun"

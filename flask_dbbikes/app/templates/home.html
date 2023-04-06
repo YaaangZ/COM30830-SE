@@ -13,16 +13,25 @@
 <body>
     <div id="container">
         <div id="leftSection">
-            <button id="closeSideBar" onclick="changeSideBar()">close</button>
-            <div id="Navigation">
-                <form action="/plan" method="post">
-                    <label for="start">Start:</label>
-                    <input type="text" id="start" name="start"><br>
+<!--            <button id="closeSideBar" onclick="changeSideBar()">close</button>-->
+<!--            <div id="Navigation">-->
+<!--                <form action="/plan" method="post">-->
+<!--                    <label for="start">Start:</label>-->
+<!--                    <input type="text" id="start" name="start"><br>-->
 
-                    <label for="destination">Destination:</label>
-                    <input type="text" id="destination" name="destination"><br>
-                    <button type="submit">Submit</button>
-                </form>
+<!--                    <label for="destination">Destination:</label>-->
+<!--                    <input type="text" id="destination" name="destination"><br>-->
+<!--                    <button type="submit">Submit</button>-->
+<!--                </form>-->
+<!--            </div>-->
+            <a href="javascript:void(0)" class="closebtn" onclick="changeSideBar()">&times;</a>
+            <div class="sidebarElement">
+                <input type="date" id="journeydate" class="dateandtime" >
+                <input type="time" id="journeytime" class="dateandtime">
+                <input type="text" id="journeyfrom" class="journeyinfo">
+                <input type="text" id="journeyto" class="journeyinfo">
+                <input type="radio" id="currentlocation" value="yes">
+                <label for="currentlocation" id="text_for_location"> Your Location</label><br>
             </div>
             <div id="info">
 
@@ -37,6 +46,7 @@
     </div>
     <div id="weather"></div>
     <script src="{{url_for('static', filename='js/weather.js')}}"></script>
+    <script src="{{url_for('static', filename='js/direction.js')}}"></script>
     <script src="{{url_for('static', filename='js/index.js')}}"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBs_Crb12f2lIbUsBrjabD2AKXur_qY81o&callback=initMap"></script>
 </body>

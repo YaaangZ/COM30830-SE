@@ -3,7 +3,7 @@
 google.charts.load('current', {'packages':['corechart']});
 function initMap() {
     const dublin = {lat: 53.350140, lng: -6.266155};
-    const mapProp= {center: dublin, zoom:14};
+    const mapProp= {center: dublin, zoom:15};
     map = new google.maps.Map(document.getElementById("map"),mapProp);
     focus = new google.maps.Marker({position: dublin, map: map});
     const button = document.createElement("button");
@@ -17,7 +17,7 @@ function initMap() {
     });
     map.controls[google.maps.ControlPosition.TOP_LEFT].push(button);
     getStations();
-
+    new AutocompleteDirectionsHandler(map);
     //Yang
     getWeather();
 
@@ -32,12 +32,48 @@ function getStations() {
 
 function addMarkers(stations) {
     stations.forEach(station => {
+        console.log("station", station);
+
+        let markerIcon;
+        // console.log("station bikes: ", station.available_bikes);
+        // if (station.available_bikes >= 25) {
+            if (temp >= 25) {
+          markerIcon = "../img/greenbike.svg";
+        } else if (station.available_bikes >= 10 && station.available_bikes <=24) {
+          markerIcon = "../img/bluebike.svg";
+        } else if (station.available_bikes <= 9) {
+          markerIcon = "../img/redbike.svg";
+        }
+
         let marker = new google.maps.Marker({
             position: {lat: station.position_lat, lng: station.position_lng},
             map: map,
-            icon: iconImage,
+            // icon: iconImage,
+            icon: markerIcon,
             title: station.name,
             //lable, optimized, animation, drag
+        });
+            //Winnie's codes
+        google.maps.event.addListener(map, 'zoom_changed', function() {
+            var pixelSizeAtZoom0 = 50; //the size of the icon at zoom level 0
+            var maxPixelSize = 50; //restricts the maximum size of the icon, otherwise the browser will choke at higher zoom levels trying to scale an image to millions of pixels
+
+            var zoom = map.getZoom();
+            var relativePixelSize = Math.round(pixelSizeAtZoom0*Math.pow(2,zoom)); // use 2 to the power of current zoom to calculate relative pixel size.  Base of exponent is 2 because relative size should double every time you zoom in
+
+            if(relativePixelSize > maxPixelSize) //restrict the maximum size of the icon
+                relativePixelSize = maxPixelSize;
+
+            //change the size of the icon
+            marker.setIcon(
+                new google.maps.MarkerImage(
+                    marker.getIcon().url, //marker's same icon graphic
+                    null,//size
+                    null,//origin
+                    null, //anchor
+                    new google.maps.Size(relativePixelSize, relativePixelSize) //changes the scale
+                )
+            );
         });
         marker.addListener("mouseover", () => {
             marker.setAnimation(google.maps.Animation.BOUNCE);
@@ -211,6 +247,7 @@ let infowindow;
 let focus;
 let currentStation;
 let sideBarOpened = false;
+let temp = 26;
 // window.initMap = initMap;
 // initMap()
 //continue: 1 icon resize and color
