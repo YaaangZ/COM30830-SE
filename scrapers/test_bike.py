@@ -7,7 +7,8 @@ class TestBikeInfo(unittest.TestCase):
 
     def test_get_data(self):
         obj = get_data()
-        print(obj[0])
+
+        print(obj)
 
     def test_check_connection(self):
         check_connection()

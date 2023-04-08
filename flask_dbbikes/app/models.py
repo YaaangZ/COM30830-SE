@@ -33,12 +33,14 @@ class Station(db.Model):
 
 class Availability(db.Model):
     __tablename__ = "availability"
-    number = db.Column(db.Integer, primary_key=True, nullable=False)
+    # id = db.Column(db.Integer, primary_key=True)
+    number = db.Column(db.Integer, primary_key=True)
     available_bike_stands = db.Column(db.Integer)
     available_bikes = db.Column(db.Integer)
     status = db.Column(db.String(128))
-    last_update = db.Column(db.Integer)
-
+    last_update = db.Column(db.Integer, primary_key=True)
+    db.PrimaryKeyConstraint('number', 'last_update')
+    # station = db.relationship('Station', backref='availability')
     def to_dir(self):
         return {
             'number': self.number,

@@ -1,25 +1,39 @@
+// define the global variables
+let map = null;
+const iconImage = "../img/bikeIcon.png";//24px
+let infowindow;
+let focus;
+let currentStation;
+let sideBarOpened = false;
 
 // Load the Google Charts library
 google.charts.load('current', {'packages':['corechart']});
 function initMap() {
     const dublin = {lat: 53.350140, lng: -6.266155};
-    const mapProp= {center: dublin, zoom:15};
+    const mapProp= {center: dublin, zoom:14};
+    const styles = {
+        hide: [
+            {
+                featureType: "poi.business",
+                stylers: [{ visibility: "off" }],},
+            {
+                featureType: "transit",
+                elementType: "labels.icon",
+                stylers: [{ visibility: "off" }],
+            },
+            ]
+    };
     map = new google.maps.Map(document.getElementById("map"),mapProp);
     map.setOptions({styles: styles['hide']});
-    focus = new google.maps.Marker({position: dublin, map: map});
     const button = document.createElement("button");
     button.textContent = "Planning Journey";
     button.classList.add("MapButton");
     button.addEventListener("click", function () {
-        if (!sideBarOpened) {
-            changeSideBar();
-        }
-//        addNavigation();
+        if (!sideBarOpened) {changeSideBar();}
     });
     map.controls[google.maps.ControlPosition.TOP_LEFT].push(button);
     getStations();
     new AutocompleteDirectionsHandler(map);
-    //Yang
     getWeather();
 
 }
@@ -27,18 +41,14 @@ function getStations() {
     fetch("/stations")
         .then((response) => response.json())
         .then((data) => {
-            // console.log("data is:", typeof data);
             addMarkers(data);})
 }
 
 function addMarkers(stations) {
     stations.forEach(station => {
-        // console.log("station", station);
 
         let markerIcon;
-        // console.log("station bikes: ", station.available_bikes);
-        // if (station.available_bikes >= 25) {
-            if (temp >= 25) {
+        if (station.available_bikes >= 25) {
           markerIcon = "../img/greenbike.svg";
         } else if (station.available_bikes >= 10 && station.available_bikes <=24) {
           markerIcon = "../img/bluebike.svg";
@@ -49,10 +59,8 @@ function addMarkers(stations) {
         let marker = new google.maps.Marker({
             position: {lat: station.position_lat, lng: station.position_lng},
             map: map,
-            // icon: iconImage,
             icon: markerIcon,
             title: station.name,
-            //lable, optimized, animation, drag
         });
             //Winnie's codes
         google.maps.event.addListener(map, 'zoom_changed', function() {
@@ -78,73 +86,65 @@ function addMarkers(stations) {
         });
         marker.addListener("mouseover", () => {
             marker.setAnimation(google.maps.Animation.BOUNCE);
+
+            const content = `<div id='infoWindow'>
+                <h2 id='infoW_head'>${station.name}</h2>
+                <div id='infoW_body'>
+                    <p><i class="fa-sharp fa-solid fa-square-parking"></i>
+                        Stands: ${station.available_bike_stands}/${station.bike_stands}
+                    </p><p><i class="fa-solid fa-person-biking"></i>
+                        Bikes: ${station.available_bikes}/${station.bike_stands}
+                    </p><p><i class="fas fa-check-circle"></i>
+                        Status: ${station.status}
+                    </p>
+                </div>
+            </div>`;
+
+            infowindow = new google.maps.InfoWindow({content: content});
+            infowindow.open({anchor: marker, map: map});
         });
         marker.addListener("mouseout", () => {
             marker.setAnimation(null);
+            infowindow.close();
         });
         marker.addListener("click", () => {
-            getAvailability(station.number).then((station_dynamic) => {
-                if (infowindow) {infowindow.close();}
-                // console.log("station_dynamic is:", typeof station_dynamic);
-                currentStation = station.number;
-                if (sideBarOpened) {stationDetail(currentStation);}
-                const content = "<div id='infoWindow'>" +
-                    "<h2 id='infoW_head'>" + station.name + "</h2>" +
-                    "<div id='infoW_body'>" +
-                    "<p>" + '<i class="fa-sharp fa-solid fa-square-parking"></i>' +
-                    " Stands: " + station_dynamic.available_bike_stands + "/" + station.bike_stands + "</p>" +
-                    "<p>" + '<i class="fa-solid fa-person-biking"></i>' +
-                    " Bikes: " + station_dynamic.available_bikes + "/" + station.bike_stands + "</p>" +
-                    "<p>" + '<i class="fas fa-check-circle"></i>' +
-                    " Status: " + station_dynamic.status + "</p>" +
-                    "<button id='StationDetailButton' onclick='stationDetail(currentStation)'>Show Details</button>" +
-                    "</div>" +
-                    "</div>";
-                infowindow = new google.maps.InfoWindow({content: content});
-                infowindow.open({anchor: marker, map: map});
-
-
-            }).catch((error) => console.error(error));
+            openStationCard(station.number);
         });
     });
 }
-function getAvailability(number) {
-    return fetch("/availability/" + number)
-    .then((response) => response.json());
-}
-function stationDetail(number) {
-    if (!sideBarOpened) {changeSideBar();}//put into another function
+
+function openStationCard(number) {
+    if (!sideBarOpened) {changeSideBar();}
     let info = document.getElementById("info");
     if (info.innerHTML.trim() !== '') {
         info.innerHTML = '';
     }
-    stationCard(number).then(card => {
+    createStationCard(number).then(card => {
         info.appendChild(card);
-        // trends_switch(card.querySelector(".trendButton"));
     });
-
 }
-async function stationCard(number) {
+async function createStationCard(number) {
     let card = document.createElement("div");
     card.classList.add("stationCard");
     card.dataset.number = number;
     let station;
-    let station_dynamic;
     try {
         let response = await fetch("/station/" + number);
         station = await response.json();
-        response = await fetch("availability/" + number);
-        station_dynamic = await response.json();
     } catch (error) {
         console.error('Error fetching station card data:', error);
     }
     let textDetail = document.createElement("div");
     textDetail.classList.add("textDetail");
-    textDetail.innerHTML ="<h2>" + station.name + "</h2>" +
-                    "<p>Stands: " + station_dynamic.available_bike_stands + "/" + station.bike_stands + "</p>" +
-                    "<p>Bikes: " + station_dynamic.available_bikes + "/" + station.bike_stands + "</p>" +
-                    "<p>Status: " + station_dynamic.status + "</p>" +
-                    "<p>Address: " + station.address + "</p>";
+    textDetail.innerHTML =
+        `<h2>${station.name}</h2>
+        <p>Stands: ${station.available_bike_stands}/${station.bike_stands}</p>
+        <p>Bikes: ${station.available_bikes}/${station.bike_stands}</p>
+        <p>Status: ${station.status}</p>
+        <p>Bonus Support: ${station.bonus == 0 ? 'NO' : 'YES'}</p>
+        <p>Banking Support: ${station.banking == 0 ? 'NO' : 'YES'}</p>
+        <p>Last Update: ${station.last_update}</p>
+        <p>Address: ${station.address}</p>`
     card.appendChild(textDetail);
     let trendButton = document.createElement("button");
     trendButton.classList.add("trendButton");
@@ -190,10 +190,6 @@ function changeSideBar() {
         sideBarOpened = false;
     }
 }
-//function addNavigation() {
-//    document.getElementById("Navigation").style.display = "block";
-//}
-// Function to draw the chart
 async function drawChart(number) {
     let response_data;
     try {
@@ -241,32 +237,9 @@ function basicDraw(bikeData, div) {
     };
 
     // Create and draw the chart
-    var chart = new google.visualization.ColumnChart(div);
+    var chart = new google.visualization.LineChart(div);
     chart.draw(data, options);
 }
-let map = null;
-// src: https://www.flaticon.com/free-icons/bike?word=bike
-const iconImage = "../img/bikeIcon.png";//24px
-let infowindow;
-let focus;
-let currentStation;
-let sideBarOpened = false;
-let temp = 26;
-const styles = {
-    hide: [
-        {
-            featureType: "poi.business",
-            stylers: [{ visibility: "off" }],},
-        {
-            featureType: "transit",
-            elementType: "labels.icon",
-            stylers: [{ visibility: "off" }],
-        },
-        ]
-}
-// window.initMap = initMap;
-// initMap()
-//continue: 1 icon resize and color
-// 2. add event to show info and popup
-//click
+
+
 
