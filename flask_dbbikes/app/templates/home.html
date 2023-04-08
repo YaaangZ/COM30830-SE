@@ -25,14 +25,53 @@
 <!--                </form>-->
 <!--            </div>-->
             <a href="javascript:void(0)" class="closebtn" onclick="changeSideBar()">&times;</a>
-            <div class="sidebarElement">
-                <input type="date" id="journeydate" class="dateandtime" >
-                <input type="time" id="journeytime" class="dateandtime">
-                <input type="text" id="journeyfrom" class="journeyinfo">
-                <input type="text" id="journeyto" class="journeyinfo">
-                <input type="radio" id="currentlocation" value="yes">
-                <label for="currentlocation" id="text_for_location"> Your Location</label><br>
+            <div id="logo-element" data-image-url="{{ url_for('static', filename='imag/dublinbikes-vector-logo.svg') }}">
+            <img src="{{ url_for('static', filename='img/dublinbikes-vector-logo.svg') }}" alt="Dublin Bikes logo">
             </div>
+            <form action="/plan" method="POST" class="sidebarElement">
+                <input type="date" id="journeydate" class="dateandtime" name="journeydate">
+                <input type="time" id="journeytime" class="dateandtime" name="journeytime">
+                <div class="journey-info-wrapper">
+                    <input type="text" id="journeyfrom" class="journeyinfo" name="journeyfrom" placeholder="From">
+                    <input type="text" id="journeyto" class="journeyinfo" name="journeyto" placeholder="To">
+                </div>
+
+                <div id="mode-selector" class="controls">
+                    <input type="radio" name="type" id="changemode-walking" value="walking" checked="checked" />
+                    <label for="changemode-walking">Walking</label>
+
+                    <input type="radio" name="type" id="changemode-transit" value="transit" />
+                    <label for="changemode-transit">Transit</label>
+
+                    <input type="radio" name="type" id="changemode-driving" value="driving" />
+                    <label for="changemode-driving">Driving</label>
+                </div>
+                <button type="submit">Submit</button>
+            </form>
+<!--            <div class="sidebarElement">-->
+<!--          <input type="date" id="journeydate" class="dateandtime">-->
+<!--          <input type="time" id="journeytime" class="dateandtime">-->
+<!--          <div class="journey-info-wrapper">-->
+<!--            <input type="text" id="journeyfrom" class="journeyinfo" placeholder="From">-->
+<!--           <input type="text" id="journeyto" class="journeyinfo" placeholder="To">-->
+<!--          </div>-->
+
+<!--      <div id="mode-selector" class="controls">-->
+<!--        <input-->
+<!--          type="radio"-->
+<!--          name="type"-->
+<!--          id="changemode-walking"-->
+<!--          checked="checked"-->
+<!--        />-->
+<!--        <label for="changemode-walking">Walking</label>-->
+
+<!--        <input type="radio" name="type" id="changemode-transit" />-->
+<!--        <label for="changemode-transit">Transit</label>-->
+
+<!--        <input type="radio" name="type" id="changemode-driving" />-->
+<!--        <label for="changemode-driving">Driving</label>-->
+<!--      </div>-->
+<!--         </div>-->
             <div id="info">
 
             </div>
@@ -48,6 +87,6 @@
     <script src="{{url_for('static', filename='js/weather.js')}}"></script>
     <script src="{{url_for('static', filename='js/direction.js')}}"></script>
     <script src="{{url_for('static', filename='js/index.js')}}"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBs_Crb12f2lIbUsBrjabD2AKXur_qY81o&callback=initMap"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBs_Crb12f2lIbUsBrjabD2AKXur_qY81o&libraries=places&callback=initMap"></script>
 </body>
 </html>

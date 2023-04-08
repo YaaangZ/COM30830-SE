@@ -2,6 +2,7 @@ function getWeather() {
   fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=53.3498006&lon=-6.2602964&units=metric&appid=8f2e40db6b1c4dcc89b68735362dbc56`)
     .then(response => response.json())
     .then(data => {
+        console.log("come here 1");
       const forecast = data.list;
       const currentTemp = data.list[0].main.temp;
       const currentWeatherMain = data.list[0].weather[0].main;

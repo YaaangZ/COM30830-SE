@@ -1,4 +1,3 @@
-// google api functionality
   class AutocompleteDirectionsHandler {
     map;
     originPlaceId;

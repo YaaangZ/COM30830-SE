@@ -5,6 +5,7 @@ function initMap() {
     const dublin = {lat: 53.350140, lng: -6.266155};
     const mapProp= {center: dublin, zoom:15};
     map = new google.maps.Map(document.getElementById("map"),mapProp);
+    map.setOptions({styles: styles['hide']});
     focus = new google.maps.Marker({position: dublin, map: map});
     const button = document.createElement("button");
     button.textContent = "Planning Journey";
@@ -13,7 +14,7 @@ function initMap() {
         if (!sideBarOpened) {
             changeSideBar();
         }
-        addNavigation();
+//        addNavigation();
     });
     map.controls[google.maps.ControlPosition.TOP_LEFT].push(button);
     getStations();
@@ -26,13 +27,13 @@ function getStations() {
     fetch("/stations")
         .then((response) => response.json())
         .then((data) => {
-            console.log("data is:", typeof data);
+            // console.log("data is:", typeof data);
             addMarkers(data);})
 }
 
 function addMarkers(stations) {
     stations.forEach(station => {
-        console.log("station", station);
+        // console.log("station", station);
 
         let markerIcon;
         // console.log("station bikes: ", station.available_bikes);
@@ -84,21 +85,24 @@ function addMarkers(stations) {
         marker.addListener("click", () => {
             getAvailability(station.number).then((station_dynamic) => {
                 if (infowindow) {infowindow.close();}
-                console.log("station_dynamic is:", typeof station_dynamic);
+                // console.log("station_dynamic is:", typeof station_dynamic);
                 currentStation = station.number;
                 if (sideBarOpened) {stationDetail(currentStation);}
                 const content = "<div id='infoWindow'>" +
                     "<h2 id='infoW_head'>" + station.name + "</h2>" +
                     "<div id='infoW_body'>" +
-                    "<p>Stands: " + station_dynamic.available_bike_stands + "/" + station.bike_stands + "</p>" +
-                    "<p>Bikes: " + station_dynamic.available_bikes + "/" + station.bike_stands + "</p>" +
-                    "<p>Status: " + station_dynamic.status + "</p>" +
-                    "<p>Address: " + station.address + "</p>" +
+                    "<p>" + '<i class="fa-sharp fa-solid fa-square-parking"></i>' +
+                    " Stands: " + station_dynamic.available_bike_stands + "/" + station.bike_stands + "</p>" +
+                    "<p>" + '<i class="fa-solid fa-person-biking"></i>' +
+                    " Bikes: " + station_dynamic.available_bikes + "/" + station.bike_stands + "</p>" +
+                    "<p>" + '<i class="fas fa-check-circle"></i>' +
+                    " Status: " + station_dynamic.status + "</p>" +
                     "<button id='StationDetailButton' onclick='stationDetail(currentStation)'>Show Details</button>" +
                     "</div>" +
                     "</div>";
                 infowindow = new google.maps.InfoWindow({content: content});
                 infowindow.open({anchor: marker, map: map});
+
 
             }).catch((error) => console.error(error));
         });
@@ -186,9 +190,9 @@ function changeSideBar() {
         sideBarOpened = false;
     }
 }
-function addNavigation() {
-    document.getElementById("Navigation").style.display = "block";
-}
+//function addNavigation() {
+//    document.getElementById("Navigation").style.display = "block";
+//}
 // Function to draw the chart
 async function drawChart(number) {
     let response_data;
@@ -248,6 +252,18 @@ let focus;
 let currentStation;
 let sideBarOpened = false;
 let temp = 26;
+const styles = {
+    hide: [
+        {
+            featureType: "poi.business",
+            stylers: [{ visibility: "off" }],},
+        {
+            featureType: "transit",
+            elementType: "labels.icon",
+            stylers: [{ visibility: "off" }],
+        },
+        ]
+}
 // window.initMap = initMap;
 // initMap()
 //continue: 1 icon resize and color
