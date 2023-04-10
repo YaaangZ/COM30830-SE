@@ -19,31 +19,34 @@ padding: 0;
 
 #logo-element{
   display: flex;
-  align-items: center;
+  justify-content: center;
+ 
   height: 150px;
-  width: 150px;
+  width: 650px;
+  /* background-color: red; */
 }
 
 /* The sidebar menu */
 .sidebar {
   display: flex;
-  flex-direction: column;  
+  flex-direction: column; 
+  justify-content: center; 
   height: 100%; /* 100% Full-height */
   width: 0; /* 0 width - change this with JavaScript */
   position: fixed; /* Stay in place */
   z-index: 1; /* Stay on top */
   top: 0;
   left: 0;
-  background-color: #111; /* Black*/
+  background-color: rgb(40, 39, 39); /* Black*/
   overflow-x: hidden; /* Disable horizontal scroll */
   padding-top: 60px; /* Place content 60px from the top */
   transition: 0.5s; /* 0.5 second transition effect to slide in the sidebar */
+  /* background-color: purple; */
 }
 
 
-/* The sidebar links */
-.sidebar a {
-  padding: 8px 8px 8px 32px;
+ .sidebar a {
+  /* padding: 8px 8px 8px 32px; */
   text-decoration: none;
   font-size: 25px;
   color: #818181;
@@ -54,43 +57,56 @@ padding: 0;
 
 .sidebarElement {
   display: flex;
-  padding: 50px;
-  flex-direction: column;
+  justify-content: center;
+ flex-direction: column;
+  /* margin: 100px; */
+  /* background-color: yellow; */
+  height: 30rem;
+  width: 40rem;
+
 }
 
-
 .dateandtime {
-  height: 50px;
-  width: 330px;
-  padding: 10px;
+  height: 70px;
+  width: 25rem;
+  border-radius: 25px;
 
 }
 
 .journeyinfo{
-  height: 50px;
-  width: 300px;
+  height: 70px;
+  width: 25rem;
+  border-radius: 25px;
 }
 
-#mode-selector {
-  font-size:  20px;
-  color: white;
-  
 
-}
 #journeyfrom, #journeyto {
-  font-size: 30px;
+  font-size: 40px;
 }
 #journeydate, #journeytime {
-  font-size: 30px;
+  font-size: 40px;
+  /* background-color: green; */
 }
 .journey-info-wrapper {
   display: flex;
-  justify-content: space-between;
+  padding-left: 3.8rem;
+  justify-content: space-evenly;
   flex-direction: column;  
-  padding: 30px;
-  height: 180px;  
+  height: 15rem;
+  width: 30rem;
+  /* background-color: green; */
 }
 
+.date-time-wrapper{
+  display: flex;
+  justify-content: space-evenly;
+  padding-left: 3.8rem;
+
+  flex-direction: column; 
+  height: 15rem;
+  width: 30rem;
+  /* background-color: orange; */
+}
 
 /* When you mouse over the navigation links, change their color */
 .sidebar a:hover {
@@ -102,13 +118,26 @@ padding: 0;
   position: absolute;
   top: 0;
   right: 25px;
-  font-size: 36px;
+  font-size: 40px;
   margin-left: 50px;
 }
 
 /* The button used to open the sidebar */
-.openbtn {
-  font-size: 20px;
+.btn-design {
+  font-size: 30px;
+  cursor: pointer;
+  background-color: #111;
+  color: white;
+  padding: 12px 12px;
+  border: none;
+  position: sticky;
+  top: 18px;
+  left: 370px;
+  border-radius: 25px;
+  z-index: 1;
+}
+.openbtn{
+  font-size: 30px;
   cursor: pointer;
   background-color: #111;
   color: white;
@@ -117,17 +146,29 @@ padding: 0;
   position: sticky;
   top: 10px;
   left: 370px;
+  border-radius: 25px;
   z-index: 1;
 }
-
 .openbtn:hover {
   background-color: #444;
 }
 
+ .available-content{
+  display: flex;
+  justify-content: space-between;
+  width: 34.5rem
+
+} 
+
+.button-container{
+  display: flex;
+
+}
 /* Style page content - use this if you want to push the page content to the right when you open the side navigation */
 #main {
   transition: margin-left .5s; /* If you want a transition effect */
   padding: 20px;
+ 
 }
 
 /* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */

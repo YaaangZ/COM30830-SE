@@ -17,38 +17,33 @@
             <img src="{{ url_for('static', filename='images/dublinbikes-vector-logo.svg') }}" alt="Dublin Bikes logo">
           </div>
         <div class="sidebarElement">
+          <div class="date-time-wrapper">
           <input type="date" id="journeydate" class="dateandtime">
           <input type="time" id="journeytime" class="dateandtime">
+        </div>
           <div class="journey-info-wrapper">
             <input type="text" id="journeyfrom" class="journeyinfo" placeholder="From">
-           <input type="text" id="journeyto" class="journeyinfo" placeholder="To">
+        
+                     
+            <input type="text" id="journeyto" class="journeyinfo" placeholder="To">
           </div>
-
-      <div id="mode-selector" class="controls">
-        <input
-          type="radio"
-          name="type"
-          id="changemode-walking"
-          checked="checked"
-        />
-        <label for="changemode-walking">Walking</label>
-
-        <input type="radio" name="type" id="changemode-transit" />
-        <label for="changemode-transit">Transit</label>
-
-        <input type="radio" name="type" id="changemode-driving" />
-        <label for="changemode-driving">Driving</label>
-      </div>
-          <!-- <div class="current-location-wrapper">
-            <input type="checkbox" id="currentlocation" value="yes">
-            <label for="currentlocation" class="sidebar-text" id="location-text">use your current location</label> -->
           </div>
-        </div>
-      </div>
-          
-    <div id="main">
-        <button class="openbtn" onclick="openNav()"> Plan Journey </button>    
-    </div> 
+     </div>
+        
+   
+<div class="button-container">    
+  <div id="main">
+    <button class="openbtn" onclick="openNav()"> Plan Journey </button>  
+  </div> 
+  <div class="available-content">
+   <div >
+    <button id="availablebike-button" class="btn-design" onclick=""> Available Bikes </button>
+  </div>
+  <div id="availablebikestand-button">
+    <button class="btn-design" onclick=""> Available BikeStands </button>    
+  </div>  
+  </div>
+</div>  
 
     
     <div id="map"></div>
