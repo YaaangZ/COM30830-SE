@@ -1,13 +1,22 @@
+// globalvaribale 
 var directionsService;
-
 var directionsRenderer;
-
 let lastClickedMarker = null;
+let lastClickedInfoWindow = null;
 
-let currentRoute
+// let focus;
+// let currentStation;
+// let sideBarOpened = false;
+
+// Load the Google Charts library
+
+// if (typeof google !== 'undefined' && google.charts && google.charts.load) {
+//   console.log("Google Charts is loaded and ready to use")
+// } else {
+//   console.log("Google Charts is not yet loaded")
+// }
 
 function initMap() {
-
   directionsService = new google.maps.DirectionsService();
   directionsRenderer = new google.maps.DirectionsRenderer();
 
@@ -23,10 +32,10 @@ function initMap() {
   map.setOptions({styles: styles['hide']});
   getStations();
   getWeather();
+  google.charts.load("current", {packages: ["corechart"]});
+
 
   directionsRenderer.setMap(map); // add the renderer to the map
-
-  // new AutocompleteDirectionsHandler(map);
 
 }
 
@@ -35,7 +44,7 @@ function addMarkers(stations){
   stations.forEach(station =>{
     const lat = Number(station.position_lat)
     const lng = Number(station.position_lng)
-    const infoString = `<h1 style="text-align: center; font-size:25px; "> Station Name: ${station.address} <h1>
+    const infoString = `<h1 style="text-align: center; font-size:25px; "> ${station.number} <h1>
     <p style="font-size:20px"> 
     <i class="fa-sharp fa-solid fa-square-parking"></i>
     Available Bikes Stand: ${station.available_bike_stands} 
@@ -43,7 +52,13 @@ function addMarkers(stations){
     <p style="font-size:20px">
     <i class="fa-solid fa-person-biking"></i>
     Available Bikes: ${station.available_bikes} 
-    </p>`;
+    </p>
+    <p style="font-size:20px">
+    <i class="fas fa-check-circle"></i>
+    Status: ${station.status}
+    </p>
+    <button class="show-trends" id="show-trends-button" onclick="showTrends(${station.number})">Show Trends</button>`;
+    ;
 
     let markerIcon;
     document.getElementById('availablebike-button').addEventListener('click', function(){
@@ -62,7 +77,6 @@ function addMarkers(stations){
       })
     } 
   })
-
 
   document.getElementById('availablebikestand-button').addEventListener('click', function(){
     console.log('hi')
@@ -89,8 +103,6 @@ function addMarkers(stations){
         icon: markerIcon,
         title: station.name,
         address: station.address,
-        position_lat: station.position_lat,
-        position_lng: station.position_lat,
         station_number: station.number,
         animation: google.maps.Animation.DROP // Add animation property
 
@@ -123,18 +135,21 @@ function addMarkers(stations){
       content: infoString
     });
 
-    marker.addListener('mouseover', function(){
+    marker.addListener('click', function(){
       infowindow.open(map, marker);
       marker.setAnimation(google.maps.Animation.BOUNCE);
     });
 
-    marker.addListener('mouseout', function() {
-      infowindow.close();
-      marker.setAnimation(null);
+    infowindow.addListener('closeclick', function() {
+      document.getElementById('journeyfrom').value = "";
+      marker.setAnimation(null)
+      lastClickedMarker = null;
+
 
     });
-    marker.addListener('click', () => {
 
+
+    marker.addListener('click', () => {
       // If this is the first marker clicked, fill in the "from" field
       if (!lastClickedMarker) {
         document.getElementById('journeyfrom').value = marker.address;
@@ -150,10 +165,6 @@ function addMarkers(stations){
           travelMode: 'WALKING',
         };
 
-            // Clear any existing route
-    if (currentRoute) {
-      currentRoute.setMap(null);
-    }
    
         directionsService.route(request, function(result, status) {
             if (status === 'OK') {
@@ -177,8 +188,7 @@ function addMarkers(stations){
               // An unknown error occurred
               console.log('Unknown error.');
             }
-          });
-                
+          });               
         document.getElementById('journeyto').value = marker.address;
         lastClickedMarker = null;
       }
@@ -186,24 +196,16 @@ function addMarkers(stations){
   });
 }
 
-
-
 function getStations(){
 
     fetch("/stations")
       .then((response)=> response.json())
-      .then((data) => {
-      console.log(data);
-      // console.log("fetch response", typeof 
-      // data)   
+      .then((data) => {  
       addMarkers(data);
       });
       
 }
-
-
-
-     
+ 
   const styles = {
     hide: [
     {
@@ -218,116 +220,6 @@ function getStations(){
       
   ]
   }
-// google api functionality 
-  // class AutocompleteDirectionsHandler {
-  //   map;
-  //   originPlaceId;
-  //   destinationPlaceId;
-  //   travelMode;
-  //   directionsService;
-  //   directionsRenderer;
-  //   constructor(map) {
-  //     this.map = map;
-  //     this.originPlaceId = "";
-  //     this.destinationPlaceId = "";
-  //     this.travelMode = google.maps.TravelMode.WALKING;
-  //     this.directionsService = new google.maps.DirectionsService();
-  //     this.directionsRenderer = new google.maps.DirectionsRenderer({
-  //       polylineOptions: {
-  //         strokeColor: "black",
-  //       },
-  //     });
-  //     this.directionsRenderer.setMap(map);
-
-
-  //   const originInput = document.getElementById("journeyfrom");
-  //   const destinationInput = document.getElementById("journeyto");
-  //   const modeSelector = document.getElementById("mode-selector");
-  //   // Specify just the place data fields that you need.
-  //   const originAutocomplete = new google.maps.places.Autocomplete(
-  //     originInput,
-  //     { fields: ["place_id"] }
-  //   );
-  //   // Specify just the place data fields that you need.
-  //   const destinationAutocomplete = new google.maps.places.Autocomplete(
-  //     destinationInput,
-  //     { fields: ["place_id"] }
-
-  //   );
-
-
-  //   this.setupClickListener(
-  //     "changemode-walking",
-  //     google.maps.TravelMode.WALKING
-  //   );
-  //   this.setupClickListener(
-  //     "changemode-transit",
-  //     google.maps.TravelMode.TRANSIT
-  //   );
-  //   this.setupClickListener(
-  //     "changemode-driving",
-  //     google.maps.TravelMode.DRIVING
-  //   );
-
-
-  //   this.setupPlaceChangedListener(originAutocomplete, "ORIG");
-  //   this.setupPlaceChangedListener(destinationAutocomplete, "DEST");
-  // }
-  // // Sets a listener on a radio button to change the filter type on Places
-  // // Autocomplete.
-  // setupClickListener(id, mode) {
-  //   const radioButton = document.getElementById(id);
-
-  //   radioButton.addEventListener("click", () => {
-  //     this.travelMode = mode;
-  //     this.route();
-  //   });
-  // }
-  // setupPlaceChangedListener(autocomplete, mode) {
-  //   autocomplete.bindTo("bounds", this.map);
-  //   autocomplete.addListener("place_changed", () => {
-  //     const place = autocomplete.getPlace();
-
-  //     if (!place.place_id) {
-  //       window.alert("Please select an option from the dropdown list.");
-  //       return;
-  //     }
-
-  //     if (mode === "ORIG") {
-  //       this.originPlaceId = place.place_id;
-  //     } else {
-  //       this.destinationPlaceId = place.place_id;
-  //     }
-
-  //     this.route();
-  //   });
-  // }
-  // route() {
-  //   if (!this.originPlaceId || !this.destinationPlaceId) {
-  //     return;
-  //   }
-
-  //   const me = this;
-
-  //   this.directionsService.route(
-  //     {
-  //       origin: { placeId: this.originPlaceId },
-  //       destination: { placeId: this.destinationPlaceId },
-  //       travelMode: this.travelMode,
-  //     },
-  //     (response, status) => {
-  //       if (status === "OK") {
-  //         me.directionsRenderer.setDirections(response);
-  //       } else {
-  //         window.alert("Directions request failed due to " + status);
-  //       }
-  //     }
-
-  
-  //   );
-  //   }
-
-
 
   // <!--This part is displayed weather information vertically-->
   function getWeather() {
@@ -440,6 +332,101 @@ function getStations(){
         };
       });
   }
+  async function getOccupancyData(number) {
+    try {
+      const response = await fetch("/occupancy/" + number);
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching occupancy data:', error);
+      return null;
+    }
+  }
+  
+  function addTrendsButtonListener(number, response_data) {
+    const trendsButton = document.getElementById('show-trends-button');
+    chart_div = document.getElementById('chart-info');
+    console.log(response_data)
+  
+    // loop through each object in response_data
+    for (const key in response_data) {
+      const item = response_data[key];
+    }
+  
+    if (response_data && response_data.length > 0) {
+      trendsButton.addEventListener("click", () => {
+        openNav();
+  
+        const bikesData = response_data.map(item => [item.time.split(' ')[1], item.bikes]);
+        console.log('bike-data', bikesData);
+        
+        const standsData = response_data.map(item => [item.time.split(' ')[1], item.stands]);
+        console.log('stands-data', standsData);
+  
+        const chartDivBikes = document.getElementById('chart-bikes');
+        const chartDivStands = document.getElementById('chart-stands');
+  
+        google.charts.setOnLoadCallback(() => {
+          drawChart(bikesData, "Bike Trends over Time", chartDivBikes);
+          drawChart(standsData, "BikeStand Trends over Time", chartDivStands);
+        });
+
+      // Toggle the text of the button
+      if (trendsButton.innerText === 'Show Trends') {
+        trendsButton.innerText = 'Hide Trends'; // Update button text to 'Remove Graph'
+        chartDivBikes.style.display = 'block'; // Set display property of chartDivBikes to 'block' to show the chart
+        chartDivStands.style.display = 'block'; // Set display property of chartDivStands to 'block' to show the chart
+      } else {
+        trendsButton.innerText = 'Show Trends'; // Update button text to 'Show Trends'
+        chartDivBikes.style.display = 'none'; // Set display property of chartDivBikes to 'none' to hide the chart
+        chartDivStands.style.display = 'none'; // Set display property of chartDivStands to 'none' to hide the chart
+      }
+      });
+    } else {
+      console.error("Invalid station number!")
+    }
+  }
+  
+  async function showTrends(number) {
+    const response_data = await getOccupancyData(number);
+    addTrendsButtonListener(number, response_data);
+  }
+  
+  function drawChart(data, chartTitle, chartDiv) {
+    var dataTable = new google.visualization.DataTable();
+    dataTable.addColumn("string", "Time");
+    dataTable.addColumn("number", chartTitle);
+    dataTable.addRows(data);
+    var options = {
+      title: chartTitle,
+      curveType: "function",
+      legend: { position: "bottom" },
+      backgroundColor: '#FFFFFF',
+      height: 320, // change the height of the chart here
+      width: 600, // change the width of the chart here
+      titleTextStyle: {
+      fontSize: 20, // change the font size of the title here
+    },
+      subtitleTextStyle: {
+      fontSize: 20, // change the font size of the subtitle here
+    },
+      hAxis: {
+      title: 'Time',
+      format: 'HH:mm' // specify the format pattern for the horizontal axis labels here
+    },
+
+     vAxis: {
+      textStyle: {
+        fontSize: 20 // change the font size of the axis labels here
+      }},
+     
+
+
+
+    };
+  
+    var chart = new google.visualization.LineChart(chartDiv);
+    chart.draw(dataTable, options);
+  }
   
 
   function openNav() {
@@ -447,13 +434,16 @@ function getStations(){
     document.getElementById("main").style.marginLeft = "25%";
     document.getElementById("mySidebar").style.width = "25%";
     document.getElementById("mySidebar").style.display = "block";
-    document.getElementById("openNav").style.display = 'none';
-  }
+  document.getElementById("chart-bikes").style.display = "block"; // show the chart for bikes
+  document.getElementById("chart-stands").style.display = "block"; // show the chart for stands
+}
+  
   function closeNav() {
     document.getElementById("main").style.marginLeft = "0%";
     document.getElementById("mySidebar").style.display = "none";
-    document.getElementById("openNav").style.display = "inline-block";
-  }
+    document.getElementById("chart-bikes").style.display = "none"; // hide the chart for bikes
+    document.getElementById("chart-stands").style.display = "none"; // hide the chart for stands
+  }  
 
 var map = null;
 window.initMap = initMap;
