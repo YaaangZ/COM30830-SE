@@ -41,7 +41,6 @@ padding: 0;
   overflow-x: hidden; /* Disable horizontal scroll */
   padding-top: 60px; /* Place content 60px from the top */
   transition: 0.5s; /* 0.5 second transition effect to slide in the sidebar */
-  /* background-color: purple; */
 }
 
 
@@ -59,8 +58,7 @@ padding: 0;
   display: flex;
   justify-content: center;
  flex-direction: column;
-  /* margin: 100px; */
-  /* background-color: yellow; */
+
   height: 30rem;
   width: 40rem;
 
@@ -105,7 +103,6 @@ padding: 0;
   flex-direction: column; 
   height: 15rem;
   width: 30rem;
-  /* background-color: orange; */
 }
 
 /* When you mouse over the navigation links, change their color */
@@ -126,28 +123,32 @@ padding: 0;
 .btn-design {
   font-size: 30px;
   cursor: pointer;
-  background-color: #111;
+  background-color: rgb(40, 39, 39); 
   color: white;
   padding: 12px 12px;
   border: none;
   position: sticky;
   top: 18px;
   left: 370px;
-  border-radius: 25px;
+  border-radius: 15px;
   z-index: 1;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+
 }
 .openbtn{
   font-size: 30px;
   cursor: pointer;
-  background-color: #111;
+  background-color: rgb(40, 39, 39);
   color: white;
   padding: 10px 15px;
   border: none;
   position: sticky;
   top: 10px;
   left: 370px;
-  border-radius: 25px;
+  border-radius: 15px;
   z-index: 1;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+
 }
 .openbtn:hover {
   background-color: #444;
@@ -170,6 +171,128 @@ padding: 0;
   padding: 20px;
  
 }
+
+/*This part is displayed vertically*/
+#weather {
+  position: fixed;
+  top: 5px;
+  right: 5px;
+  padding: 10px;
+  background-color: rgb(40, 39, 39); /* Black*/
+  border: none;
+  border-radius: 15px;
+  font-size: 14px;
+  color: white;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  max-width: 300px;
+  width: 100%;
+}
+
+.weather-border {
+  border: none;
+  border-radius: 15px;
+  margin: 10px;
+  padding: 10px;
+}
+
+.weather-header {
+  font-weight: bold;
+  font-size: 40px;
+  margin-bottom: 10px;
+}
+
+.weather-content {
+
+  font-size: 35px;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.weather-content .icon {
+  width: 120px;
+  height: 120px;
+}
+.weather-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.weather-info p {
+  margin: 0;
+}
+
+
+.dropbtn {
+  background-color: transparent;
+  color: white;
+  padding: 20px 30px;
+  font-size: 22px;
+  border: none;
+  cursor: pointer;
+}
+
+.five-day{
+  width: 16.5rem;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+  background-color: rgb(40, 39, 39); /* Black*/
+
+}
+
+
+.dropdown-content {
+  font-size: 27px;
+
+  max-height: 400px;
+  overflow-y: auto;
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  background-color: rgb(40, 39, 39); /* Black*/
+  border-radius: 5px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+}
+
+.dropdown-content a {
+  font-size: 20px;
+
+  color: white;
+  padding: 12px 13px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.details {
+  display: none;
+}
+
+.show {
+  display: block;
+} 
+
+.icon {
+  width: 100rem;
+  height: 150px;
+}
+
 
 /* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
 @media screen and (max-height: 450px) {
