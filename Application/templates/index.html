@@ -6,8 +6,8 @@
 
 <h1>Google Map</h1>
 
-<input type="checkbox" id="heatmap_checkbox"  onclick="drawHeatmap(this);">
-<label for="heatmap_checkbox">Show heatmap</label>
+<!--<input type="checkbox" id="heatmap_checkbox"  onclick="drawHeatmap(this);">-->
+<!--<label for="heatmap_checkbox">Show heatmap</label>-->
 <div id="googleMap_marker"></div>
 <div id="weather"></div>
 
@@ -291,7 +291,6 @@ function getWeather() {
 
 
 function drawHeatmap(checkbox) {
-<!--    console.log('clicked checkbox-1', checkbox, checkbox.checked);-->
     checked = checkbox.checked;
     if (checked) {
       if (heatmap == null) {
@@ -300,7 +299,6 @@ function drawHeatmap(checkbox) {
         xhr.onreadystatechange = function() {
           if (xhr.readyState == XMLHttpRequest.DONE) {
             if (xhr.status == 200) {
-<!--              console.log('data', xhr.responseText);-->
               var heatmapData = [];
               var data = JSON.parse(xhr.responseText).data;
               data.forEach(function(row) {
@@ -316,7 +314,6 @@ function drawHeatmap(checkbox) {
                 data: heatmapData,
                 map: map
               });
-<!--              console.log('data: ', data, 'map: ', map); // Debugging line-->
               console.log('heatmap: ', heatmap);
 <!--              heatmap.setMap(map);-->
               heatmap.set('radius', 40);
@@ -336,6 +333,7 @@ function drawHeatmap(checkbox) {
 }
 
 
+
 </script>
 
 <!--<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAjeRpg6GHEMrW0F-SVb08DJ5X2_0vOiYY&callback=myMap"></script>-->
@@ -343,3 +341,4 @@ function drawHeatmap(checkbox) {
 
 </body>
 </html>
+
