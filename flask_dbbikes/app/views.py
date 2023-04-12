@@ -7,7 +7,7 @@ from services import DatbaseService, ModelService, RecommendService
 from datetime import datetime
 datbaseService = DatbaseService(db)
 modelService = ModelService()
-
+recommendService = RecommendService(modelService)
 
 @app.route('/station/<int:number>', methods=['GET'])
 def get_station(number):
@@ -55,35 +55,33 @@ def predict_24h(number):
     return result
 @app.route('/plan', methods=['POST'])
 def plan():
+
+
     journey_date = request.form.get('journeydate')
     journey_time = request.form.get('journeytime')
     journey_from = request.form.get('journeyfrom')
     journey_to = request.form.get('journeyto')
     journey_mode = request.form.get('type')
+
+    date_obj = datetime.strptime(journey_date, "%Y-%m-%d").date()
+    time_obj = datetime.strptime(journey_time, "%H:%M").time()
+    datetime_obj = datetime.combine(date_obj, time_obj)
+
     origin_lat_lng = request.form.get('origin_lat_lng')
     destination_lat_lng = request.form.get('destination_lat_lng')
 
     if origin_lat_lng and destination_lat_lng:
         origin_lat, origin_lng = map(float, origin_lat_lng.split(','))
         destination_lat, destination_lng = map(float, destination_lat_lng.split(','))
-
-        # You can now process the data and return a JSON response
-        # return jsonify({
-        #     "journey_date": journey_date,
-        #     "journey_time": journey_time,
-        #     "journey_from": journey_from,
-        #     "journey_to": journey_to,
-        #     "journey_mode": journey_mode,
-        #     "origin_lat": origin_lat,
-        #     "origin_lng": origin_lng,
-        #     "destination_lat": destination_lat,
-        #     "destination_lng": destination_lng
-        # })
+        orig = recommendService.recommend((origin_lat, origin_lng), datetime_obj, "orig")
+        des = recommendService.recommend((destination_lat, destination_lng), datetime_obj, "des")
+        result = {"orig": orig, "des": des}
+        return result
         # test data
-        return jsonify({
-            "orig": {"number": 42, "bikes": 10},
-            "des": {"number": 43, "stands": 12}
-        })
+        # return jsonify({
+        #     "orig": {"number": 42, "bikes": 10},
+        #     "des": {"number": 43, "stands": 12}
+        # })
         # RecommendService.recommend()
     else:
         return jsonify({"error": "Missing origin or destination coordinates."})
