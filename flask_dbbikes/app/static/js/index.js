@@ -207,10 +207,13 @@ async function createStationCard(number) {
     trendButton.textContent = "Show/Hide Trends";
     trendButton.addEventListener("click", function () {trends_switch(trendButton)});
     card.appendChild(trendButton);
+
+    buttonGroup = createButtonGroup();
     let bike_chart = document.createElement("div");
     bike_chart.classList.add("bike_chart");
     let stand_chart = document.createElement("div");
     stand_chart.classList.add("stand_chart");
+    card.appendChild(buttonGroup);
     card.appendChild(bike_chart);
     card.appendChild(stand_chart);
     return card;
@@ -220,13 +223,16 @@ function trends_switch(btn) {
     const number = card.dataset.number;
     const bike_chart = card.querySelector(".bike_chart");
     const stand_chart = card.querySelector(".stand_chart");
+    const buttonGroup = card.querySelector(".button-group");
     if (window.getComputedStyle(bike_chart).getPropertyValue('display') === 'none') {
         bike_chart.style.display = "block";
         stand_chart.style.display = "block"
-        drawChart(number);
+        buttonGroup.style.display = "flex";
+        drawChart(number, "history");
     } else {
         bike_chart.style.display = "none";
-        stand_chart.style.display = "none"
+        stand_chart.style.display = "none";
+        buttonGroup.style.display = "none";
     }
 }
 function changeSideBar() {
@@ -247,10 +253,18 @@ function changeSideBar() {
 }
 
 
-async function drawChart(number) {
+async function drawChart(number, type) {
+    let url;
+    if (type === "history") {
+        url = "/occupancy/" + number;
+    } else if (type === "predict_24h") {
+        url = "/predict_24h/" + number;
+    } else {
+        url = "/predict_5d/" + number;
+    }
     let response_data;
     try {
-        const response = await fetch("/occupancy/" + number);
+        const response = await fetch(url);
         response_data = await response.json();
     } catch (error) {
         console.error('Error fetching occupancy data:', error);
@@ -284,7 +298,7 @@ function basicDraw(bikeData, div) {
     // Set chart options
     var options = {
         title: 'Occupancy for ' + y + ' at Different Times',
-        hAxis: {title: 'Time', titleTextStyle: {color: '#333'}},
+        hAxis: {title: 'Time', titleTextStyle: {color: '#333'}, textPosition: 'none'},
         vAxis: {minValue: 0},
         legend: {position: 'top'},
         height: 300, 
@@ -300,6 +314,45 @@ function basicDraw(bikeData, div) {
     // Create and draw the chart
     var chart = new google.visualization.LineChart(div);
     chart.draw(data, options);
+}
+//functions to switch the charts
+function selectStatus(clickedButton, status) {
+  // Get the parent button group for the clicked button
+  const buttonGroup = clickedButton.parentNode;
+
+  // Remove the "selected" class from all buttons in the button group
+  const buttons = buttonGroup.getElementsByClassName("chart-button");
+  for (let i = 0; i < buttons.length; i++) {
+    buttons[i].classList.remove("selected");
+  }
+
+  // Add the "selected" class to the clicked button
+  clickedButton.classList.add("selected");
+  // change charts
+    const card = buttonGroup.parentElement;
+    const number = card.dataset.number;
+    drawChart(number, status);
+}
+function createButtonGroup() {
+    const buttonGroup = document.createElement("div");
+    buttonGroup.className = "button-group";
+
+    const buttonNames = ["history", "predict_24h", "predict_5d"];
+
+    for (let i = 0; i < buttonNames.length; i++) {
+        const button = document.createElement("button");
+        button.className = `chart-button ${buttonNames[i]}`;
+        button.textContent = buttonNames[i];
+        button.onclick = function () {
+            selectStatus(button, buttonNames[i]);
+        };
+        if (button.textContent === "history") {
+            button.classList.add("selected");
+        }
+        buttonGroup.appendChild(button);
+    }
+
+    return buttonGroup;
 }
 
 

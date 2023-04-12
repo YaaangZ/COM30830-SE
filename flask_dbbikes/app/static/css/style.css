@@ -231,3 +231,44 @@ flex-direction: column;
   .sidebar a {font-size: 18px;}
 }
 
+
+
+/*chart buttons*/
+/*chart butttons updated April 11*/
+.button-group {
+  /*display: flex;*/
+    display: none;
+}
+
+.chart-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  background-color: #312727;
+  color: white;
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.history.selected,
+.chart-button.history:hover {
+  background-color: #9e9e9e;
+  box-shadow: 0 0 10px rgba(158, 158, 158, 0.5);
+}
+
+.predict_24h.selected,
+.chart-button.predict_24h:hover {
+  /*background-color: #4caf50;*/
+    background-color: #9e9e9e;
+  /*box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);*/
+    box-shadow: 0 0 10px rgba(158, 158, 158, 0.5);
+}
+
+.predict_5d.selected,
+.chart-button.predict_5d:hover {
+  /*background-color: #f44336;*/
+    background-color: #9e9e9e;
+  /*box-shadow: 0 0 10px rgba(244, 67, 54, 0.5);*/
+    box-shadow: 0 0 10px rgba(158, 158, 158, 0.5);
+}
