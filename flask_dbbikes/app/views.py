@@ -26,9 +26,12 @@ def get_occupancy_24h(number):
         {"time": row[0], "bikes": row[1], "stands": row[2]} for row in data_24h
     ]
     return jsonify(serialized_data_24h)
-@app.route('/map')
-def map():
+# @app.route('/map')
+# def map():
+#     
+@app.route('/')
+# @cache.cached()
+def index():
     return render_template("home.html")
-
 if __name__ == '__main__':
     app.run(debug=True)

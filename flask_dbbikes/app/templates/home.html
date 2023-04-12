@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Map</title>
-    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/home.css')}}">
     <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/weather.css')}}">
     <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/googleMap.css') }}">
@@ -14,7 +13,7 @@
 </head>
 <body>
     <div id="container">
-        <div id="leftSection">
+        <div id="leftSection" class="sidebar">
             <a href="javascript:void(0)" class="closebtn" onclick="changeSideBar()">&times;</a>
 
             <div id="logo-element" data-image-url="{{ url_for('static', filename='imag/dublinbikes-vector-logo.svg') }}">
@@ -30,29 +29,33 @@
                 </div>
 
                 <div id="mode-selector" class="controls">
+                    <i class="fa-solid fa-person-walking fa-xl"></i>
                     <input type="radio" name="type" id="changemode-walking" value="walking" checked="checked" />
-                    <label for="changemode-walking">Walking</label>
-
+                    <i class="fa-solid fa-bus fa-xl"></i>
                     <input type="radio" name="type" id="changemode-transit" value="transit" />
-                    <label for="changemode-transit">Transit</label>
-
+                    <!-- <label for="changemode-transit">Transit</label> -->
+                    <i class="fa-solid fa-car fa-xl" style="color: #ffffff;"></i>
                     <input type="radio" name="type" id="changemode-driving" value="driving" />
-                    <label for="changemode-driving">Driving</label>
+                    <!-- <label for="changemode-driving">Driving</label> -->
                 </div>
-                <button type="submit">Submit</button>
+                <button type="submit" class="submit-button" >Submit</button>
             </form>
 
             <div id="info"></div>
 
         </div>
 
-        <div id="map"></div>
+        
 
     </div>
+    <div id="map"></div>
     <div id="weather"></div>
     <script src="{{url_for('static', filename='js/weather.js')}}"></script>
     <script src="{{url_for('static', filename='js/direction.js')}}"></script>
     <script src="{{url_for('static', filename='js/index.js')}}"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBs_Crb12f2lIbUsBrjabD2AKXur_qY81o&libraries=places&callback=initMap"></script>
+    <div id="my-element-1" data-image-url="{{ url_for('static', filename='img/greenbike.svg') }}"></div>
+    <div id="my-element-3" data-image-url="{{ url_for('static', filename='img/redbike.svg') }}"></div>    
+    <div id="my-element-2" data-image-url="{{ url_for('static', filename='img/bluebike.svg') }}"></div>  
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAvFe6i9P5wR5qDTU5S_CSdIzAonznhh0Y&libraries=places&callback=initMap" async defer></script>
 </body>
 </html>

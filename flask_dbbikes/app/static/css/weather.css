@@ -1,14 +1,15 @@
+
 /*This part is displayed vertically*/
 #weather {
   position: fixed;
   top: 5px;
   right: 5px;
   padding: 10px;
-  background-color: rgba(255, 255, 255, 0.9);
+  background-color: rgb(40, 39, 39); /* Black*/
   border: none;
   border-radius: 15px;
   font-size: 14px;
-  color: black;
+  color: white;
   text-align: center;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   z-index: 1;
@@ -16,36 +17,22 @@
   width: 100%;
 }
 
-/*
-This part is horizontal screen display
-#weather {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  padding: 10px;
-  background-color: rgba(255, 255, 255, 0.9);
-  border: none;
-  border-radius: 15px;
-  font-size: 16px;
-  color: black;
-  text-align
-}
-*/
 .weather-border {
   border: none;
-  border-radius: 10px;
+  border-radius: 15px;
   margin: 10px;
   padding: 10px;
 }
 
 .weather-header {
   font-weight: bold;
-  font-size: 18px;
+  font-size: 40px;
   margin-bottom: 10px;
 }
 
 .weather-content {
-  font-size: 16px;
+
+  font-size: 35px;
   margin-bottom: 10px;
   padding: 10px;
   border-radius: 5px;
@@ -72,21 +59,28 @@ This part is horizontal screen display
 
 .dropbtn {
   background-color: transparent;
-  color: black;
+  color: white;
   padding: 20px 30px;
-  font-size: 16px;
+  font-size: 22px;
   border: none;
   cursor: pointer;
-  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.five-day{
+  width: 16.5rem;
 }
 
 .dropdown {
   position: relative;
   display: inline-block;
+  background-color: rgb(40, 39, 39); /* Black*/
+
 }
 
 
 .dropdown-content {
+  font-size: 27px;
+
   max-height: 400px;
   overflow-y: auto;
   display: none;
@@ -95,31 +89,24 @@ This part is horizontal screen display
   left: 0;
   right: 0;
   z-index: 1;
-  background-color: #ffffff;
+  background-color: rgb(40, 39, 39); /* Black*/
   border-radius: 5px;
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
 }
 
 .dropdown-content a {
-  color: #000000;
-  padding: 12px 16px;
+  font-size: 20px;
+
+  color: white;
+  padding: 12px 13px;
   text-decoration: none;
   display: block;
-  font-size: 13px;
 }
+
+
 
 .dropdown:hover .dropdown-content {
   display: block;
-}
-
-/* Change the background color of dropdown links when hovered over */
-.dropdown-content a:hover {
-  background-color: lightgray;
-}
-
-/* Change the background color of dropdown links back to the original color when mouse moves away */
-.dropdown-content a:not(:hover) {
-  background-color: #ffffff;
 }
 
 .details {
@@ -128,34 +115,15 @@ This part is horizontal screen display
 
 .show {
   display: block;
-}
-
+} 
 
 .icon {
-  width: 100px;
+  width: 10rem;
   height: 150px;
 }
 
-
-.animated-bg {
-  background: linear-gradient(to bottom, #87CEFA, #98FB98);
-  animation: change-gradient 10s linear infinite;
-}
-
-@keyframes change-gradient {
-  0% {
-    background: linear-gradient(to bottom, #87CEFA, #98FB98);
-  }
-  25% {
-    background: linear-gradient(to bottom, #98FB98, #87CEFA);
-  }
-  50% {
-    background: linear-gradient(to bottom, #87CEFA, #98FB98);
-  }
-  75% {
-    background: linear-gradient(to bottom, #98FB98, #87CEFA);
-  }
-  100% {
-    background: linear-gradient(to bottom, #87CEFA, #98FB98);
-  }
+/* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+@media screen and (max-height: 450px) {
+  .sidebar {padding-top: 15px;}
+  .sidebar a {font-size: 18px;}
 }

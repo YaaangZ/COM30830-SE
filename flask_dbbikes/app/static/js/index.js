@@ -33,8 +33,9 @@ function initMap() {
     });
     map.controls[google.maps.ControlPosition.TOP_LEFT].push(button);
     getStations();
-    new AutocompleteDirectionsHandler(map);
     getWeather();
+    new AutocompleteDirectionsHandler(map);
+
 
 }
 function getStations() {
@@ -45,22 +46,75 @@ function getStations() {
 }
 
 function addMarkers(stations) {
+    // flag for color change 
+    let selectedButton = null;
+    const button_availablebike = document.createElement("button");
+    const button_availablebikestands = document.createElement("button")
+    button_availablebike.textContent = "Available Bike";
+    button_availablebikestands.textContent = "Available Bikestands";
+    button_availablebike.classList.add("btn-design");
+    button_availablebikestands.classList.add("btn-design")
+    map.controls[google.maps.ControlPosition.TOP_LEFT].push(button_availablebike);
+    map.controls[google.maps.ControlPosition.TOP_LEFT].push(button_availablebikestands);
+
     stations.forEach(station => {
 
         let markerIcon;
+       button_availablebike.addEventListener('click', function(){
+        if (selectedButton !== null) {
+            selectedButton.style.backgroundColor = '';
+            selectedButton.style.color = '';
+          }
+          this.style.backgroundColor = 'rgb(175, 88, 88)';
+          this.style.color = 'white';
+          selectedButton = this;
         if (station.available_bikes >= 25) {
-          markerIcon = "../img/greenbike.svg";
+          marker.setIcon({
+            url: document.getElementById('my-element-1').dataset.imageUrl,
+          })
         } else if (station.available_bikes >= 10 && station.available_bikes <=24) {
-          markerIcon = "../img/bluebike.svg";
+          marker.setIcon({
+            url: document.getElementById('my-element-2').dataset.imageUrl,
+          })
         } else if (station.available_bikes <= 9) {
-          markerIcon = "../img/redbike.svg";
-        }
-
-        let marker = new google.maps.Marker({
+          marker.setIcon({
+            url: document.getElementById('my-element-3').dataset.imageUrl,
+          })
+        } 
+      })
+    
+     button_availablebikestands.addEventListener('click', function(){
+       // Update color of selected button
+  if (selectedButton !== null) {
+    selectedButton.style.backgroundColor = '';
+    selectedButton.style.color = '';
+  }
+  this.style.backgroundColor = 'rgb(175, 88, 88)';
+  this.style.color = 'white';
+  selectedButton = this;
+      if (station.available_bike_stands >= 25) {
+        marker.setIcon({
+          url: document.getElementById('my-element-1').dataset.imageUrl,
+        })
+      } else if (station.available_bike_stands >= 10 && station.available_bikes <=24) {
+        marker.setIcon({
+          url: document.getElementById('my-element-2').dataset.imageUrl,
+        })
+      } else if (station.available_bike_stands <= 9) {
+        marker.setIcon({
+          url: document.getElementById('my-element-3').dataset.imageUrl,
+        })
+      } 
+    })
+        var marker = new google.maps.Marker({
             position: {lat: station.position_lat, lng: station.position_lng},
             map: map,
             icon: markerIcon,
             title: station.name,
+            address: station.address,
+            station_number: station.number,
+             animation: google.maps.Animation.DROP // Add animation property
+
         });
             //Winnie's codes
         google.maps.event.addListener(map, 'zoom_changed', function() {
@@ -87,18 +141,19 @@ function addMarkers(stations) {
         marker.addListener("mouseover", () => {
             marker.setAnimation(google.maps.Animation.BOUNCE);
 
-            const content = `<div id='infoWindow'>
-                <h2 id='infoW_head'>${station.name}</h2>
-                <div id='infoW_body'>
-                    <p><i class="fa-sharp fa-solid fa-square-parking"></i>
-                        Stands: ${station.available_bike_stands}/${station.bike_stands}
-                    </p><p><i class="fa-solid fa-person-biking"></i>
-                        Bikes: ${station.available_bikes}/${station.bike_stands}
-                    </p><p><i class="fas fa-check-circle"></i>
-                        Status: ${station.status}
-                    </p>
-                </div>
-            </div>`;
+            const content = `<h1 style="text-align: center; font-size:25px; "> ${station.number} <h1>
+            <p style="font-size:20px"> 
+            <i class="fa-sharp fa-solid fa-square-parking"></i>
+            Available Bikes Stand: ${station.available_bike_stands} 
+            </p>
+            <p style="font-size:20px">
+            <i class="fa-solid fa-person-biking"></i>
+            Available Bikes: ${station.available_bikes} 
+            </p>
+            <p style="font-size:20px">
+            <i class="fas fa-check-circle"></i>
+            Status: ${station.status}
+            </p>`
 
             infowindow = new google.maps.InfoWindow({content: content});
             infowindow.open({anchor: marker, map: map});
@@ -137,14 +192,14 @@ async function createStationCard(number) {
     let textDetail = document.createElement("div");
     textDetail.classList.add("textDetail");
     textDetail.innerHTML =
-        `<h2>${station.name}</h2>
-        <p>Stands: ${station.available_bike_stands}/${station.bike_stands}</p>
-        <p>Bikes: ${station.available_bikes}/${station.bike_stands}</p>
-        <p>Status: ${station.status}</p>
-        <p>Bonus Support: ${station.bonus == 0 ? 'NO' : 'YES'}</p>
-        <p>Banking Support: ${station.banking == 0 ? 'NO' : 'YES'}</p>
-        <p>Last Update: ${station.last_update}</p>
-        <p>Address: ${station.address}</p>`
+        `<h2 >${station.name}</h2>
+        <p style="font-size: 25px">Stands: ${station.available_bike_stands}/${station.bike_stands}</p>
+        <p style="font-size: 25px">Bikes: ${station.available_bikes}/${station.bike_stands}</p>
+        <p style="font-size: 25px">Status: ${station.status}</p>
+        <p style="font-size: 25px">Bonus Support: ${station.bonus == 0 ? 'NO' : 'YES'}</p>
+        <p style="font-size: 25px">Banking Support: ${station.banking == 0 ? 'NO' : 'YES'}</p>
+        <p style="font-size: 25px">Last Update: ${station.last_update}</p>
+        <p style="font-size: 25px">Address: ${station.address}</p>`
     card.appendChild(textDetail);
     let trendButton = document.createElement("button");
     trendButton.classList.add("trendButton");
@@ -179,8 +234,8 @@ function changeSideBar() {
     const mapSection = document.getElementById("map");
     // if (leftSection.style.width === "0px" || leftSection.style.width === "") {
     if (!sideBarOpened) {
-        leftSection.style.width = "400px";
-        mapSection.style.marginLeft = "400px";
+        leftSection.style.width = "600px";
+        mapSection.style.marginLeft = "600px";
         sideBarOpened = true;
     } else {
         leftSection.style.width = "0px";
@@ -190,6 +245,8 @@ function changeSideBar() {
         sideBarOpened = false;
     }
 }
+
+
 async function drawChart(number) {
     let response_data;
     try {
@@ -210,6 +267,7 @@ async function drawChart(number) {
         console.error("Invalid station number!")
     }
 }
+
 function basicDraw(bikeData, div) {
     let y;
     if (div.className === "bike_chart") {
@@ -229,6 +287,9 @@ function basicDraw(bikeData, div) {
         hAxis: {title: 'Time', titleTextStyle: {color: '#333'}},
         vAxis: {minValue: 0},
         legend: {position: 'top'},
+        height: 300, 
+        width: 550, 
+        fontSize: 12.5,
         animation: {
             duration: 1000,
             easing: 'out',

@@ -12,9 +12,7 @@
       this.travelMode = google.maps.TravelMode.WALKING;
       this.directionsService = new google.maps.DirectionsService();
       this.directionsRenderer = new google.maps.DirectionsRenderer({
-        polylineOptions: {
-          strokeColor: "black",
-        },
+       
       });
       this.directionsRenderer.setMap(map);
 
