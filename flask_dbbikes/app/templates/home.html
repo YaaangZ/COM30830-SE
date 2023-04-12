@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Map</title>
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/home.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/weather.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/googleMap.css') }}">
+<!--    font and icon api-->
+    <script src="https://kit.fontawesome.com/7bf84053cf.js" crossorigin="anonymous"></script>
+<!--    google chart api-->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+</head>
+<body>
+    <div id="container">
+        <div id="leftSection">
+            <a href="javascript:void(0)" class="closebtn" onclick="changeSideBar()">&times;</a>
+
+            <div id="logo-element" data-image-url="{{ url_for('static', filename='imag/dublinbikes-vector-logo.svg') }}">
+            <img src="{{ url_for('static', filename='img/dublinbikes-vector-logo.svg') }}" alt="Dublin Bikes logo">
+            </div>
+
+            <form action="/plan" method="POST" class="sidebarElement">
+                <input type="date" id="journeydate" class="dateandtime" name="journeydate">
+                <input type="time" id="journeytime" class="dateandtime" name="journeytime">
+                <div class="journey-info-wrapper">
+                    <input type="text" id="journeyfrom" class="journeyinfo" name="journeyfrom" placeholder="From">
+                    <input type="text" id="journeyto" class="journeyinfo" name="journeyto" placeholder="To">
+                </div>
+
+                <div id="mode-selector" class="controls">
+                    <input type="radio" name="type" id="changemode-walking" value="walking" checked="checked" />
+                    <label for="changemode-walking">Walking</label>
+
+                    <input type="radio" name="type" id="changemode-transit" value="transit" />
+                    <label for="changemode-transit">Transit</label>
+
+                    <input type="radio" name="type" id="changemode-driving" value="driving" />
+                    <label for="changemode-driving">Driving</label>
+                </div>
+                <button type="submit">Submit</button>
+            </form>
+
+            <div id="info"></div>
+
+        </div>
+
+        <div id="map"></div>
+
+    </div>
+    <div id="weather"></div>
+
+    <script src="{{url_for('static', filename='js/weather.js')}}"></script>
+    <script src="{{url_for('static', filename='js/direction.js')}}"></script>
+    <script src="{{url_for('static', filename='js/index.js')}}"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBs_Crb12f2lIbUsBrjabD2AKXur_qY81o&libraries=places&callback=initMap"></script>
+</body>
+</html>

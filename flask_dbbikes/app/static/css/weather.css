@@ -1,0 +1,161 @@
+/*This part is displayed vertically*/
+#weather {
+  position: fixed;
+  top: 5px;
+  right: 5px;
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 15px;
+  font-size: 14px;
+  color: black;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  max-width: 300px;
+  width: 100%;
+}
+
+/*
+This part is horizontal screen display
+#weather {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 15px;
+  font-size: 16px;
+  color: black;
+  text-align
+}
+*/
+.weather-border {
+  border: none;
+  border-radius: 10px;
+  margin: 10px;
+  padding: 10px;
+}
+
+.weather-header {
+  font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.weather-content {
+  font-size: 16px;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.weather-content .icon {
+  width: 120px;
+  height: 120px;
+}
+.weather-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.weather-info p {
+  margin: 0;
+}
+
+
+.dropbtn {
+  background-color: transparent;
+  color: black;
+  padding: 20px 30px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+
+.dropdown-content {
+  max-height: 400px;
+  overflow-y: auto;
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  background-color: #ffffff;
+  border-radius: 5px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+}
+
+.dropdown-content a {
+  color: #000000;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  font-size: 13px;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+/* Change the background color of dropdown links when hovered over */
+.dropdown-content a:hover {
+  background-color: lightgray;
+}
+
+/* Change the background color of dropdown links back to the original color when mouse moves away */
+.dropdown-content a:not(:hover) {
+  background-color: #ffffff;
+}
+
+.details {
+  display: none;
+}
+
+.show {
+  display: block;
+}
+
+
+.icon {
+  width: 100px;
+  height: 150px;
+}
+
+
+.animated-bg {
+  background: linear-gradient(to bottom, #87CEFA, #98FB98);
+  animation: change-gradient 10s linear infinite;
+}
+
+@keyframes change-gradient {
+  0% {
+    background: linear-gradient(to bottom, #87CEFA, #98FB98);
+  }
+  25% {
+    background: linear-gradient(to bottom, #98FB98, #87CEFA);
+  }
+  50% {
+    background: linear-gradient(to bottom, #87CEFA, #98FB98);
+  }
+  75% {
+    background: linear-gradient(to bottom, #98FB98, #87CEFA);
+  }
+  100% {
+    background: linear-gradient(to bottom, #87CEFA, #98FB98);
+  }
+}

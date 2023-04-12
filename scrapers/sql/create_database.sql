@@ -1,14 +1,3 @@
-# COM30830-SE
-Dublin bike group work
-
-# dependencies
-one is from conda and another is from pip
-
-/env/environment.yml
-
-/env/requirements.txt
-
-# SQL STATEMENT:
 -- create database dbbikes
 
 create database if not exists dbbikes;
@@ -40,4 +29,24 @@ create table availability(
     `status` varcharacter(128),
     last_update integer,
     primary key(`number`, last_update)
+);
+
+-- create table tb_weather
+
+drop table if exists tb_weather;
+create table tb_weather(
+	`updatedTime` integer not null,
+	`weatherId` integer not null,
+	`weatherMain` varchar(128),
+	`temp` float,
+	feels_like float,
+	temp_min float,
+	temp_max float,
+	humidity float,
+	visibility integer,
+	windSpeed float,
+	windDeg float,
+	sunrise integer,
+	sunset integer,
+	primary key(`updatedTime`)
 );
