@@ -23,12 +23,12 @@
     // Specify just the place data fields that you need.
     const originAutocomplete = new google.maps.places.Autocomplete(
       originInput,
-      { fields: ["place_id"] }
+      { fields: ["place_id", "geometry"] }
     );
     // Specify just the place data fields that you need.
     const destinationAutocomplete = new google.maps.places.Autocomplete(
       destinationInput,
-      { fields: ["place_id"] }
+      { fields: ["place_id", "geometry"] }
 
     );
 
@@ -60,25 +60,48 @@
       this.route();
     });
   }
-  setupPlaceChangedListener(autocomplete, mode) {
-    autocomplete.bindTo("bounds", this.map);
-    autocomplete.addListener("place_changed", () => {
-      const place = autocomplete.getPlace();
+  // setupPlaceChangedListener(autocomplete, mode) {
+  //   autocomplete.bindTo("bounds", this.map);
+  //   autocomplete.addListener("place_changed", () => {
+  //     const place = autocomplete.getPlace();
+  //
+  //     if (!place.place_id) {
+  //       window.alert("Please select an option from the dropdown list.");
+  //       return;
+  //     }
+  //
+  //     if (mode === "ORIG") {
+  //       this.originPlaceId = place.place_id;
+  //     } else {
+  //       this.destinationPlaceId = place.place_id;
+  //     }
+  //
+  //     this.route();
+  //   });
+  // }
+    setupPlaceChangedListener(autocomplete, mode) {
+        autocomplete.bindTo("bounds", this.map);
+      autocomplete.addListener("place_changed", () => {
+        const place = autocomplete.getPlace();
+        console.log("place:", place);
+        if (!place.place_id) {
+          window.alert("Please select an option from the dropdown list.");
+          return;
+        }
 
-      if (!place.place_id) {
-        window.alert("Please select an option from the dropdown list.");
-        return;
-      }
+        const latLng = `${place.geometry.location.lat()},${place.geometry.location.lng()}`;
+        console.log("latlng:", latLng);
+        if (mode === "ORIG") {
+          this.originPlaceId = place.place_id;
+          document.getElementById("origin-lat-lng").value = latLng;
+        } else {
+          this.destinationPlaceId = place.place_id;
+          document.getElementById("destination-lat-lng").value = latLng;
+        }
 
-      if (mode === "ORIG") {
-        this.originPlaceId = place.place_id;
-      } else {
-        this.destinationPlaceId = place.place_id;
-      }
-
-      this.route();
-    });
-  }
+        this.route();
+      });
+}
   route() {
     if (!this.originPlaceId || !this.destinationPlaceId) {
       return;

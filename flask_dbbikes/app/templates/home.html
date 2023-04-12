@@ -20,12 +20,15 @@
             <img src="{{ url_for('static', filename='img/dublinbikes-vector-logo.svg') }}" alt="Dublin Bikes logo">
             </div>
 
-            <form action="/plan" method="POST" class="sidebarElement">
+            <form class="sidebarElement" onsubmit="return submitForm(event);">
                 <input type="date" id="journeydate" class="dateandtime" name="journeydate">
                 <input type="time" id="journeytime" class="dateandtime" name="journeytime">
                 <div class="journey-info-wrapper">
                     <input type="text" id="journeyfrom" class="journeyinfo" name="journeyfrom" placeholder="From">
                     <input type="text" id="journeyto" class="journeyinfo" name="journeyto" placeholder="To">
+                    <input type="hidden" id="origin-lat-lng" name="origin_lat_lng" />
+                    <input type="hidden" id="destination-lat-lng" name="destination_lat_lng" />
+
                 </div>
 
                 <div id="mode-selector" class="controls">

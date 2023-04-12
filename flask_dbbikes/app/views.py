@@ -1,6 +1,6 @@
 import json
 
-from flask import jsonify, render_template
+from flask import jsonify, render_template, request
 from app import db
 from app import app
 from services import DatbaseService, ModelService, RecommendService
@@ -53,14 +53,40 @@ def predict_24h(number):
 
     result = modelService.predict_24h(station)
     return result
-@app.route('/plan', methods=['GET'])
+@app.route('/plan', methods=['POST'])
 def plan():
-    # a = request
-    # test_data = {
-    # }
-    location = (53.350140, -6.266155)
-    RecommendService.recommend(location, 1)
-    return "test"
+    journey_date = request.form.get('journeydate')
+    journey_time = request.form.get('journeytime')
+    journey_from = request.form.get('journeyfrom')
+    journey_to = request.form.get('journeyto')
+    journey_mode = request.form.get('type')
+    origin_lat_lng = request.form.get('origin_lat_lng')
+    destination_lat_lng = request.form.get('destination_lat_lng')
+
+    if origin_lat_lng and destination_lat_lng:
+        origin_lat, origin_lng = map(float, origin_lat_lng.split(','))
+        destination_lat, destination_lng = map(float, destination_lat_lng.split(','))
+
+        # You can now process the data and return a JSON response
+        # return jsonify({
+        #     "journey_date": journey_date,
+        #     "journey_time": journey_time,
+        #     "journey_from": journey_from,
+        #     "journey_to": journey_to,
+        #     "journey_mode": journey_mode,
+        #     "origin_lat": origin_lat,
+        #     "origin_lng": origin_lng,
+        #     "destination_lat": destination_lat,
+        #     "destination_lng": destination_lng
+        # })
+        # test data
+        return jsonify({
+            "orig": {"number": 42, "bikes": 10},
+            "des": {"number": 43, "stands": 12}
+        })
+        # RecommendService.recommend()
+    else:
+        return jsonify({"error": "Missing origin or destination coordinates."})
 @app.route('/')
 # @cache.cached()
 def index():

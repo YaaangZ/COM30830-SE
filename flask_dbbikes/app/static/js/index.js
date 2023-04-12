@@ -128,15 +128,28 @@ function addMarkers(stations) {
                 relativePixelSize = maxPixelSize;
 
             //change the size of the icon
-            marker.setIcon(
-                new google.maps.MarkerImage(
+            // marker.setIcon(
+            //     new google.maps.MarkerImage(
+            //         marker.getIcon().url, //marker's same icon graphic
+            //         null,//size
+            //         null,//origin
+            //         null, //anchor
+            //         new google.maps.Size(relativePixelSize, relativePixelSize) //changes the scale
+            //     )
+            // );
+              if (marker.getIcon()) {
+                marker.setIcon(
+                  new google.maps.MarkerImage(
                     marker.getIcon().url, //marker's same icon graphic
-                    null,//size
-                    null,//origin
+                    null, //size
+                    null, //origin
                     null, //anchor
                     new google.maps.Size(relativePixelSize, relativePixelSize) //changes the scale
-                )
-            );
+                  )
+                );
+              }
+
+
         });
         marker.addListener("mouseover", () => {
             marker.setAnimation(google.maps.Animation.BOUNCE);
@@ -174,11 +187,12 @@ function openStationCard(number) {
     if (info.innerHTML.trim() !== '') {
         info.innerHTML = '';
     }
-    createStationCard(number).then(card => {
+    createStationCard(number, "realtime").then(card => {
         info.appendChild(card);
     });
 }
-async function createStationCard(number) {
+async function createStationCard(number, type, data) {
+
     let card = document.createElement("div");
     card.classList.add("stationCard");
     card.dataset.number = number;
@@ -189,8 +203,31 @@ async function createStationCard(number) {
     } catch (error) {
         console.error('Error fetching station card data:', error);
     }
+
+
     let textDetail = document.createElement("div");
     textDetail.classList.add("textDetail");
+    if (type === "predict_orig") {
+        textDetail.innerHTML =
+            `<h2 >From: ${station.name}</h2>
+            <p style="font-size: 25px">Bikes(Predict): ${data}/${station.bike_stands}</p>
+            <p style="font-size: 25px">Bonus Support: ${station.bonus == 0 ? 'NO' : 'YES'}</p>
+            <p style="font-size: 25px">Banking Support: ${station.banking == 0 ? 'NO' : 'YES'}</p>
+            <p style="font-size: 25px">Address: ${station.address}</p>`;
+        card.appendChild(textDetail);
+        return card;
+    }
+    if (type === "predict_des") {
+        textDetail.innerHTML =
+            `<h2 >To: ${station.name}</h2>
+            <p style="font-size: 25px">Stands(Predict): ${data}/${station.bike_stands}</p>
+            <p style="font-size: 25px">Bonus Support: ${station.bonus == 0 ? 'NO' : 'YES'}</p>
+            <p style="font-size: 25px">Banking Support: ${station.banking == 0 ? 'NO' : 'YES'}</p>
+            <p style="font-size: 25px">Address: ${station.address}</p>`;
+        card.appendChild(textDetail);
+        return card;
+    }
+
     textDetail.innerHTML =
         `<h2 >${station.name}</h2>
         <p style="font-size: 25px">Stands: ${station.available_bike_stands}/${station.bike_stands}</p>
@@ -199,7 +236,7 @@ async function createStationCard(number) {
         <p style="font-size: 25px">Bonus Support: ${station.bonus == 0 ? 'NO' : 'YES'}</p>
         <p style="font-size: 25px">Banking Support: ${station.banking == 0 ? 'NO' : 'YES'}</p>
         <p style="font-size: 25px">Last Update: ${station.last_update}</p>
-        <p style="font-size: 25px">Address: ${station.address}</p>`
+        <p style="font-size: 25px">Address: ${station.address}</p>`;
     card.appendChild(textDetail);
     let trendButton = document.createElement("button");
     trendButton.classList.add("trendButton");
@@ -355,5 +392,58 @@ function createButtonGroup() {
     return buttonGroup;
 }
 
+// functions to do recommendation
+async function submitForm() {
+    event.preventDefault();
+  // Collect form data
+  const journeyDate = document.getElementById("journeydate").value;
+  const journeyTime = document.getElementById("journeytime").value;
+  const journeyFrom = document.getElementById("journeyfrom").value;
+  const journeyTo = document.getElementById("journeyto").value;
+  const journeyMode = document.querySelector('input[name="type"]:checked').value;
+  const originLatLng = document.getElementById("origin-lat-lng").value;
+  const destinationLatLng = document.getElementById("destination-lat-lng").value;
 
+  // Create FormData object to send data to the backend
+  const formData = new FormData();
+  formData.append("journeydate", journeyDate);
+  formData.append("journeytime", journeyTime);
+  formData.append("journeyfrom", journeyFrom);
+  formData.append("journeyto", journeyTo);
+  formData.append("type", journeyMode);
+  formData.append("origin_lat_lng", originLatLng);
+  formData.append("destination_lat_lng", destinationLatLng);
+
+  // Send the data to the backend using fetch and handle the response
+  try {
+    const response = await fetch("/plan", {
+      method: "POST",
+      body: formData,
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      // Update the elements on your website based on the response
+      //   console.log("test", data);
+
+        let info = document.getElementById("info");
+        if (info.innerHTML.trim() !== '') {
+         info.innerHTML = '';
+        }
+        createStationCard(data["orig"]["number"], "predict_orig", data["orig"]["bikes"]).then(card_orig => {
+            info.appendChild(card_orig);
+        });
+        createStationCard(data["des"]["number"], "predict_des", data["des"]["stands"]).then(card_des => {
+            info.appendChild(card_des);
+        });
+    } else {
+      console.error("Error in submitting the form");
+    }
+  } catch (error) {
+    console.error("Error in submitting the form", error);
+  }
+
+  // Prevent the form from submitting and reloading the page
+  return false;
+}
 
