@@ -27,7 +27,6 @@
   
         weatherDiv.innerHTML = `
           <div class="weather-border">
-            <div class="weather-header">Current Weather</div>
             <div class="weather-content">
               <img src="https://openweathermap.org/img/wn/${currentWeatherIcon}@2x.png" alt="${currentWeatherMain}" class="icon">
               ${currentTemp} &#8451;, ${currentWeatherMain}

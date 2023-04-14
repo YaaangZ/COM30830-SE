@@ -129,7 +129,9 @@ class DatbaseService:
 
 class ModelService:
     def __init__(self):
-        with open('data/random_forest_model.pkl', 'rb') as file:
+        # with open('data/random_forest_model.pkl', 'rb') as file:
+        with open('data/random_forest_model_new.pkl', 'rb') as file:
+        # with open('/Users/winnieimafidon/Documents/software-engineering/bike_rental_project/duplicateYun/COM30830-SE/flask_dbbikes/app/data/random_forest_model.pkl', 'rb') as file:
             data_model = pickle.load(file)
         self.model = data_model
 
@@ -214,11 +216,12 @@ class ModelService:
                     'weatherMain_Rain', 'weatherMain_Snow']
 
         data = data[features]
-        scaler = StandardScaler()
-        data_scaled = scaler.fit_transform(data)
+        # scaler = StandardScaler()
+        # data_scaled = scaler.fit_transform(data)
         # need to do data process
 
-        predicted_bikes = self.model.predict(data_scaled)
+        # predicted_bikes = self.model.predict(data_scaled)
+        predicted_bikes = self.model.predict(data)
         # change to python list
         predicted_bikes = predicted_bikes.tolist()
         # combine the result

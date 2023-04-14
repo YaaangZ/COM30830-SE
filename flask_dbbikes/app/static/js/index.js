@@ -10,7 +10,7 @@ let sideBarOpened = false;
 google.charts.load('current', {'packages':['corechart']});
 function initMap() {
     const dublin = {lat: 53.350140, lng: -6.266155};
-    const mapProp= {center: dublin, zoom:14};
+    const mapProp= {center: dublin, zoom:15};
     const styles = {
         hide: [
             {
@@ -26,7 +26,7 @@ function initMap() {
     map = new google.maps.Map(document.getElementById("map"),mapProp);
     map.setOptions({styles: styles['hide']});
     const button = document.createElement("button");
-    button.textContent = "Planning Journey";
+    button.textContent = "Plan Journey";
     button.classList.add("MapButton");
     button.addEventListener("click", function () {
         if (!sideBarOpened) {changeSideBar();}
@@ -50,10 +50,22 @@ function addMarkers(stations) {
     let selectedButton = null;
     const button_availablebike = document.createElement("button");
     const button_availablebikestands = document.createElement("button")
-    button_availablebike.textContent = "Available Bike";
-    button_availablebikestands.textContent = "Available Bikestands";
+    button_availablebike.textContent = "Available Bike ";
+    // Create an icon element
+    const iconElement = document.createElement("i");
+    iconElement.className = "fa-solid fa-square-parking";
+    iconElement.style.color = "#ffffff";
+     // Create an icon element
+     const iconElement2 = document.createElement("i");
+     iconElement2.className = "fa-solid fa-person-biking";
+     iconElement2.style.color = "#ffffff";
+
+    button_availablebikestands.textContent = "Available Bikestands ";
     button_availablebike.classList.add("btn-design");
     button_availablebikestands.classList.add("btn-design")
+    button_availablebikestands.appendChild(iconElement);
+    button_availablebike.appendChild(iconElement2)
+
     map.controls[google.maps.ControlPosition.TOP_LEFT].push(button_availablebike);
     map.controls[google.maps.ControlPosition.TOP_LEFT].push(button_availablebikestands);
 
@@ -127,16 +139,6 @@ function addMarkers(stations) {
             if(relativePixelSize > maxPixelSize) //restrict the maximum size of the icon
                 relativePixelSize = maxPixelSize;
 
-            //change the size of the icon
-            // marker.setIcon(
-            //     new google.maps.MarkerImage(
-            //         marker.getIcon().url, //marker's same icon graphic
-            //         null,//size
-            //         null,//origin
-            //         null, //anchor
-            //         new google.maps.Size(relativePixelSize, relativePixelSize) //changes the scale
-            //     )
-            // );
               if (marker.getIcon()) {
                 marker.setIcon(
                   new google.maps.MarkerImage(
@@ -154,7 +156,7 @@ function addMarkers(stations) {
         marker.addListener("mouseover", () => {
             marker.setAnimation(google.maps.Animation.BOUNCE);
 
-            const content = `<h1 style="text-align: center; font-size:25px; "> ${station.number} <h1>
+            const content = `<h1 style="text-align: center; font-size:25px; "> ${station.name} <h1>
             <p style="font-size:20px"> 
             <i class="fa-sharp fa-solid fa-square-parking"></i>
             Available Bikes Stand: ${station.available_bike_stands} 
@@ -210,9 +212,8 @@ async function createStationCard(number, type, data) {
     if (type === "predict_orig") {
         textDetail.innerHTML =
             `<h2 >From: ${station.name}</h2>
-            <p style="font-size: 25px">Bikes(Predict): ${data}/${station.bike_stands}</p>
-            <p style="font-size: 25px">Bonus Support: ${station.bonus == 0 ? 'NO' : 'YES'}</p>
-            <p style="font-size: 25px">Banking Support: ${station.banking == 0 ? 'NO' : 'YES'}</p>
+            <p style="font-size: 25px"> <i class="fa-solid fa-person-biking"></i>  Bikes(Predict): ${data}/${station.bike_stands}</p>
+          
             <p style="font-size: 25px">Address: ${station.address}</p>`;
         card.appendChild(textDetail);
         return card;
@@ -220,10 +221,9 @@ async function createStationCard(number, type, data) {
     if (type === "predict_des") {
         textDetail.innerHTML =
             `<h2 >To: ${station.name}</h2>
-            <p style="font-size: 25px">Stands(Predict): ${data}/${station.bike_stands}</p>
-            <p style="font-size: 25px">Bonus Support: ${station.bonus == 0 ? 'NO' : 'YES'}</p>
-            <p style="font-size: 25px">Banking Support: ${station.banking == 0 ? 'NO' : 'YES'}</p>
-            <p style="font-size: 25px">Address: ${station.address}</p>`;
+            <p style="font-size: 25px"> <i class="fa-sharp fa-solid fa-square-parking"></i>  Stands(Predict): ${data}/${station.bike_stands}</p>
+
+            <p style="font-size: 25px"> Address: ${station.address}</p>`;
         card.appendChild(textDetail);
         return card;
     }
@@ -233,9 +233,6 @@ async function createStationCard(number, type, data) {
         <p style="font-size: 25px">Stands: ${station.available_bike_stands}/${station.bike_stands}</p>
         <p style="font-size: 25px">Bikes: ${station.available_bikes}/${station.bike_stands}</p>
         <p style="font-size: 25px">Status: ${station.status}</p>
-        <p style="font-size: 25px">Bonus Support: ${station.bonus == 0 ? 'NO' : 'YES'}</p>
-        <p style="font-size: 25px">Banking Support: ${station.banking == 0 ? 'NO' : 'YES'}</p>
-        <p style="font-size: 25px">Last Update: ${station.last_update}</p>
         <p style="font-size: 25px">Address: ${station.address}</p>`;
     card.appendChild(textDetail);
     let trendButton = document.createElement("button");
@@ -319,6 +316,39 @@ async function drawChart(number, type) {
     }
 }
 
+//function basicDraw(bikeData, div) {
+//    let y;
+//    if (div.className === "bike_chart") {
+//        y = "bikes";
+//    } else {
+//        y = "stands";
+//    }
+//    // Create the data table
+//    var data = new google.visualization.DataTable();
+//    data.addColumn('string', 'Time');
+//    data.addColumn('number', y);
+//    data.addRows(bikeData);
+//
+//    // Set chart options
+//    var options = {
+//        title: 'Occupancy for ' + y + ' at Different Times',
+//        hAxis: {title: 'Time', titleTextStyle: {color: '#333'}, textPosition: 'none'},
+//        vAxis: {minValue: 0},
+//        legend: {position: 'top'},
+//        height: 300,
+//        width: 550,
+//        fontSize: 12.5,
+//        animation: {
+//            duration: 1000,
+//            easing: 'out',
+//            startup: true,
+//        },
+//    };
+//
+//    // Create and draw the chart
+//    var chart = new google.visualization.LineChart(div);
+//    chart.draw(data, options);
+//}
 function basicDraw(bikeData, div) {
     let y;
     if (div.className === "bike_chart") {
@@ -332,24 +362,44 @@ function basicDraw(bikeData, div) {
     data.addColumn('number', y);
     data.addRows(bikeData);
 
-    // Set chart options
-    var options = {
-        title: 'Occupancy for ' + y + ' at Different Times',
-        hAxis: {title: 'Time', titleTextStyle: {color: '#333'}, textPosition: 'none'},
-        vAxis: {minValue: 0},
-        legend: {position: 'top'},
-        height: 300, 
-        width: 550, 
-        fontSize: 12.5,
-        animation: {
-            duration: 1000,
-            easing: 'out',
-            startup: true,
-        },
-    };
+var options = {
+    title: 'Trends for ' + y,
+    titleTextStyle: {color: '#f7f5f5'}, // Change the chart title text color
+    hAxis: {
+        title: 'Time',
+        titleTextStyle: {color: '#f7f5f5'},
+        textPosition: 'none',
+        textStyle: {color: '#f7f5f5'}, // Change the hAxis label text color
+    },
+    vAxis: {
+        minValue: 0,
+        textStyle: {color: '#f7f5f5'}, // Change the vAxis label text color
+        format: '0', // Display y-axis numbers as integers
+    },
+    legend: {
+        position: 'top',
+        textStyle: {color: '#f7f5f5'}, // Change the legend text color
+    },
+    height: 300,
+    width: 550,
+    fontSize: 12.5,
+    colors: ['#782a04'], // Change this to the desired gradient color
+    interpolateNulls: true,
+    animation: {
+        duration: 1000,
+        easing: 'out',
+        startup: true,
+    },
+    isStacked: true,
+    areaOpacity: 0.5,
+    backgroundColor: '#030000', // Change to your desired chart background color
+    chartArea: {
+        backgroundColor: '#030000', // Change to your desired chartArea background color
+    },
+};
 
     // Create and draw the chart
-    var chart = new google.visualization.LineChart(div);
+    var chart = new google.visualization.AreaChart(div);
     chart.draw(data, options);
 }
 //functions to switch the charts

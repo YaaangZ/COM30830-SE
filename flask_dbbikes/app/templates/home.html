@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>Map</title>
-    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/weather.css')}}">
     <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/style.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/googleMap.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Dosis:wght@300;400;600&display=swap" rel="stylesheet">
 <!--    font and icon api-->
     <script src="https://kit.fontawesome.com/7bf84053cf.js" crossorigin="anonymous"></script>
 <!--    google chart api-->
@@ -21,7 +22,7 @@
             </div>
 
             <form class="sidebarElement" onsubmit="return submitForm(event);">
-                <input type="date" id="journeydate" class="dateandtime" name="journeydate">
+                <input type="date" id="journeydate" class="dateandtime" name="journeydate" placeholder="">
                 <input type="time" id="journeytime" class="dateandtime" name="journeytime">
                 <div class="journey-info-wrapper">
                     <input type="text" id="journeyfrom" class="journeyinfo" name="journeyfrom" placeholder="From">
@@ -59,9 +60,12 @@
     <div id="my-element-1" data-image-url="{{ url_for('static', filename='img/greenbike.svg') }}"></div>
     <div id="my-element-3" data-image-url="{{ url_for('static', filename='img/redbike.svg') }}"></div>    
     <div id="my-element-2" data-image-url="{{ url_for('static', filename='img/bluebike.svg') }}"></div>
+    <div id="my-element-4" data-image-url="{{ url_for('static', filename='img/parkingblue.svg') }}"></div>
+    <div id="my-element-5" data-image-url="{{ url_for('static', filename='img/parkingred.svg') }}"></div>    
+    <div id="my-element-6" data-image-url="{{ url_for('static', filename='img/parkinggreen.svg') }}"></div>
 <!--    winnie's key-->
-<!--    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAvFe6i9P5wR5qDTU5S_CSdIzAonznhh0Y&libraries=places&callback=initMap" async defer></script>-->
+<!--   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAvFe6i9P5wR5qDTU5S_CSdIzAonznhh0Y&libraries=places&callback=initMap" async defer></script>-->
 <!--    yun's key-->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBs_Crb12f2lIbUsBrjabD2AKXur_qY81o&libraries=places&callback=initMap" async defer></script>
+     <script src="https://maps.googleapis.com/maps/api/js?key={{ googleKey }}&libraries=places&callback=initMap" async defer></script>
 </body>
 </html>

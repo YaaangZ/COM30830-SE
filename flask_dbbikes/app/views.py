@@ -1,7 +1,7 @@
 import json
 
 from flask import jsonify, render_template, request
-from app import db
+from app import db, GoogleMap_API_KEY
 from app import app
 from services import DatbaseService, ModelService, RecommendService
 from datetime import datetime
@@ -88,6 +88,7 @@ def plan():
 @app.route('/')
 # @cache.cached()
 def index():
-    return render_template("home.html")
+    myKEY = GoogleMap_API_KEY
+    return render_template("home.html", googleKey=GoogleMap_API_KEY)
 if __name__ == '__main__':
     app.run(debug=True)
