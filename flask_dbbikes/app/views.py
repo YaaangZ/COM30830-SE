@@ -1,8 +1,10 @@
 import json
 
 from flask import jsonify, render_template, request
-from app import db, GoogleMap_API_KEY
-from app import app
+from . import db, GoogleMap_API_KEY
+# from app import db, GoogleMap_API_KEY
+# from app import app
+from . import app
 from services import DatbaseService, ModelService, RecommendService
 from datetime import datetime
 datbaseService = DatbaseService(db)
@@ -93,9 +95,8 @@ def plan():
     else:
         return jsonify({"error": "Missing origin or destination coordinates."})
 @app.route('/')
-# @cache.cached()
 def index():
-    myKEY = GoogleMap_API_KEY
+    # myKEY = GoogleMap_API_KEY
     return render_template("home.html", googleKey=GoogleMap_API_KEY)
-if __name__ == '__main__':
-    app.run(debug=True)
+# if __name__ == '__main__':
+#     app.run(debug=True)
