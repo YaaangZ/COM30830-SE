@@ -1,11 +1,7 @@
 // define the global variables
 let map = null;
-const iconImage = "../img/bikeIcon.png";//24px
 let infowindow;
-let focus;
-let currentStation;
 let sideBarOpened = false;
-
 // Load the Google Charts library
 google.charts.load('current', {'packages':['corechart']});
 function initMap() {
@@ -46,7 +42,7 @@ function getStations() {
 }
 
 function addMarkers(stations) {
-    // flag for color change 
+    // flag for color change
     let selectedButton = null;
     const button_availablebike = document.createElement("button");
     const button_availablebikestands = document.createElement("button")
@@ -69,9 +65,21 @@ function addMarkers(stations) {
     map.controls[google.maps.ControlPosition.TOP_LEFT].push(button_availablebike);
     map.controls[google.maps.ControlPosition.TOP_LEFT].push(button_availablebikestands);
 
+    // console.log("Before loop: stations=", stations);
     stations.forEach(station => {
+        // console.log("Inside loop: station=", station);
+        var marker = new google.maps.Marker({
+        position: {lat: station.position_lat, lng: station.position_lng},
+        map: map,
+        // icon: markerIcon,
+        title: station.name,
+        address: station.address,
+        station_number: station.number,
+         animation: google.maps.Animation.DROP // Add animation property
 
-        let markerIcon;
+        });
+
+        // let markerIcon;
        button_availablebike.addEventListener('click', function(){
         if (selectedButton !== null) {
             selectedButton.style.backgroundColor = '';
@@ -81,6 +89,7 @@ function addMarkers(stations) {
           this.style.color = 'white';
           selectedButton = this;
         if (station.available_bikes >= 25) {
+            // console.log("marker here 992", marker);
           marker.setIcon({
             url: document.getElementById('my-element-1').dataset.imageUrl,
           })
@@ -97,37 +106,28 @@ function addMarkers(stations) {
     
      button_availablebikestands.addEventListener('click', function(){
        // Update color of selected button
-  if (selectedButton !== null) {
-    selectedButton.style.backgroundColor = '';
-    selectedButton.style.color = '';
-  }
-  this.style.backgroundColor = 'rgb(175, 88, 88)';
-  this.style.color = 'white';
-  selectedButton = this;
-      if (station.available_bike_stands >= 25) {
-        marker.setIcon({
-          url: document.getElementById('my-element-1').dataset.imageUrl,
-        })
-      } else if (station.available_bike_stands >= 10 && station.available_bikes <=24) {
-        marker.setIcon({
-          url: document.getElementById('my-element-2').dataset.imageUrl,
-        })
-      } else if (station.available_bike_stands <= 9) {
-        marker.setIcon({
-          url: document.getElementById('my-element-3').dataset.imageUrl,
-        })
-      } 
-    })
-        var marker = new google.maps.Marker({
-            position: {lat: station.position_lat, lng: station.position_lng},
-            map: map,
-            icon: markerIcon,
-            title: station.name,
-            address: station.address,
-            station_number: station.number,
-             animation: google.maps.Animation.DROP // Add animation property
+          if (selectedButton !== null) {
+            selectedButton.style.backgroundColor = '';
+            selectedButton.style.color = '';
+          }
+          this.style.backgroundColor = 'rgb(175, 88, 88)';
+          this.style.color = 'white';
+          selectedButton = this;
+          if (station.available_bike_stands >= 25) {
+            marker.setIcon({
+              url: document.getElementById('my-element-1').dataset.imageUrl,
+            })
+          } else if (station.available_bike_stands >= 10 && station.available_bikes <=24) {
+            marker.setIcon({
+              url: document.getElementById('my-element-2').dataset.imageUrl,
+            })
+          } else if (station.available_bike_stands <= 9) {
+            marker.setIcon({
+              url: document.getElementById('my-element-3').dataset.imageUrl,
+            })
+          }
+     });
 
-        });
             //Winnie's codes
         google.maps.event.addListener(map, 'zoom_changed', function() {
             var pixelSizeAtZoom0 = 50; //the size of the icon at zoom level 0
@@ -172,60 +172,69 @@ function addMarkers(stations) {
 
             infowindow = new google.maps.InfoWindow({content: content});
             infowindow.open({anchor: marker, map: map});
+            console.log("open window here", station.number);
         });
         marker.addListener("mouseout", () => {
             marker.setAnimation(null);
             infowindow.close();
         });
+
         marker.addListener("click", () => {
             openStationCard(station.number);
         });
     });
 }
-
 function openStationCard(number) {
     if (!sideBarOpened) {changeSideBar();}
     let info = document.getElementById("info");
     if (info.innerHTML.trim() !== '') {
         info.innerHTML = '';
     }
+
     createStationCard(number, "realtime").then(card => {
         info.appendChild(card);
+
     });
 }
 async function createStationCard(number, type, data) {
+    // console.log("station in createCard", data);
 
     let card = document.createElement("div");
     card.classList.add("stationCard");
     card.dataset.number = number;
     let station;
-    try {
-        let response = await fetch("/station/" + number);
-        station = await response.json();
-    } catch (error) {
-        console.error('Error fetching station card data:', error);
-    }
 
 
     let textDetail = document.createElement("div");
     textDetail.classList.add("textDetail");
+
+
     if (type === "predict_orig") {
+        station = data;
         textDetail.innerHTML =
             `<h2 >From: ${station.name}</h2>
-            <p style="font-size: 25px"> <i class="fa-solid fa-person-biking"></i>  Bikes(Predict): ${data}/${station.bike_stands}</p>
-          
+            <p style="font-size: 25px"> <i class="fa-solid fa-person-biking"></i>  Bikes(Predict): ${station.bikes}/${station.bike_stands}</p>
+            <p style="font-size: 25px"> <i class="fa-solid fa-walking"></i>  Distance: ${station.distance_text} (${station.duration_text})</p>
             <p style="font-size: 25px">Address: ${station.address}</p>`;
         card.appendChild(textDetail);
         return card;
     }
     if (type === "predict_des") {
+        station = data;
         textDetail.innerHTML =
             `<h2 >To: ${station.name}</h2>
-            <p style="font-size: 25px"> <i class="fa-sharp fa-solid fa-square-parking"></i>  Stands(Predict): ${data}/${station.bike_stands}</p>
-
+            <p style="font-size: 25px"> <i class="fa-sharp fa-solid fa-square-parking"></i>  Stands(Predict): ${station.stands}/${station.bike_stands}</p>
+            <p style="font-size: 25px"> <i class="fa-solid fa-walking"></i>  Distance: ${station.distance_text} (${station.duration_text})</p>
             <p style="font-size: 25px"> Address: ${station.address}</p>`;
         card.appendChild(textDetail);
         return card;
+    }
+
+    try {
+        let response = await fetch("/station/" + number);
+        station = await response.json();
+    } catch (error) {
+        console.error('Error fetching station card data:', error);
     }
 
     textDetail.innerHTML =
@@ -316,39 +325,8 @@ async function drawChart(number, type) {
     }
 }
 
-//function basicDraw(bikeData, div) {
-//    let y;
-//    if (div.className === "bike_chart") {
-//        y = "bikes";
-//    } else {
-//        y = "stands";
-//    }
-//    // Create the data table
-//    var data = new google.visualization.DataTable();
-//    data.addColumn('string', 'Time');
-//    data.addColumn('number', y);
-//    data.addRows(bikeData);
-//
-//    // Set chart options
-//    var options = {
-//        title: 'Occupancy for ' + y + ' at Different Times',
-//        hAxis: {title: 'Time', titleTextStyle: {color: '#333'}, textPosition: 'none'},
-//        vAxis: {minValue: 0},
-//        legend: {position: 'top'},
-//        height: 300,
-//        width: 550,
-//        fontSize: 12.5,
-//        animation: {
-//            duration: 1000,
-//            easing: 'out',
-//            startup: true,
-//        },
-//    };
-//
-//    // Create and draw the chart
-//    var chart = new google.visualization.LineChart(div);
-//    chart.draw(data, options);
-//}
+
+
 function basicDraw(bikeData, div) {
     let y;
     if (div.className === "bike_chart") {
@@ -473,19 +451,45 @@ async function submitForm() {
 
     if (response.ok) {
       const data = await response.json();
-      // Update the elements on your website based on the response
-      //   console.log("test", data);
-
         let info = document.getElementById("info");
         if (info.innerHTML.trim() !== '') {
          info.innerHTML = '';
         }
-        createStationCard(data["orig"]["number"], "predict_orig", data["orig"]["bikes"]).then(card_orig => {
-            info.appendChild(card_orig);
-        });
-        createStationCard(data["des"]["number"], "predict_des", data["des"]["stands"]).then(card_des => {
-            info.appendChild(card_des);
-        });
+      if (Object.keys(data["orig"]).length === 0 || Object.keys(data["des"]).length === 0) {
+          const warnIcon = document.createElement('i');
+            warnIcon.classList.add('fas', 'fa-exclamation-triangle', 'warn-icon');
+            info.appendChild(warnIcon);
+
+            // Create the warn text
+            const warnText = document.createElement('span');
+            warnText.classList.add('warn-text');
+            warnText.textContent = 'OOPS! No available stations in 3KM.';
+            info.appendChild(warnText);
+            return;
+      }
+
+
+        let card_orig = await createStationCard(data["orig"]["number"], "predict_orig", data["orig"]);
+        info.appendChild(card_orig);
+        let card_des = await createStationCard(data["des"]["number"], "predict_des", data["des"]);
+        info.appendChild(card_des);
+
+        // createStationCard(data["orig"]["number"], "predict_orig", data["orig"]).then(card_orig => {
+        //     info.appendChild(card_orig);
+        // });
+        // createStationCard(data["des"]["number"], "predict_des", data["des"]).then(card_des => {
+        //     info.appendChild(card_des);
+        // });
+         // Create the warn icon
+            const warnIcon = document.createElement('i');
+            warnIcon.classList.add('fas', 'fa-exclamation-triangle', 'warn-icon');
+            info.appendChild(warnIcon);
+
+            // Create the warn text
+            const warnText = document.createElement('span');
+            warnText.classList.add('warn-text');
+            warnText.textContent = 'The prediction is based on 5-day weather forecast and history trends. Please note that there may be deviations.';
+            info.appendChild(warnText);
     } else {
       console.error("Error in submitting the form");
     }
@@ -496,4 +500,3 @@ async function submitForm() {
   // Prevent the form from submitting and reloading the page
   return false;
 }
-

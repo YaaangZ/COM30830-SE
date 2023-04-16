@@ -414,6 +414,17 @@ flex-direction: column;
   height: 150px;
 }
 
+.warn-icon {
+    font-size: 24px;
+    margin-right: 10px;
+  color: white;
+}
+
+.warn-text {
+    font-size: 20px;
+  color: white;
+}
+
 /* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
 @media screen and (max-height: 450px) {
   .sidebar {padding-top: 15px;}

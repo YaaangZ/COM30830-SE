@@ -63,8 +63,15 @@ def plan():
     journey_to = request.form.get('journeyto')
     journey_mode = request.form.get('type')
 
-    date_obj = datetime.strptime(journey_date, "%Y-%m-%d").date()
-    time_obj = datetime.strptime(journey_time, "%H:%M").time()
+    if journey_date == "":
+        date_obj = datetime.now().date()
+    else:
+        date_obj = datetime.strptime(journey_date, "%Y-%m-%d").date()
+    if journey_time == "":
+        time_obj = datetime.now().time()
+    else:
+        time_obj = datetime.strptime(journey_time, "%H:%M").time()
+
     datetime_obj = datetime.combine(date_obj, time_obj)
 
     origin_lat_lng = request.form.get('origin_lat_lng')
