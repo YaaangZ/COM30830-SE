@@ -5,9 +5,9 @@ from typing import List, Optional
 import requests
 from sqlalchemy import func, text
 
-from models import Station, Availability
+from .models import Station, Availability
 from datetime import datetime, timedelta
-from config import weatherForecastAPI, weatherCurrentAPI, GoogleMap_API_KEY
+from .config import weatherForecastAPI, weatherCurrentAPI, GoogleMap_API_KEY
 import pandas as pd
 import numpy as np
 from sklearn.preprocessing import StandardScaler
