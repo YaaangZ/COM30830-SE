@@ -5,7 +5,7 @@ from . import db, GoogleMap_API_KEY
 # from app import db, GoogleMap_API_KEY
 # from app import app
 from . import app
-from services import DatbaseService, ModelService, RecommendService
+from .services import DatbaseService, ModelService, RecommendService
 from datetime import datetime
 datbaseService = DatbaseService(db)
 modelService = ModelService()
