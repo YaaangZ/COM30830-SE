@@ -13,6 +13,7 @@ recommendService = RecommendService(modelService)
 
 @app.route('/station/<int:number>', methods=['GET'])
 def get_station(number):
+    print("Registering get_station")
     station = datbaseService.get_latest_station(number)
     if station:
         return jsonify(station)
@@ -20,30 +21,34 @@ def get_station(number):
         return jsonify({'error': 'Station not found'}), 404
 @app.route('/stations')
 def get_all_stations():
+    print("Registering get_all_stations")
     stations = datbaseService.get_lastest_stations()
     return jsonify(stations)
 @app.route('/occupancy/<int:number>', methods=['GET'])
 def get_occupancy_24h(number):
+    print("Registering get_occupancy_24h")
     data_24h = datbaseService.get_occupancy_by_number_24h(number)
     serialized_data_24h = [
         {"time": row[0], "bikes": row[1], "stands": row[2]} for row in data_24h
     ]
     return jsonify(serialized_data_24h)
-@app.route('/predict', methods=['POST'])
-def predict():
-    # input_data = request.json
-    # just test data
-    input_data = {
-        'time': datetime.now(),
-        'number': 42
-    }
-
-    station = datbaseService.get_station_static(input_data["number"])
-    result = modelService.predict(station, input_data["time"])
-
-    return result
+# @app.route('/predict', methods=['POST'])
+# def predict():
+#     print("Registering predict")
+#     # input_data = request.json
+#     # just test data
+#     input_data = {
+#         'time': datetime.now(),
+#         'number': 42
+#     }
+#
+#     station = datbaseService.get_station_static(input_data["number"])
+#     result = modelService.predict(station, input_data["time"])
+#
+#     return result
 @app.route('/predict_5d/<int:number>', methods=['GET'])
 def predict_5d(number):
+    print("Registering predict_5d")
     station = datbaseService.get_station_static(number)
 
     result = modelService.predict_5d(station)
@@ -51,13 +56,14 @@ def predict_5d(number):
     return result
 @app.route('/predict_24h/<int:number>', methods=['GET'])
 def predict_24h(number):
+    print("Registering predict_24h")
     station = datbaseService.get_station_static(number)
 
     result = modelService.predict_24h(station)
     return result
 @app.route('/plan', methods=['POST'])
 def plan():
-
+    print("Registering plan")
 
     journey_date = request.form.get('journeydate')
     journey_time = request.form.get('journeytime')
@@ -96,7 +102,8 @@ def plan():
         return jsonify({"error": "Missing origin or destination coordinates."})
 @app.route('/')
 def index():
+    print("Registering index")
     # myKEY = GoogleMap_API_KEY
     return render_template("home.html", googleKey=GoogleMap_API_KEY)
-# if __name__ == '__main__':
-#     app.run(debug=True)
+if __name__ == '__main__':
+    app.run(debug=True)
