@@ -7,4 +7,4 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://{}:{}@{}/{}'.format(USER, PASSW
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
-# from . import views  # Import views.py after creating the app instance
+from . import views  # Import views.py after creating the app instance
