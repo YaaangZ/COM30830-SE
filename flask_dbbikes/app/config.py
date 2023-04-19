@@ -10,12 +10,6 @@ HOST = "dbbikes.czd4qxlz1ioy.us-east-1.rds.amazonaws.com"
 DATABASE = "dbbikes"
 
 
-# class Config:
-#     SQLALCHEMY_DATABASE_URI = 'mysql://{}:{}@{}/{}'.format(USER, PASSWORD, HOST, DATABASE)
-#     SQLALCHEMY_TRACK_MODIFICATIONS = False
-
-
-
 
 OPEN_WEATHER_API_KEY = "8f2e40db6b1c4dcc89b68735362dbc56"
 # weatherForecast

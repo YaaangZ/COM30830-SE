@@ -10,7 +10,6 @@ from datetime import datetime, timedelta
 from .config import weatherForecastAPI, weatherCurrentAPI, GoogleMap_API_KEY
 import pandas as pd
 import numpy as np
-from sklearn.preprocessing import StandardScaler
 import math
 class DatbaseService:
     def __init__(self, db):
@@ -129,8 +128,7 @@ class DatbaseService:
 
 class ModelService:
     def __init__(self):
-        # with open(r'C:\Users\85217\Desktop\random_forest_model_new.pkl', 'rb') as file:
-        # with open('data/random_forest_model_new.pkl', 'rb') as file:
+        # with open(r'C:\Users\85217\OneDrive\UCD\2023 Spring\Software Engineering (Conv) (COMP30830)\assignments\ass 2 bike project\Train Data\20230403\random_forest_model.pkl', 'rb') as file:
         with open('/home/ubuntu/codes/model/random_forest_model_new.pkl', 'rb') as file:
         # with open('/Users/winnieimafidon/Documents/software-engineering/bike_rental_project/duplicateYun/COM30830-SE/flask_dbbikes/app/data/random_forest_model.pkl', 'rb') as file:
             data_model = pickle.load(file)
@@ -158,6 +156,7 @@ class ModelService:
             time_list.append(current_time + timedelta(hours=1*x))
         result = self.predict_helper(station, time_list)
         return result
+
 
     def predict_helper(self, station, time_list):
         data_list = []
@@ -207,28 +206,25 @@ class ModelService:
         data["day_of_week"] = data["last_update"].dt.dayofweek
         data["is_weekend"] = data["day_of_week"].isin([5, 6]).astype(int)
         data["month"] = data["last_update"].dt.month
+
+
         data['last_update'] = pd.to_datetime(data['last_update'])
         data['last_update'] = data['last_update'].view('int64') // 10**9
 
-        features = ['number', 'position_lat', 'position_lng', 'bike_stands', 'last_update',
+        features = ['position_lat', 'position_lng', 'bike_stands',
                     'temp', 'humidity', 'visibility', 'windSpeed', 'windDeg', 'hour',
                     'day_of_week', 'is_weekend', 'month', 'weatherMain_Clouds',
                     'weatherMain_Drizzle', 'weatherMain_Fog', 'weatherMain_Mist',
                     'weatherMain_Rain', 'weatherMain_Snow']
 
-        data = data[features]
-        # scaler = StandardScaler()
-        # data_scaled = scaler.fit_transform(data)
-        # need to do data process
+        X_data = data[features]
 
-        # predicted_bikes = self.model.predict(data_scaled)
-        predicted_bikes = self.model.predict(data)
+        predicted_bikes = self.model.predict(X_data)
         # change to python list
         predicted_bikes = predicted_bikes.tolist()
         # combine the result
         result = data[['last_update']].copy()
         # Convert the 'last_update' column from timestamp integers to datetime objects
-        # result['time'] = pd.to_datetime(data['last_update'], unit='s')
         result.loc[:, 'time'] = pd.to_datetime(result['last_update'], unit='s')
 
         # Format the datetime objects to the desired format
