@@ -542,9 +542,9 @@ function createDropdown() {
 
   const colors = ['green', 'blue', 'red'];
   const texts = [
-    'availability >= 25',
-    '5 < availability < 25',
-    'availability <= 5',
+    'More than 25',
+    'Between 5 to 25',
+    'Less than 5',
   ];
 
   for (let i = 0; i < colors.length; i++) {
