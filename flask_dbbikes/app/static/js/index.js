@@ -62,6 +62,13 @@ function addMarkers(stations) {
     button_availablebikestands.appendChild(iconElement);
     button_availablebike.appendChild(iconElement2)
 
+    //set prompt for buttons
+    // button_availablebike.title = "Green: availability >= 25\nBlue: 5 < availability < 25\nRed: availability <= 5";
+    // button_availablebikestands.title = "Green: availability >= 25\nBlue: 5 < availability < 25\nRed: availability <= 5";
+    button_availablebike.appendChild(createDropdown());
+    button_availablebikestands.appendChild(createDropdown());
+
+
     map.controls[google.maps.ControlPosition.TOP_LEFT].push(button_availablebike);
     map.controls[google.maps.ControlPosition.TOP_LEFT].push(button_availablebikestands);
 
@@ -93,11 +100,11 @@ function addMarkers(stations) {
           marker.setIcon({
             url: document.getElementById('my-element-1').dataset.imageUrl,
           })
-        } else if (station.available_bikes >= 10 && station.available_bikes <=24) {
+        } else if (station.available_bikes >= 6 && station.available_bikes <=24) {
           marker.setIcon({
             url: document.getElementById('my-element-2').dataset.imageUrl,
           })
-        } else if (station.available_bikes <= 9) {
+        } else if (station.available_bikes <= 5) {
           marker.setIcon({
             url: document.getElementById('my-element-3').dataset.imageUrl,
           })
@@ -117,11 +124,11 @@ function addMarkers(stations) {
             marker.setIcon({
               url: document.getElementById('my-element-1').dataset.imageUrl,
             })
-          } else if (station.available_bike_stands >= 10 && station.available_bikes <=24) {
+          } else if (station.available_bike_stands >= 6 && station.available_bikes <=24) {
             marker.setIcon({
               url: document.getElementById('my-element-2').dataset.imageUrl,
             })
-          } else if (station.available_bike_stands <= 9) {
+          } else if (station.available_bike_stands <= 5) {
             marker.setIcon({
               url: document.getElementById('my-element-3').dataset.imageUrl,
             })
@@ -172,7 +179,7 @@ function addMarkers(stations) {
 
             infowindow = new google.maps.InfoWindow({content: content});
             infowindow.open({anchor: marker, map: map});
-            console.log("open window here", station.number);
+            // console.log("open window here", station.number);
         });
         marker.addListener("mouseout", () => {
             marker.setAnimation(null);
@@ -314,25 +321,26 @@ async function drawChart(number, type) {
     }
     if (response_data && response_data.length > 0) {
         const bikesData = response_data.map(item => [item.time, item.bikes]);
-        const standsData = response_data.map(item => [item.time, item.stands])
+        const standsData = response_data.map(item => [item.time, item.stands]);
+        const bikes_stands_sum = response_data[0].bikes + response_data[0].stands;
         const card = document.querySelector('.stationCard[data-number="' + parseInt(number) + '"]');
         const bike_chart = card.querySelector(".bike_chart");
         const stand_chart = card.querySelector(".stand_chart");
-        basicDraw(bikesData, bike_chart);
-        basicDraw(standsData, stand_chart);
+        basicDraw(bikesData, bikes_stands_sum, bike_chart);
+        basicDraw(standsData, bikes_stands_sum, stand_chart);
     } else {
-        console.error("Invalid station number!")
+        console.error("Invalid station number!");
     }
 }
 
 
 
-function basicDraw(bikeData, div) {
+function basicDraw(bikeData, range, div) {
     let y;
     if (div.className === "bike_chart") {
-        y = "bikes";
+        y = "Bikes";
     } else {
-        y = "stands";
+        y = "Stands";
     }
     // Create the data table
     var data = new google.visualization.DataTable();
@@ -351,6 +359,7 @@ var options = {
     },
     vAxis: {
         minValue: 0,
+        maxValue: range,
         textStyle: {color: '#f7f5f5'}, // Change the vAxis label text color
         format: '0', // Display y-axis numbers as integers
     },
@@ -403,15 +412,18 @@ function createButtonGroup() {
     buttonGroup.className = "button-group";
 
     const buttonNames = ["history", "predict_24h", "predict_5d"];
+    const buttonTexts = ["History", "24h Prediction", "5d Prediction"];
 
     for (let i = 0; i < buttonNames.length; i++) {
         const button = document.createElement("button");
         button.className = `chart-button ${buttonNames[i]}`;
-        button.textContent = buttonNames[i];
+        // button.textContent = buttonNames[i];
+        button.textContent = buttonTexts[i];
         button.onclick = function () {
             selectStatus(button, buttonNames[i]);
         };
-        if (button.textContent === "history") {
+        // if (button.textContent === "history") {
+        if (button.textContent === "History") {
             button.classList.add("selected");
         }
         buttonGroup.appendChild(button);
@@ -451,45 +463,66 @@ async function submitForm() {
 
     if (response.ok) {
       const data = await response.json();
+        // handle the situation that the form is not submitted via button
+        if (data["error"]) {
+            return;
+        }
         let info = document.getElementById("info");
         if (info.innerHTML.trim() !== '') {
          info.innerHTML = '';
         }
-      if (Object.keys(data["orig"]).length === 0 || Object.keys(data["des"]).length === 0) {
-          const warnIcon = document.createElement('i');
-            warnIcon.classList.add('fas', 'fa-exclamation-triangle', 'warn-icon');
-            info.appendChild(warnIcon);
+        // Create the warn icon
+        const warnIcon = document.createElement('i');
+        warnIcon.classList.add('fas', 'fa-exclamation-triangle', 'warn-icon');
+        // Create the warn text
+        const warnText = document.createElement('span');
+        warnText.classList.add('warn-text');
+        warnText.textContent = 'The prediction is based on 5-day weather forecast and history trends. Please note that there may be deviations.';
+        //Create no recommend icon and text
+        const noRecIcon = document.createElement('i');
+        // noRecIcon.classList.add('fas', 'fa-exclamation-triangle', 'warn-icon');
+        noRecIcon.classList.add('fas', 'fa-sad-cry', 'warn-icon');
+        const noRecText = document.createElement('span');
+        noRecText.classList.add('warn-text');
 
-            // Create the warn text
-            const warnText = document.createElement('span');
-            warnText.classList.add('warn-text');
-            warnText.textContent = 'OOPS! No available stations in 3KM.';
+
+        //1. only has station nearby the start point
+        if (Object.keys(data["orig"]).length !== 0 && Object.keys(data["des"]).length === 0) {
+            let card_orig = await createStationCard(data["orig"]["number"], "predict_orig", data["orig"]);
+            info.appendChild(card_orig);
+            noRecText.textContent = 'OOPS! No available parking stations for your destination in 3KM!';
+            info.appendChild(noRecIcon);
+            info.appendChild(noRecText);
+            info.appendChild(warnIcon);
             info.appendChild(warnText);
+            return;
+        }
+        //2. only has station nearby the end point
+        if (Object.keys(data["des"]).length !== 0 && Object.keys(data["orig"]).length === 0) {
+            let card_des = await createStationCard(data["des"]["number"], "predict_des", data["des"]);
+            info.appendChild(card_des);
+            noRecText.textContent = 'OOPS! No available bike stations for your origin in 3KM!';
+            info.appendChild(noRecIcon);
+            info.appendChild(noRecText);
+            info.appendChild(warnIcon);
+            info.appendChild(warnText);
+            return;
+        }
+        //3. no available stations nearby the start point and end point
+      if (Object.keys(data["orig"]).length === 0 && Object.keys(data["des"]).length === 0) {
+          noRecText.textContent = 'OOPS! No available bike stations and parking stations for your origin and destination in 3KM!';
+            info.appendChild(noRecIcon);
+            info.appendChild(noRecText);
             return;
       }
 
-
+        //4. available stations nearby the start point and end point
         let card_orig = await createStationCard(data["orig"]["number"], "predict_orig", data["orig"]);
         info.appendChild(card_orig);
         let card_des = await createStationCard(data["des"]["number"], "predict_des", data["des"]);
         info.appendChild(card_des);
-
-        // createStationCard(data["orig"]["number"], "predict_orig", data["orig"]).then(card_orig => {
-        //     info.appendChild(card_orig);
-        // });
-        // createStationCard(data["des"]["number"], "predict_des", data["des"]).then(card_des => {
-        //     info.appendChild(card_des);
-        // });
-         // Create the warn icon
-            const warnIcon = document.createElement('i');
-            warnIcon.classList.add('fas', 'fa-exclamation-triangle', 'warn-icon');
-            info.appendChild(warnIcon);
-
-            // Create the warn text
-            const warnText = document.createElement('span');
-            warnText.classList.add('warn-text');
-            warnText.textContent = 'The prediction is based on 5-day weather forecast and history trends. Please note that there may be deviations.';
-            info.appendChild(warnText);
+        info.appendChild(warnIcon);
+        info.appendChild(warnText);
     } else {
       console.error("Error in submitting the form");
     }
@@ -499,4 +532,37 @@ async function submitForm() {
 
   // Prevent the form from submitting and reloading the page
   return false;
+}
+
+
+//prompt for color
+function createDropdown() {
+  const dropdown = document.createElement('div');
+  dropdown.classList.add('prompt_dropdown');
+
+  const colors = ['green', 'blue', 'red'];
+  const texts = [
+    'availability >= 25',
+    '5 < availability < 25',
+    'availability <= 5',
+  ];
+
+  for (let i = 0; i < colors.length; i++) {
+    const line = document.createElement('div');
+    line.classList.add('prompt_line');
+
+    const square = document.createElement('span');
+    square.classList.add('prompt_square');
+    square.style.backgroundColor = colors[i];
+
+    const text = document.createElement('span');
+    text.classList.add('prompt_text');
+    text.textContent = texts[i];
+
+    line.appendChild(square);
+    line.appendChild(text);
+    dropdown.appendChild(line);
+  }
+
+  return dropdown;
 }

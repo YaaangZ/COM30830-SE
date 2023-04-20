@@ -1,7 +1,7 @@
 import json
 
 from flask import jsonify, render_template, request
-from . import db, GoogleMap_API_KEY
+from . import db, GoogleMap_API_KEY, OPEN_WEATHER_API_KEY
 # from app import db, GoogleMap_API_KEY
 # from app import app
 from . import app
@@ -77,6 +77,6 @@ def plan():
         return jsonify({"error": "Missing origin or destination coordinates."})
 @app.route('/')
 def index():
-    return render_template("home.html", googleKey=GoogleMap_API_KEY)
+    return render_template("home.html", googleKey=GoogleMap_API_KEY, weatherKey=OPEN_WEATHER_API_KEY)
 if __name__ == '__main__':
     app.run(debug=True)

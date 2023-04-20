@@ -246,28 +246,29 @@ flex-direction: column;
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
-  background-color: #312727;
+  background-color: #9e9e9e; /* Default background color */
   color: white;
   transition: background-color 0.3s, box-shadow 0.3s;
 }
 
 .history.selected,
 .chart-button.history:hover {
-  background-color: #9e9e9e;
-  box-shadow: 0 0 10px rgba(158, 158, 158, 0.5);
+  background-color: #312727; /* Selected background color */
+  box-shadow: 0 0 10px rgba(49, 39, 39, 0.5); /* Adjusted box-shadow */
 }
 
 .predict_24h.selected,
 .chart-button.predict_24h:hover {
-    background-color: #9e9e9e;
-    box-shadow: 0 0 10px rgba(158, 158, 158, 0.5);
+    background-color: #312727; /* Selected background color */
+    box-shadow: 0 0 10px rgba(49, 39, 39, 0.5); /* Adjusted box-shadow */
 }
 
 .predict_5d.selected,
 .chart-button.predict_5d:hover {
-    background-color: #9e9e9e;
-    box-shadow: 0 0 10px rgba(158, 158, 158, 0.5);
+    background-color: #312727; /* Selected background color */
+    box-shadow: 0 0 10px rgba(49, 39, 39, 0.5); /* Adjusted box-shadow */
 }
+
 
 
 .trendButton{
@@ -423,10 +424,52 @@ flex-direction: column;
 .warn-text {
     font-size: 20px;
   color: white;
+  display: block;
 }
+/*prompt drop down for the colored bikes*/
+.btn-design:hover .prompt_dropdown {
+  display: block;
+}
+
+.prompt_dropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 200px;
+  padding: 5px;
+  background-color: #fff;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+.prompt_line {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.prompt_square {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin-right: 5px;
+}
+
+.prompt_text {
+  font-size: 14px;
+  color: #333;
+}
+
+
+
+
 
 /* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
 @media screen and (max-height: 450px) {
   .sidebar {padding-top: 15px;}
   .sidebar a {font-size: 18px;}
 }
+
+

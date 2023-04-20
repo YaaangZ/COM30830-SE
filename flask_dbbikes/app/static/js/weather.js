@@ -2,7 +2,7 @@
 
   // <!--This part is displayed weather information vertically-->
   function getWeather() {
-    fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=53.3498006&lon=-6.2602964&units=metric&appid=8f2e40db6b1c4dcc89b68735362dbc56`)
+    fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=53.3498006&lon=-6.2602964&units=metric&appid=${window.weatherKey}`)
       .then(response => response.json())
       .then(data => {
         const forecast = data.list;
