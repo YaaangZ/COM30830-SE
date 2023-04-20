@@ -54,11 +54,6 @@
     </div>
     <div id="map"></div>
     <div id="weather"></div>
-    <script>
-        // Set global variables
-        window.googleKey = "{{ googleKey }}";
-        window.weatherKey = "{{ weatherKey }}";
-    </script>
     <script src="{{url_for('static', filename='js/weather.js')}}"></script>
     <script src="{{url_for('static', filename='js/direction.js')}}"></script>
     <script src="{{url_for('static', filename='js/index.js')}}"></script>
@@ -69,6 +64,7 @@
     <div id="my-element-5" data-image-url="{{ url_for('static', filename='img/parkingred.svg') }}"></div>    
     <div id="my-element-6" data-image-url="{{ url_for('static', filename='img/parkinggreen.svg') }}"></div>
 
-     <script src="https://maps.googleapis.com/maps/api/js?key={{ googleKey }}&libraries=places&callback=initMap" async defer></script>
+     <script src="{{url_for('static', filename='js/load_google_maps_api.js')}}"></script>
+
 </body>
 </html>

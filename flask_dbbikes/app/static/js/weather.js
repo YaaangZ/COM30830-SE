@@ -2,7 +2,9 @@
 
   // <!--This part is displayed weather information vertically-->
   function getWeather() {
-    fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=53.3498006&lon=-6.2602964&units=metric&appid=${window.weatherKey}`)
+    const lat = 53.3498006;
+    const lon = -6.2602964;
+    fetch(`/weather/${lat}/${lon}`)
       .then(response => response.json())
       .then(data => {
         const forecast = data.list;
@@ -110,4 +112,5 @@
         };
       });
   }
+
   
