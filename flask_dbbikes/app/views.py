@@ -89,6 +89,6 @@ def get_google_maps_key():
 
 @app.route('/')
 def index():
-    return render_template("home.html", googleKey=GoogleMap_API_KEY, weatherKey=OPEN_WEATHER_API_KEY)
+    return render_template("home.html")
 if __name__ == '__main__':
     app.run(debug=True)
