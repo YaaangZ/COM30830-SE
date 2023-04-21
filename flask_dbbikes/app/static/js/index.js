@@ -2,6 +2,7 @@
 let map = null;
 let infowindow;
 let sideBarOpened = false;
+//let renderers = [];
 // Load the Google Charts library
 google.charts.load('current', {'packages':['corechart']});
 function initMap() {
@@ -30,7 +31,7 @@ function initMap() {
     map.controls[google.maps.ControlPosition.TOP_LEFT].push(button);
     getStations();
     getWeather();
-    new AutocompleteDirectionsHandler(map);
+    initRenderers(map);
 
 
 }
@@ -471,6 +472,15 @@ async function submitForm() {
         if (info.innerHTML.trim() !== '') {
          info.innerHTML = '';
         }
+        console.log(journeyFrom);
+        //draw routes
+//        clearRoutes();
+        const l1 = journeyFrom;
+        const l2 = Object.keys(data["orig"]).length > 0 ? {lat: data["orig"]["position_lat"], lng: data["orig"]["position_lng"]} : null;
+        const l3 = Object.keys(data["des"]).length > 0 ? {lat: data["des"]["position_lat"], lng: data["des"]["position_lng"]} : null;
+        const l4 = journeyTo;
+        recommendRoute(l1, l2, l3, l4, map);
+
         // Create the warn icon
         const warnIcon = document.createElement('i');
         warnIcon.classList.add('fas', 'fa-exclamation-triangle', 'warn-icon');

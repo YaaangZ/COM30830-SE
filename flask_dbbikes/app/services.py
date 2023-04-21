@@ -128,6 +128,7 @@ class DatbaseService:
 
 class ModelService:
     def __init__(self):
+        # with open(r'C:\Users\y\OneDrive\UCD\2023 Spring\Software Engineering (Conv) (COMP30830)\assignments\ass 2 bike project\Train Data\20230403\random_forest_model.pkl', 'rb') as file:
         # with open(r'C:\Users\85217\OneDrive\UCD\2023 Spring\Software Engineering (Conv) (COMP30830)\assignments\ass 2 bike project\Train Data\20230403\random_forest_model.pkl', 'rb') as file:
         with open('/home/ubuntu/codes/model/random_forest_model.pkl', 'rb') as file:
         # with open('/Users/winnieimafidon/Documents/software-engineering/bike_rental_project/duplicateYun/COM30830-SE/flask_dbbikes/app/data/random_forest_model.pkl', 'rb') as file:
