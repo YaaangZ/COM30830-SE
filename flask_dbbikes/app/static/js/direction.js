@@ -1,5 +1,5 @@
 /**/
-  function route(originPlaceId, destinationPlaceId) {
+  function route(originPlaceId, destinationPlaceId, mode) {
     if (!originPlaceId || !destinationPlaceId) {
       return;
     }
@@ -10,7 +10,8 @@
       {
         origin: { placeId: originPlaceId },
         destination: { placeId: destinationPlaceId },
-        travelMode: google.maps.TravelMode.WALKING,
+//        travelMode: google.maps.TravelMode.WALKING,
+        travelMode: mode,
       },
       (response, status) => {
         if (status === "OK") {
@@ -70,7 +71,7 @@ function setupAutocompleteDirectionsHandler(map) {
 
     radioButton.addEventListener("click", () => {
       travelMode = mode;
-      callback(originPlaceId, destinationPlaceId);
+      callback(originPlaceId, destinationPlaceId, travelMode);
     });
   }
 
@@ -94,10 +95,10 @@ function setupAutocompleteDirectionsHandler(map) {
         document.getElementById("destination-lat-lng").value = latLng;
       }
 
-      callback(originPlaceId, destinationPlaceId);
+      callback(originPlaceId, destinationPlaceId, travelMode);
     });
   }
-  route(originPlaceId, destinationPlaceId);
+  route(originPlaceId, destinationPlaceId, travelMode);
 
 }
 
