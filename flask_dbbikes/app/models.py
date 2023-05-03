@@ -1,6 +1,8 @@
 from typing import Iterable
 
-from app import db
+from . import db
+# from app import db
+
 from datetime import datetime
 
 class Station(db.Model):

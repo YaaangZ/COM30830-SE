@@ -4,13 +4,13 @@ from typing import List, Optional
 
 import requests
 from sqlalchemy import func, text
-
-from models import Station, Availability
+from .models import Station, Availability
 from datetime import datetime, timedelta
-from config import weatherForecastAPI, weatherCurrentAPI, GoogleMap_API_KEY
+from .config import weatherForecastAPI, weatherCurrentAPI, GoogleMap_API_KEY
 import pandas as pd
 import numpy as np
-from sklearn.preprocessing import StandardScaler
+import math
+
 class DatbaseService:
     def __init__(self, db):
         self.db = db
@@ -128,7 +128,11 @@ class DatbaseService:
 
 class ModelService:
     def __init__(self):
-        with open('data/random_forest_model.pkl', 'rb') as file:
+        # with open(r'C:\Users\y\OneDrive\UCD\2023 Spring\Software Engineering (Conv) (COMP30830)\assignments\ass 2 bike project\Train Data\20230403\random_forest_model.pkl', 'rb') as file:
+        # with open(r'C:\Users\85217\OneDrive\UCD\2023 Spring\Software Engineering (Conv) (COMP30830)\assignments\ass 2 bike project\Train Data\20230403\random_forest_model.pkl', 'rb') as file:
+        with open('/home/ubuntu/codes/model/random_forest_model.pkl', 'rb') as file:
+        # with open('/Users/winnieimafidon/Documents/software-engineering/bike_rental_project/duplicateYun/COM30830-SE/flask_dbbikes/app/data/random_forest_model.pkl', 'rb') as file:
+
             data_model = pickle.load(file)
         self.model = data_model
 
@@ -203,27 +207,28 @@ class ModelService:
         data["day_of_week"] = data["last_update"].dt.dayofweek
         data["is_weekend"] = data["day_of_week"].isin([5, 6]).astype(int)
         data["month"] = data["last_update"].dt.month
+
+
         data['last_update'] = pd.to_datetime(data['last_update'])
         data['last_update'] = data['last_update'].view('int64') // 10**9
 
-        features = ['number', 'position_lat', 'position_lng', 'bike_stands', 'last_update',
+        features = ['position_lat', 'position_lng', 'bike_stands',
+
                     'temp', 'humidity', 'visibility', 'windSpeed', 'windDeg', 'hour',
                     'day_of_week', 'is_weekend', 'month', 'weatherMain_Clouds',
                     'weatherMain_Drizzle', 'weatherMain_Fog', 'weatherMain_Mist',
                     'weatherMain_Rain', 'weatherMain_Snow']
 
-        data = data[features]
-        scaler = StandardScaler()
-        data_scaled = scaler.fit_transform(data)
-        # need to do data process
 
-        predicted_bikes = self.model.predict(data_scaled)
+        X_data = data[features]
+
+        predicted_bikes = self.model.predict(X_data)
+
         # change to python list
         predicted_bikes = predicted_bikes.tolist()
         # combine the result
         result = data[['last_update']].copy()
         # Convert the 'last_update' column from timestamp integers to datetime objects
-        # result['time'] = pd.to_datetime(data['last_update'], unit='s')
         result.loc[:, 'time'] = pd.to_datetime(result['last_update'], unit='s')
 
         # Format the datetime objects to the desired format
@@ -241,52 +246,69 @@ class ModelService:
         return json_style_list
 
 class RecommendService:
+
+    def __init__(self, modelService):
+        self.modelService = modelService
     # def __int__(self):
     #     self.stations = DatbaseService.get_stations_static()
-    @classmethod
-    def recommend(cls, location, time):
+
+    def recommend(self, location, time, type):
         """
         :param location: (lat,lng)
         :param time: datetime in the format %Y-%m-%d %H:%M
-        :return: station number
+        :return: station info: {}
         """
         stations_info = DatbaseService.get_stations_static()
-        destinations = []
-        destinations_lat_lng = []
+        candidates = []
+
         for s in stations_info:
-            destinations.append((s["number"], s["position_lat"], s["position_lng"]))
-            destinations_lat_lng.append((s["position_lat"], s["position_lng"]))
+            lat = s["position_lat"]
+            lng = s["position_lng"]
+            distance = self.get_distance(lat, lng, location[0], location[1])
+            if distance <= 3000:
+                s["distance"] = distance
+                candidates.append(s)
+        sorted_candidates = sorted(candidates, key=lambda x: x["distance"])
+        result = dict()
+        for s in sorted_candidates:
+            # check if it has bikes/stands
+            predict_res = self.modelService.predict(s, time)
+            if type == "orig":
+                if predict_res[0]["bikes"] > 0:
+                    result = s
+                    result["bikes"] = predict_res[0]["bikes"]
+                    break
+            else:
+                if predict_res[0]["stands"] > 0:
+                    result = s
+                    result["stands"] = predict_res[0]["stands"]
+                    break
+        if not result:
+            return result
 
-        # print("Destinations:", destinations)
-        # print("Destinations Lat/Lng:", destinations_lat_lng)
-        # limit 25
-        # need to do..
-        destinations_lat_lng = destinations_lat_lng[:10]
-        destinations = destinations[:10]
-        distance_data = cls.get_distance_matrix(location, destinations_lat_lng)
+        # get more information of this station from Google Distance Matrix API
 
-        print("Distance Data:", distance_data)
+        data = self.get_distance_from_API(location, (result["position_lat"], result["position_lng"]))
+        distance_text = data["rows"][0]["elements"][0]["distance"]["text"]
+        # distance_meters = data["rows"][0]["elements"][0]["distance"]["value"]
+        duration_text = data["rows"][0]["elements"][0]["duration"]["text"]
+        # duration_seconds = data["rows"][0]["elements"][0]["duration"]["value"]
+        result["distance_text"] = distance_text
+        result["duration_text"] = duration_text
 
-        distances = []
-        for i, destination in enumerate(destinations):
-            distance_text = distance_data["rows"][0]["elements"][i]["distance"]["text"]
-            distance_value = distance_data["rows"][0]["elements"][i]["distance"]["value"]
-            distances.append((destination, distance_text, distance_value))
+        return result
 
-        sorted_destinations = sorted(distances, key=lambda x: x[2])
 
-        print("Sorted destinations by distance from the start location:")
-        for dest, distance_text, distance_value in sorted_destinations:
-            print(f"Destination: {dest}, Distance: {distance_text} ({distance_value} meters)")
-
-    @classmethod
-    def get_distance_matrix(cls, start, destinations):
+    def get_distance_from_API(self, start, destination):
         origin_lat = start[0]
         origin_lng = start[1]
+        des_lat = destination[0]
+        des_lng = destination[1]
         base_url = "https://maps.googleapis.com/maps/api/distancematrix/json"
         params = {
             "origins": f"{origin_lat},{origin_lng}",
-            "destinations": "|".join([f"{lat},{lng}" for lat, lng in destinations]),
+            "destinations": f"{des_lat},{des_lng}",
+
             "key": GoogleMap_API_KEY,
             "mode": "walking"
         }
@@ -297,3 +319,25 @@ class RecommendService:
             return data
         else:
             raise Exception(f"Error {response.status_code}: {response.text}")
+
+    def get_distance(self, lat1, lon1, lat2, lon2):
+        # Convert latitude and longitude from degrees to radians
+        lat1, lon1, lat2, lon2 = map(math.radians, [lat1, lon1, lat2, lon2])
+
+        # Haversine formula
+        dlat = lat2 - lat1
+        dlon = lon2 - lon1
+        a = math.sin(dlat / 2) ** 2 + math.cos(lat1) * math.cos(lat2) * math.sin(dlon / 2) ** 2
+        c = 2 * math.asin(math.sqrt(a))
+
+        # Radius of Earth in kilometers. Use 3956 for miles
+        radius_of_earth = 6371
+
+        # Calculate the resulting distance in kilometers
+        distance_km = c * radius_of_earth
+
+        # Convert the distance to meters
+        distance_m = distance_km * 1000
+
+        return distance_m
+
