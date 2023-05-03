@@ -12,6 +12,7 @@ datbaseService = DatbaseService(db)
 modelService = ModelService()
 recommendService = RecommendService(modelService)
 
+
 @app.route('/station/<int:number>', methods=['GET'])
 def get_station(number):
     station = datbaseService.get_latest_station(number)
@@ -31,6 +32,7 @@ def get_occupancy_24h(number):
     ]
     return jsonify(serialized_data_24h)
 
+
 @app.route('/predict_5d/<int:number>', methods=['GET'])
 def predict_5d(number):
     station = datbaseService.get_station_static(number)
@@ -44,6 +46,7 @@ def predict_24h(number):
 
     result = modelService.predict_24h(station)
     return result
+
 @app.route('/plan', methods=['POST'])
 def plan():
 
@@ -90,5 +93,6 @@ def get_google_maps_key():
 @app.route('/')
 def index():
     return render_template("home.html")
+
 if __name__ == '__main__':
     app.run(debug=True)

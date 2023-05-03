@@ -1,13 +1,16 @@
 // define the global variables
 let map = null;
+
 let infowindow;
 let sideBarOpened = false;
 //let renderers = [];
+
 // Load the Google Charts library
 google.charts.load('current', {'packages':['corechart']});
 function initMap() {
     const dublin = {lat: 53.350140, lng: -6.266155};
     const mapProp= {center: dublin, zoom:15};
+
     const styles = {
         hide: [
             {
@@ -23,15 +26,19 @@ function initMap() {
     map = new google.maps.Map(document.getElementById("map"),mapProp);
     map.setOptions({styles: styles['hide']});
     const button = document.createElement("button");
+
     button.textContent = "Plan Journey";
+
     button.classList.add("MapButton");
     button.addEventListener("click", function () {
         if (!sideBarOpened) {changeSideBar();}
     });
     map.controls[google.maps.ControlPosition.TOP_LEFT].push(button);
     getStations();
+
     getWeather();
     initRenderers(map);
+
 
 
 }
@@ -43,6 +50,7 @@ function getStations() {
 }
 
 function addMarkers(stations) {
+
     // flag for color change
     let selectedButton = null;
     const button_availablebike = document.createElement("button");
@@ -136,6 +144,7 @@ function addMarkers(stations) {
           }
      });
 
+
             //Winnie's codes
         google.maps.event.addListener(map, 'zoom_changed', function() {
             var pixelSizeAtZoom0 = 50; //the size of the icon at zoom level 0
@@ -146,6 +155,7 @@ function addMarkers(stations) {
 
             if(relativePixelSize > maxPixelSize) //restrict the maximum size of the icon
                 relativePixelSize = maxPixelSize;
+
 
               if (marker.getIcon()) {
                 marker.setIcon(
@@ -160,9 +170,11 @@ function addMarkers(stations) {
               }
 
 
+
         });
         marker.addListener("mouseover", () => {
             marker.setAnimation(google.maps.Animation.BOUNCE);
+
 
             const content = `<h1 style="text-align: center; font-size:25px; "> ${station.name} <h1>
             <p style="font-size:20px"> 
@@ -181,6 +193,7 @@ function addMarkers(stations) {
             infowindow = new google.maps.InfoWindow({content: content});
             infowindow.open({anchor: marker, map: map});
             // console.log("open window here", station.number);
+
         });
         marker.addListener("mouseout", () => {
             marker.setAnimation(null);
@@ -192,12 +205,14 @@ function addMarkers(stations) {
         });
     });
 }
+
 function openStationCard(number) {
     if (!sideBarOpened) {changeSideBar();}
     let info = document.getElementById("info");
     if (info.innerHTML.trim() !== '') {
         info.innerHTML = '';
     }
+
 
     createStationCard(number, "realtime").then(card => {
         info.appendChild(card);
@@ -207,10 +222,12 @@ function openStationCard(number) {
 async function createStationCard(number, type, data) {
     // console.log("station in createCard", data);
 
+
     let card = document.createElement("div");
     card.classList.add("stationCard");
     card.dataset.number = number;
     let station;
+
 
 
     let textDetail = document.createElement("div");
@@ -238,6 +255,7 @@ async function createStationCard(number, type, data) {
         return card;
     }
 
+
     try {
         let response = await fetch("/station/" + number);
         station = await response.json();
@@ -245,12 +263,14 @@ async function createStationCard(number, type, data) {
         console.error('Error fetching station card data:', error);
     }
 
+
     textDetail.innerHTML =
         `<h2 >${station.name}</h2>
         <p style="font-size: 25px">Stands: ${station.available_bike_stands}/${station.bike_stands}</p>
         <p style="font-size: 25px">Bikes: ${station.available_bikes}/${station.bike_stands}</p>
         <p style="font-size: 25px">Status: ${station.status}</p>
         <p style="font-size: 25px">Address: ${station.address}</p>`;
+
     card.appendChild(textDetail);
     let trendButton = document.createElement("button");
     trendButton.classList.add("trendButton");
@@ -277,12 +297,16 @@ function trends_switch(btn) {
     const buttonGroup = card.querySelector(".button-group");
     if (window.getComputedStyle(bike_chart).getPropertyValue('display') === 'none') {
         bike_chart.style.display = "block";
+
         stand_chart.style.display = "block"
+
         buttonGroup.style.display = "flex";
         drawChart(number, "history");
     } else {
         bike_chart.style.display = "none";
+
         stand_chart.style.display = "none";
+
         buttonGroup.style.display = "none";
     }
 }
@@ -291,8 +315,10 @@ function changeSideBar() {
     const mapSection = document.getElementById("map");
     // if (leftSection.style.width === "0px" || leftSection.style.width === "") {
     if (!sideBarOpened) {
+
         leftSection.style.width = "600px";
         mapSection.style.marginLeft = "600px";
+
         sideBarOpened = true;
     } else {
         leftSection.style.width = "0px";
@@ -302,7 +328,6 @@ function changeSideBar() {
         sideBarOpened = false;
     }
 }
-
 
 async function drawChart(number, type) {
     let url;
@@ -322,6 +347,7 @@ async function drawChart(number, type) {
     }
     if (response_data && response_data.length > 0) {
         const bikesData = response_data.map(item => [item.time, item.bikes]);
+
         const standsData = response_data.map(item => [item.time, item.stands]);
         const bikes_stands_sum = response_data[0].bikes + response_data[0].stands;
         const card = document.querySelector('.stationCard[data-number="' + parseInt(number) + '"]');
@@ -342,12 +368,14 @@ function basicDraw(bikeData, range, div) {
         y = "Bikes";
     } else {
         y = "Stands";
+
     }
     // Create the data table
     var data = new google.visualization.DataTable();
     data.addColumn('string', 'Time');
     data.addColumn('number', y);
     data.addRows(bikeData);
+
 
 var options = {
     title: 'Trends for ' + y,
@@ -391,6 +419,7 @@ var options = {
     chart.draw(data, options);
 }
 //functions to switch the charts
+
 function selectStatus(clickedButton, status) {
   // Get the parent button group for the clicked button
   const buttonGroup = clickedButton.parentNode;
@@ -413,11 +442,14 @@ function createButtonGroup() {
     buttonGroup.className = "button-group";
 
     const buttonNames = ["history", "predict_24h", "predict_5d"];
+
     const buttonTexts = ["History", "24h Prediction", "5d Prediction"];
+
 
     for (let i = 0; i < buttonNames.length; i++) {
         const button = document.createElement("button");
         button.className = `chart-button ${buttonNames[i]}`;
+
         // button.textContent = buttonNames[i];
         button.textContent = buttonTexts[i];
         button.onclick = function () {
@@ -425,6 +457,7 @@ function createButtonGroup() {
         };
         // if (button.textContent === "history") {
         if (button.textContent === "History") {
+
             button.classList.add("selected");
         }
         buttonGroup.appendChild(button);
@@ -432,6 +465,7 @@ function createButtonGroup() {
 
     return buttonGroup;
 }
+
 
 // functions to do recommendation
 async function submitForm() {
@@ -576,3 +610,4 @@ function createDropdown() {
 
   return dropdown;
 }
+

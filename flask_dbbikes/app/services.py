@@ -4,13 +4,13 @@ from typing import List, Optional
 
 import requests
 from sqlalchemy import func, text
-
 from .models import Station, Availability
 from datetime import datetime, timedelta
 from .config import weatherForecastAPI, weatherCurrentAPI, GoogleMap_API_KEY
 import pandas as pd
 import numpy as np
 import math
+
 class DatbaseService:
     def __init__(self, db):
         self.db = db
@@ -132,6 +132,7 @@ class ModelService:
         # with open(r'C:\Users\85217\OneDrive\UCD\2023 Spring\Software Engineering (Conv) (COMP30830)\assignments\ass 2 bike project\Train Data\20230403\random_forest_model.pkl', 'rb') as file:
         with open('/home/ubuntu/codes/model/random_forest_model.pkl', 'rb') as file:
         # with open('/Users/winnieimafidon/Documents/software-engineering/bike_rental_project/duplicateYun/COM30830-SE/flask_dbbikes/app/data/random_forest_model.pkl', 'rb') as file:
+
             data_model = pickle.load(file)
         self.model = data_model
 
@@ -157,7 +158,6 @@ class ModelService:
             time_list.append(current_time + timedelta(hours=1*x))
         result = self.predict_helper(station, time_list)
         return result
-
 
     def predict_helper(self, station, time_list):
         data_list = []
@@ -213,14 +213,17 @@ class ModelService:
         data['last_update'] = data['last_update'].view('int64') // 10**9
 
         features = ['position_lat', 'position_lng', 'bike_stands',
+
                     'temp', 'humidity', 'visibility', 'windSpeed', 'windDeg', 'hour',
                     'day_of_week', 'is_weekend', 'month', 'weatherMain_Clouds',
                     'weatherMain_Drizzle', 'weatherMain_Fog', 'weatherMain_Mist',
                     'weatherMain_Rain', 'weatherMain_Snow']
 
+
         X_data = data[features]
 
         predicted_bikes = self.model.predict(X_data)
+
         # change to python list
         predicted_bikes = predicted_bikes.tolist()
         # combine the result
@@ -243,6 +246,7 @@ class ModelService:
         return json_style_list
 
 class RecommendService:
+
     def __init__(self, modelService):
         self.modelService = modelService
     # def __int__(self):
@@ -304,6 +308,7 @@ class RecommendService:
         params = {
             "origins": f"{origin_lat},{origin_lng}",
             "destinations": f"{des_lat},{des_lng}",
+
             "key": GoogleMap_API_KEY,
             "mode": "walking"
         }
@@ -314,7 +319,6 @@ class RecommendService:
             return data
         else:
             raise Exception(f"Error {response.status_code}: {response.text}")
-
 
     def get_distance(self, lat1, lon1, lat2, lon2):
         # Convert latitude and longitude from degrees to radians
@@ -336,5 +340,4 @@ class RecommendService:
         distance_m = distance_km * 1000
 
         return distance_m
-
 

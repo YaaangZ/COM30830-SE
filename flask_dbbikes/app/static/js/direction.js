@@ -77,6 +77,7 @@ function setupAutocompleteDirectionsHandler(map) {
 
   function setupPlaceChangedListener(autocomplete, mode, callback) {
     autocomplete.bindTo("bounds", map);
+
     autocomplete.addListener("place_changed", () => {
       const place = autocomplete.getPlace();
 
@@ -84,6 +85,7 @@ function setupAutocompleteDirectionsHandler(map) {
         window.alert("Please select an option from the dropdown list.");
         return;
       }
+
 
       const latLng = `${place.geometry.location.lat()},${place.geometry.location.lng()}`;
 
@@ -228,5 +230,6 @@ function clearRoutes() {
         rendererMarkers[i].setMap(null);
     }
     rendererMarkers = [];
+
 
 }

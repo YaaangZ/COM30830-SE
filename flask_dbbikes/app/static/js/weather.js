@@ -1,5 +1,6 @@
 
 
+
   // <!--This part is displayed weather information vertically-->
   function getWeather() {
     const lat = 53.3498006;
@@ -39,10 +40,12 @@
             <div class="dropdown-content">
               ${forecast.slice(0, 6).map((data) => {
                 const time = new Date(data.dt * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
                 const temp = data.main.temp;
                 const weatherMain = data.weather[0].main;
                 const weatherIcon = data.weather[0].icon;
                 return `
+
                   <div style="font-size: 20px;" class="weather-content">
                     <div>${time}</div>
                     <img src="https://openweathermap.org/img/wn/${weatherIcon}.png" alt="${weatherMain}">
@@ -114,3 +117,4 @@
   }
 
   
+

@@ -3,8 +3,10 @@ html, body {
 height: 100%;
 margin: 0;
 padding: 0;
+
 font-family: 'Dosis', sans-serif;
 zoom: 0.85;
+
 }
 
 #map {
@@ -139,12 +141,14 @@ flex-direction: column;
   font-size: 25px;
   cursor: pointer;
   background-color: rgb(40, 39, 39);
+
   color: white;
   padding: 10px 15px;
   border: none;
   position: sticky;
   top: 10px;
   left: 370px;
+
   border-radius: 15px;
   z-index: 1;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -207,6 +211,7 @@ flex-direction: column;
     color: #f1f1f1;
   }
   
+
 .openbtn:hover {
   background-color: #444;
 }
@@ -233,7 +238,6 @@ flex-direction: column;
   .sidebar {padding-top: 15px;}
   .sidebar a {font-size: 18px;}
 }
-
 
 
 /*chart buttons*/
@@ -472,5 +476,4 @@ flex-direction: column;
   .sidebar {padding-top: 15px;}
   .sidebar a {font-size: 18px;}
 }
-
 
