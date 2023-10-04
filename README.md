@@ -20,43 +20,20 @@ interacting with the database and performing calculations and processing.
 ## Screenshots
 ![main_page](https://github.com/CraneWvs/Pictures/blob/main/Dublin%20Bike/main_page.png)
 ![main_page_bike](https://github.com/CraneWvs/Pictures/blob/main/Dublin%20Bike/main_page_bike.png)
-# dependencies
-one is from conda and another is from pip
+![marker](https://github.com/CraneWvs/Pictures/blob/main/Dublin%20Bike/marker.png)
+![planner](https://github.com/CraneWvs/Pictures/blob/main/Dublin%20Bike/planner.png)
+![prompt](https://github.com/CraneWvs/Pictures/blob/main/Dublin%20Bike/prompt.png)
+![trends](https://github.com/CraneWvs/Pictures/blob/main/Dublin%20Bike/trends.png)
+## Dependencies
+Two environment files, one is from conda and another is from pip.
 
-/env/environment.yml
+/flask_dbbikes/env/environment.yml
 
-/env/requirements.txt
+flask_dbbikes/env/requirements.txt
 
-# SQL STATEMENT:
--- create database dbbikes
-
-create database if not exists dbbikes;
-
--- create table station
-
-use dbbikes;
-drop table if exists station;
-create table station(
-	`number` integer not null,
-    `name` varchar(128),
-    address varchar(128),
-    position_lat decimal(8,6),
-    position_lng decimal(9,6),
-    banking integer,
-    bonus integer,
-    bike_stands integer,
-    primary key(`number`),
-    unique(`name`)
-);
-
--- create table availability
-
-drop table if exists availability;
-create table availability(
-	`number` integer not null,
-    available_bike_stands integer,
-    available_bikes integer,
-    `status` varcharacter(128),
-    last_update integer,
-    primary key(`number`, last_update)
-);
+use yml file to create a new conda environment and then use txt file to install packages.
+```
+conda env create -f environment.yml -n myenv
+conda activate myenv
+pip install -r requirements.txt
+```
