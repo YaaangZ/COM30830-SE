@@ -19,11 +19,28 @@ interacting with the database and performing calculations and processing.
 ![whole_structure](https://github.com/CraneWvs/Pictures/blob/main/Dublin%20Bike/whole_structure.png)
 ## Screenshots
 ![main_page](https://github.com/CraneWvs/Pictures/blob/main/Dublin%20Bike/main_page.png)
+
+main page
+
 ![main_page_bike](https://github.com/CraneWvs/Pictures/blob/main/Dublin%20Bike/main_page_bike.png)
+
+bike markers
+
 ![marker](https://github.com/CraneWvs/Pictures/blob/main/Dublin%20Bike/marker.png)
+
+marker detail
+
 ![planner](https://github.com/CraneWvs/Pictures/blob/main/Dublin%20Bike/planner.png)
+
+route planner
+
 ![prompt](https://github.com/CraneWvs/Pictures/blob/main/Dublin%20Bike/prompt.png)
+
+prompt
+
 ![trends](https://github.com/CraneWvs/Pictures/blob/main/Dublin%20Bike/trends.png)
+
+trends
 ## Dependencies
 Two environment files, one is from conda and another is from pip.
 
